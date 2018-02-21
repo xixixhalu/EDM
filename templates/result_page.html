@@ -1,0 +1,292 @@
+<html>
+  <head>
+    <script>
+
+    function handle(id,len,elem)
+    {
+      var arr = document.getElementsByClassName("inner-box");
+      for (i=0; i<arr.length; i++)
+      {
+          arr[i].style.display = "none";
+      }
+      document.getElementById(id).style.display = "inline-block";
+    }
+    function collect_values(elem,i)
+    {
+      var data = document.getElementById("data"+i).value;
+      var collection_name = elem.getAttribute("name");
+      alert(data);
+      alert(collection_name);
+
+      //TODO : pass the authentication key and username to this function
+      DBAdapter.createOne(collection_name, JSON.parse(data));
+
+     }
+
+     function collect_values1(elem, i)
+    {
+      var data1 = document.getElementById("data1"+i).value;
+      var collection_name1 = elem.getAttribute("name");
+
+      //TODO : pass the authentication key and username to this function
+      DBAdapter.createOne(collection_name1, JSON.parse(data1));
+     }
+
+     function collect_values2(elem,i)
+    {
+      var data2 = document.getElementById("data2"+i).value;
+      var collection_name2 = elem.getAttribute("name");
+
+      //TODO : pass the authentication key and username to this function
+      DBAdapter.readOne(collection_name2, JSON.parse(data2));
+     }
+
+     function collect_values3(elem,i)
+    {
+      var data3 = document.getElementById("data3"+i).value;
+      var collection_name3 = elem.getAttribute("name");
+
+      //TODO : pass the authentication key and username to this function
+      DBAdapter.readAll(collection_name3, JSON.parse(data3));
+     }
+
+     function collect_values4(elem,i)
+    {
+      var data4 = document.getElementById("data4"+i).value;
+      var collection_name4 = elem.getAttribute("name");
+
+      //TODO : pass the authentication key and username to this function
+      DBAdapter.delete(collection_name4, JSON.parse(data4));
+     }
+
+     function collect_values5(elem,i)
+    {
+      var data5 = document.getElementById("data5"+i).value;
+      var collection_name5 = elem.getAttribute("name");
+
+      //TODO : pass the authentication key and username to this function
+      DBAdapter.update(collection_name5, JSON.parse(data5));
+     }
+
+    </script>
+    <meta charset="utf-8">
+    <title>Executable Domain Modeling</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/stylesem.css') }}"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.10/semantic.min.css">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/actions.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('generated_code', path='default/' + db_name + '/Adapter.js') }}"></script>
+
+  </head>
+  <body>
+    <div class="ui three item menu">
+      <a class="active item item1">Description</a>
+      <a class="item item2">REST API</a>
+      <a class="item item3">Server Status</a>
+    </div>
+
+
+  <div class='Description'>
+    <div class="ui bulleted list">
+    <div class="item">
+      <div>Database Name:</div>
+      <div class="list">
+        <div class="item">{{ db_name }}</div>
+      </div>
+    </div>
+
+    <div class="item">
+      <div>Collections created:</div>
+      <div class="list">
+        {% for id in collection_names %}
+        <div class="item">{{ collection_names[id][0] }}</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="item">
+      <div>Server URL:</div>
+      <div class="list">
+        <div class="item">{{ server_url }}</div>
+      </div>
+    </div>
+
+    </div>
+  </div>
+
+    <div class="outer_box RESTAPI">
+
+    <div style="width: 30%; height:100%;display:inline-block;float:left">
+		<div class="ui inverted vertical menu" style="height:100%">
+		  {% for i in collection_names %}
+          <a class="item outermenu" name={{collection_names[i]}} onclick="handle( {{i}} , {{collection_names|length}}, this )">
+			{{ collection_names[i][0] }}
+          </a>
+          {% endfor %}
+		</div>
+    </div>
+    <div style="width:70%;height:100%">
+
+      {% for i in collection_names %}
+      <div class = "inner-box" style="display:none" id="{{i}}">
+        {{collection_names[i][0]}}
+        <div class="ui grid">
+  <div class="four wide column">
+    <div class="ui vertical fluid tabular menu">
+      <a class="item c1 active">
+        Create One
+      </a>
+      <a class="item c2">
+        Create Many
+      </a>
+      <a class="item r1">
+        Read One
+      </a>
+      <a class="item r2">
+        Read All
+      </a>
+      <a class="item upd">
+        Update
+      </a>
+      <a class="item del">
+        Delete
+      </a>
+    </div>
+  </div>
+  <div class="twelve wide stretched column">
+    <div class="ui segment crOne">
+      <!--Collection name : <input type="text" maxlength="20" id="cname"><br><br>-->
+      Data : <textarea id="data{{i}}"></textarea><br>
+      <button name={{collection_names[i][0]}} onclick="collect_values(this, {{i}})">Create One</button>
+      <br>
+      Data must be specified <br>
+      Example: <br>
+      data : {
+      {% for w in range(collection_names[i][1]|length)%}
+        {% if w == collection_names[i][1]|length - 1 %}
+          "{{collection_names[i][1][w]}}" : "String"
+        {% else %}
+          "{{collection_names[i][1][w]}}" : "String" ,
+        {% endif %}
+      {% endfor %}
+      } <br>
+      REST API URL : {{server_url}}/create
+
+      <!--TODO-->
+      <!--Include a password field for entering the key here.
+      This key will be used to authorize database access-->
+
+    </div>
+
+    <div class="ui segment crMany">
+      <!--Collection name : <input type="text" maxlength="20" id="cname1"><br><br>-->
+      Data : <textarea id="data1{{i}}"></textarea><br>
+      <button name={{collection_names[i][0]}}  onclick="collect_values1(this, {{i}})">Create Many</button>
+      <br>
+      Data must be specified <br>
+      Example: <br>
+      data : [ {
+      {% for w in range(collection_names[i][1]|length)%}
+        {% if w == collection_names[i][1]|length - 1 %}
+          "{{collection_names[i][1][w]}}" : "String"
+        {% else %}
+          "{{collection_names[i][1][w]}}" : "String" ,
+        {% endif %}
+      {% endfor %}
+      },
+      {
+      {% for w in range(collection_names[i][1]|length)%}
+        {% if w == collection_names[i][1]|length - 1 %}
+          "{{collection_names[i][1][w]}}" : "String"
+        {% else %}
+          "{{collection_names[i][1][w]}}" : "String" ,
+        {% endif %}
+      {% endfor %}
+      }
+      ]<br>
+      REST API URL : {{server_url}}/create
+
+      <!--TODO-->
+      <!--Include a password field for entering the key here.
+      This key will be used to authorize database access-->
+    </div>
+
+    <div class="ui segment readOne">
+      Data : <textarea id="data2{{i}}"></textarea><br>
+      <button name={{collection_names[i][0]}} onclick="collect_values2(this, {{i}})">Read One</button>
+      <br>
+      Data must be specified <br>
+      Example: <br>
+      data : {"_id", "57d26068f2a81b5d740f695c"} or <br>
+      data : { "{{collection_names[i][1][0]}}" : "Some value" } <br>
+      REST API URL : {{server_url}}/readOne
+
+      <!--TODO-->
+      <!--Include a password field for entering the key here.
+      This key will be used to authorize database access-->
+    </div>
+
+    <div class="ui segment readAll">
+      <!--Collection name : <input type="text" maxlength="20" id="cname3"><br><br>-->
+      Data : <textarea id="data3{{i}}"></textarea><br>
+      <button name={{collection_names[i][0]}} onclick="collect_values3(this, {{i}})">Read All</button>
+      <br>
+      Data must be specified <br>
+      Example: <br>
+      data : { "{{collection_names[i][1][0]}}" : "Some value" } <br>
+      REST API URL : {{server_url}}/readAll
+
+      <!--TODO-->
+      <!--Include a password field for entering the key here.
+      This key will be used to authorize database access-->
+    </div>
+
+    <div class="ui segment delete">
+      <!--Collection name : <input type="text" maxlength="20" id="cname4"><br><br>-->
+      Data : <textarea id="data4{{i}}"></textarea><br>
+      <button name={{collection_names[i][0]}} onclick="collect_values4(this, {{i}})">Delete</button>
+      <br>
+      Data must be specified <br>
+      Example: <br>
+      data : { "{{collection_names[i][1][0]}}" : "Some value" } or <br>
+      data : {"_id" : "57d26068f2a81b5d740f695c"}<br>
+      REST API URL : {{server_url}}/delete
+
+      <!--TODO-->
+      <!--Include a password field for entering the key here.
+      This key will be used to authorize database access-->
+    </div>
+
+    <div class="ui segment update">
+      <!--Collection name : <input type="text" maxlength="20" id="cname5"><br><br>-->
+      Data : <textarea id="data5{{i}}"></textarea><br>
+      <button name={{collection_names[i][0]}} onclick="collect_values5(this, {{i}})">Update</button>
+      <br>
+      Data must be specified <br>
+      Example: <br>
+      data : {_id : "57d25c9cf2a81b5d740f6956", newData : { "{{collection_names[i][1][0]}}" : "Some value" } or <br>
+      data : {oldData: { "{{collection_names[i][1][0]}}" : "Some value" }, newData : { "{{collection_names[i][1][0]}}" : "Some value" }<br>
+      REST API URL : {{server_url}}/update
+
+      <!--TODO-->
+      <!--Include a password field for entering the key here.
+      This key will be used to authorize database access-->
+
+    </div>
+  </div>
+</div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+    </div>
+
+  <div class='ServerStatus'>
+    ServerStatus
+  </div>
+
+  </body>
+
+</html>

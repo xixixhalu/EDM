@@ -1,0 +1,9 @@
+ * Running on http://ec2-34-223-218-62.us-west-2.compute.amazonaws.com:4000/ (Press CTRL+C to quit)
+76.102.51.242 - - [19/Feb/2018 06:45:03] "GET / HTTP/1.1" 200 -
+76.102.51.242 - - [19/Feb/2018 06:45:09] "POST /result HTTP/1.1" 200 -
+ * Running on http://ec2-34-223-218-62.us-west-2.compute.amazonaws.com:4000/ (Press CTRL+C to quit)
+76.102.51.242 - - [19/Feb/2018 06:49:04] "GET / HTTP/1.1" 200 -
+76.102.51.242 - - [19/Feb/2018 06:49:09] "POST /result HTTP/1.1" 200 -
+76.102.51.242 - - [19/Feb/2018 06:49:09] "GET / HTTP/1.1" 200 -
+76.102.51.242 - - [19/Feb/2018 19:26:12] "GET / HTTP/1.1" 200 -
+76.102.51.242 - - [19/Feb/2018 20:04:42] "GET / HTTP/1.1" 200 -
