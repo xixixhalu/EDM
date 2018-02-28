@@ -1,7 +1,7 @@
 
 var $model = {};
 
-$model.name = $name;              // Model name
+$model.name = "$name";              // Model name
 
 $model.attributes = [            // Model attribute list
     $attributes
@@ -9,7 +9,7 @@ $model.attributes = [            // Model attribute list
 
 // Model functions
 
-$model.create$model = function(data, success, error) {
+$model.create = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -26,7 +26,7 @@ $model.create$model = function(data, success, error) {
     DBAdapter.createOne($model.name, data, successCB, errorCB);
 };
 
-$model.read$model = function(data, success, error) {
+$model.read = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -43,7 +43,7 @@ $model.read$model = function(data, success, error) {
     DBAdapter.readOne($model.name, data, successCB, errorCB);
 };
 
-$model.update$model = function(search, update, success, error) {
+$model.update = function(search, update, success, error) {
     // Wrap data
     var data = {
         oldData : search,
@@ -64,7 +64,7 @@ $model.update$model = function(search, update, success, error) {
     DBAdapter.update($model.name, data, successCB, errorCB);
 };
 
-$model.delete$model = function(data, success, error) {
+$model.delete = function(data, success, error) {
     // Wrap data
 
     // Define callback function

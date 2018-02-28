@@ -9,7 +9,7 @@ Class1.attributes = [            // Model attribute list
 
 // Model functions
 
-Class1.createClass1 = function(data, success, error) {
+Class1.create = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -26,7 +26,7 @@ Class1.createClass1 = function(data, success, error) {
     DBAdapter.createOne(Class1.name, data, successCB, errorCB);
 };
 
-Class1.readClass1 = function(data, success, error) {
+Class1.read = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -43,7 +43,7 @@ Class1.readClass1 = function(data, success, error) {
     DBAdapter.readOne(Class1.name, data, successCB, errorCB);
 };
 
-Class1.updateClass1 = function(search, update, success, error) {
+Class1.update = function(search, update, success, error) {
     // Wrap data
     var data = {
         oldData : search,
@@ -64,7 +64,7 @@ Class1.updateClass1 = function(search, update, success, error) {
     DBAdapter.update(Class1.name, data, successCB, errorCB);
 };
 
-Class1.deleteClass1 = function(data, success, error) {
+Class1.delete = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -119,4 +119,4 @@ Class1.set = function(id, newData, success, error) {
 
 // Add the other functions here
 
-
+// 

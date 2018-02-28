@@ -4,7 +4,7 @@ class ConfigUtil():
 
    def get(self, section, property):
 	config = ConfigParser.ConfigParser()
-	config.read("/home/ubuntu/EDMToolKit/config.properties")
+	config.read("config.properties")
 	return config.get(section, property)
 
    def getInt(self, section, property):
