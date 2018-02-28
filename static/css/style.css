@@ -1,0 +1,111 @@
+.jumbotron {
+    background-color: #f4511e;
+    color: #ffffff;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+footer {
+    width: 100%;
+    background-color: #f4511e;
+    color: #ffffff;
+    padding: 25px;
+    margin-top: 10px;
+}
+
+.sidenav {
+    background-color: #f1f1f1;
+    height: 100%;
+    padding: 10px;
+}
+
+.row.content {height: 1000px}
+
+pre{
+    word-break: keep-all;
+    white-space: pre-line;
+    counter-reset: line;
+}
+pre span {
+    /*display: block;*/
+}
+pre span:before {
+    counter-increment: line;
+    content: counter(line);
+    display: inline-block;
+    padding: 0 .5em;
+    color: #888
+}
+
+.panel {
+    margin-top: 1.5em;
+}
+
+input[type=text], input[type=password] {
+	width: 100%;
+	padding: 12px 20px;
+	margin-bottom: 8px;
+	display: inline-block;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+	}
+	
+.fullbutton {
+	width:100%;
+	cursor: pointer;
+	padding:10px;
+}
+	
+.navbar {
+	border-radius: 0;
+	margin-bottom: 10px;
+}
+
+.buttons {
+	padding-right: 5px
+}
+
+.animate {
+	-webkit-animation: animatezoom 0.6s;
+	animation: animatezoom 0.6s
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 2% auto 15% auto;
+	border: 1px solid #888;
+	width: 30%; 
+}
+
+.modal {
+	display: none; 
+	position: fixed; 
+	z-index: 1; 
+	left: 0;
+	top: 0;
+	width: 100%; 
+	height: 100%; 
+	overflow: auto; 
+	background-color: rgb(0,0,0); 
+	background-color: rgba(0,0,0,0.4); 
+	padding-top: 60px;
+}
+
+.lcontainer {
+	text-align: center;
+	margin: 24px 0 12px 0;
+	position: relative;
+}
+
+img.avatar {
+	width: 20%;
+	border-radius: 50%;
+}
+
+label{
+	padding-top:10px;
+}
+
+.container {
+	padding: 16px;
+}
