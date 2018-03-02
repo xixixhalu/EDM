@@ -91,7 +91,7 @@ class Analyzer:
         file_path = "generated_code/default/" + _dmoName + "/"
         if not os.path.exists(file_path):
             os.makedirs(file_path)
-        edm_utils.copyDirLink('code_templates/node_modules', file_path+'/node_modules')
+        edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
         json_file = open(file_path + output_filename + ".json", "w")
         json_file.write(dmo.toJson())
         json_file.close()
