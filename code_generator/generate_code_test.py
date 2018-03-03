@@ -149,4 +149,4 @@ def generate_all(db_name):
 
         return element_names, display_ip + ":" +str(port)
 
-generate_all("generalization")
+#generate_all("generalization")
