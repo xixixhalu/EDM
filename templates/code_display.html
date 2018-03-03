@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>API References - Executable Domain Modeling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+    <basefont size="7">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row content">
+        <div class="col-sm-10">
+            <div class="tab-pane container" id="swift1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Create One</div>
+					<div class="panel-body">Description</div>
+                    <div class="panel-body">
+                        <pre id="class1_swift">
+                            <span>def print_hi(name)</span>
+                            <span>puts "Hi, #{name}"</span>
+                            <span>end</span>
+                            <span>print_hi('Tom')</span>
+                            <span>#=> prints 'Hi, Tom' to STDOUT.</span>
+                        </pre>
+                        <button type="button" class="copy-button btn btn-primary pull-right"
+                                onclick="CopyToClipboard('class1_swift')">Copy Code</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

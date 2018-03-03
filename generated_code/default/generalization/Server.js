@@ -5,7 +5,7 @@
  */
 var server_ip = "0.0.0.0";
 var dbname = "generalization";
-var server_port = "2000";
+var server_port = "2001";
 //declare what is the primary key for the table specified above.
 var primary_key = '_id';
 
