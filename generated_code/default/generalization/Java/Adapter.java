@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Adapter {
-    private static String serverIP = "$server_ip";
-    private static String port = "$port";
+    private static String serverIP = "0.0.0.0";
+    private static String port = "2000";
     //static String serverUrl = "https://httpbin.org/post";
     private static String serverUrl = "http://" + serverIP + ":" + port + "/";
     //private static CloseableHttpClient httpClient = HttpClients.createDefault();

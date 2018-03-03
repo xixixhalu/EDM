@@ -1,14 +1,13 @@
 import com.google.gson.JsonObject;
 
 
-public class $model {
+public class Class1 {
 
-    public static String className = "$model";
+    public static String className = "Class1";
     public static String[] attributes = {
-        $attributes
+        "class1Attribute1"
     };
 
-    $FUNC readOne
     public static void readOne(JsonObject data) {
         class readOneCB {
             public void successCB(String result) {
@@ -21,9 +20,7 @@ public class $model {
         readOneCB CBModel = new readOneCB();
         Adapter.readOne(className, data, CBModel);
     }
-    $ENDFUNC
-
-    $FUNC readAll
+    
     public static void readAll(JsonObject data) {
         class readAllCB {
             public void successCB(String result) {
@@ -36,10 +33,8 @@ public class $model {
         readAllCB CBModel = new readAllCB();
         Adapter.readAll(className, data, CBModel);
     }
-    $ENDFUNC
+    
 
-
-    $FUNC create
     public static void create(JsonObject data) {
         class createCB {
             public void successCB(String result) {
@@ -52,10 +47,8 @@ public class $model {
         createCB CBModel = new createCB();
         Adapter.create(className, data, CBModel);
     }
-    $ENDFUNC
+    
 
-
-    $FUNC update
     public static void update(JsonObject data) {
         class updateCB {
             public void successCB(String result) {
@@ -68,10 +61,8 @@ public class $model {
         updateCB CBModel = new updateCB();
         Adapter.update(className, data, CBModel);
     }
-    $ENDFUNC
+    
 
-
-    $FUNC delete
     public static void delete(JsonObject data) {
         class deleteCB {
             public void successCB(String result) {
@@ -84,6 +75,5 @@ public class $model {
         deleteCB CBModel = new deleteCB();
         Adapter.delete(className, data, CBModel);
     }
-    $ENDFUNC
-
+    
 }
