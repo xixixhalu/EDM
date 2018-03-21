@@ -1,3 +1,4 @@
+$FUNC $method
 $model.$method = function($parameters) {
     // Define data operation logic
 
@@ -15,4 +16,4 @@ $model.$method = function($parameters) {
     // Call RESTful API via DBAdapter
 
 };
-
+$ENDFUNC

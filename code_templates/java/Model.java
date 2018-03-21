@@ -86,4 +86,6 @@ public class $model {
     }
     $ENDFUNC
 
+$methods
+
 }

@@ -130,4 +130,4 @@ $model.set = function(id, newData, success, error) {
 
 // Add the other functions here
 
-// $methods
+$methods
