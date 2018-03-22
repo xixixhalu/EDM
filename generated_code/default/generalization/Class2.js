@@ -10,7 +10,7 @@ Class2.attributes = [            // Model attribute list
 
 // Model functions
 
-Class2.createClass2 = function(data, success, error) {
+Class2.create = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -27,7 +27,7 @@ Class2.createClass2 = function(data, success, error) {
     DBAdapter.createOne(Class2.name, data, successCB, errorCB);
 };
 
-Class2.readClass2 = function(data, success, error) {
+Class2.read = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -44,7 +44,7 @@ Class2.readClass2 = function(data, success, error) {
     DBAdapter.readOne(Class2.name, data, successCB, errorCB);
 };
 
-Class2.updateClass2 = function(search, update, success, error) {
+Class2.update = function(search, update, success, error) {
     // Wrap data
     var data = {
         oldData : search,
@@ -65,7 +65,7 @@ Class2.updateClass2 = function(search, update, success, error) {
     DBAdapter.update(Class2.name, data, successCB, errorCB);
 };
 
-Class2.deleteClass2 = function(data, success, error) {
+Class2.delete = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -120,4 +120,4 @@ Class2.set = function(id, newData, success, error) {
 
 // Add the other functions here
 
-
+// 

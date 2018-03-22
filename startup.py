@@ -89,30 +89,20 @@ def result():
     #Parse XML and generate JSON
     ana.DM_File_Analyze('input', {'DM_Input_type': "Simple_XML"}, filename_str)
 
+    # NOTE the code below have changed and not compatible with old html files
     #Parse JSON and generate code
-    element_names, server_url = generate_code.generate_all(filename_str)
+    server_url, model_display_data = generate_code.generate_all(filename_str)
 
-    print element_names
     print server_url
 
-    #Convert collection names to dictionary for ID to name mapping
-    dict_mapping = {}
-    id = 1
-
-    for element in element_names:
-        dict_mapping[id] = [element, element_names[element]]
-        id+=1
-
-    print dict_mapping
-
     #Pass required data to the template
-    description_data = {"collection_names":dict_mapping, "db_name":filename_str}
-    description_data["server_url"] = server_url
-
-    print description_data
+    description_data = {"model_display_data":model_display_data,
+                        "db_name":filename_str,
+                        "server_url": server_url}
 
     #Render the template
-    return render_template('result_page.html', **description_data)
+    # XXX need test
+    return render_template('reference.html', **description_data)
 
 @app.route('/generated_code/<path:path>')
 def generated_code(path):
