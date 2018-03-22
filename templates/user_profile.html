@@ -25,7 +25,7 @@
     <div class="content">
         <div class="row">
             <div class="col-md-12 col-sm-12">
-                <button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
+                <a class="btn btn-primary pull-right" id="log_out" href="{{ url_for('logout') }}"><span class="fa fa-user"></span>&nbsp Logout</a>
             </div>
         </div>
         <div class="row" id="widget-box">
@@ -54,7 +54,7 @@
         </div>
         <div class="row">
             <div class="col-md-4 offset-md-4" id="new_button">
-                <button class="btn btn-lg btn-primary btn-block" href="#">New Instance</button>
+                <a class="btn btn-lg btn-primary btn-block" href="{{ url_for('upload_xml') }}">New Instance</a>
             </div>
         </div>
     </div>

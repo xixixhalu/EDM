@@ -35,7 +35,7 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('upload_xml.html')
+        return render_template('user_profile.html')
     return render_template('homepage.html')
 
 
@@ -63,7 +63,9 @@ def register():
     
     return 'That username already exists!'
 
-
+@app.route('/upload',)
+def upload_xml():
+    return render_template('xml_upload.html')    
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
