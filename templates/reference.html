@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head>
     <meta charset="utf-8">
     <title>API References - Executable Domain Modeling</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="main.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
     <basefont size="7">
 </head>
 <body>
@@ -39,33 +39,68 @@
   <div class="col-sm-2 nav-item"><a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a></div>
 </nav>
 
-<div class="container-fluid">
+<div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
     <div class="row content">
         <div class="col-sm-2 sidenav">
             <!--For the main page nav bars-->
             <ul class="nav nav-pills flex-column" role="tablist">
-                <li class="nav-item active"><a class="nav-link" data-toggle="pill" href="#class1">Class 1</a></li>
-                <li class="nav-item"><a class="nav-link" data-toggle="pill" href="#class2">Class 2</a></li>
+                <li ng-repeat="classInfo in classes"
+                    class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href='#{{classInfo}}'
+                       ng-click="changeParentTab(classInfo)">
+                        {{classInfo}}
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="col-sm-10">
             <div class="tab-content">
-                <div class="tab-pane active container-fluid" id="class1">
-                    <!--Here insert the nav bar of the class1-->
-					<!-- File to insert here is nav_bar-->
-                    <!--testing data--> class1
-                </div>
-                <div class="tab-pane container-fluid" id="class2">
-                    <!--Here insert the nav bar of the class2-->
-					<!-- File to insert here is nav_bar-->
-                    <!--testing data--> class2
+                <div ng-repeat = "class in classes"
+                     class="tab-pane active"  ng-show="view_tab === classes[$index]">
+                    <div>
+                        <ul class="nav nav-pills nav-fill" role="tablist">
+                            <li ng-repeat="language in languages"
+                                class="nav-item">
+                                <a class="nav-link" data-toggle="tab"
+                                   href='#{{class}}_{{language}}'
+                                    ng-click="changeChildTab(class, language)">
+                                    {{language}}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" >
+                            <div ng-repeat="language in languages"
+                                 ng-show="view === isView(class, language)"
+                                 class="tab-pane active" >
+                                <!--Attribute List-->
+								<br>
+                                <p ng-repeat="attribute in details[class]['attribute_list'] track by $index">
+                                    {{attribute.name}}: {{attribute.type}}
+                                </p>
+
+                                <div ng-repeat = "detail in details[class][language]['func_info_list']">
+                                    <br>
+									<div class="card card-default">
+                                        <div class="card-header">{{detail['name']}}</div>
+                                        <div class="card-body">
+                                            <pre ng-attr-id="{{class}}_{{language}}_{{$index}}">
+                                                <span ng-repeat="view in generateView(detail['body']) track by $index">{{view}}
+                                                </span>
+                                            </pre>
+                                            <button type="button" class="copy-button btn btn-primary pull-right"
+                                                    ng-click="CopyToClipboard(class, language, $index)">Copy Code</button>
+                                        </div>
+                                    </div>
+									<br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
 <footer class="container-fluid text-center">
     <p>&copy; Copyright Protected. All rights reserved</p>
 </footer>

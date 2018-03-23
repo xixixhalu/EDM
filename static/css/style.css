@@ -1,5 +1,6 @@
 .jumbotron{
 	padding: 2em;
+	margin-bottom: 5px;
 }
 
 .jumbotron h1 {
@@ -9,6 +10,7 @@
 .jumbotron p {
 	font-size: 1.5em;
 }
+
 footer {
     width: 100%;
     background-color: #e9ecef;
@@ -22,15 +24,19 @@ footer {
     height: 100%;
     padding: 10px;
 }
-.row.content {height: 1000px}
+
+/* .row.content {height: 1000px} */
+
 pre{
     word-break: keep-all;
     white-space: pre-line;
     counter-reset: line;
 }
+
 pre span {
     /*display: block;*/
 }
+
 pre span:before {
     counter-increment: line;
     content: counter(line);
@@ -139,6 +145,7 @@ widget-area.blank {
     position: relative;
     width: 100%;
 }
+
 .user_profile {
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -150,7 +157,6 @@ widget-area.blank {
     width: 100%;
     font-weight: bold;
 }
-
 
 .user_profile > span#instance_info {
     background: #48a4dc;
@@ -166,7 +172,6 @@ widget-area.blank {
     background: #ff604f;
     color: white;
 }
-
 
 .user_profile > span {
     float: left;
