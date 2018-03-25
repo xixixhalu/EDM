@@ -5,6 +5,6 @@ config.properties
 *.pyc
 
 # Generated Code #
-/input/
+#/input/
 /generated_code/
 
