@@ -1,6 +1,6 @@
 import os
 
-import generate_code
+from code_generator import generate_code
 from utilities.config_util import ConfigUtil
 
 from flask import flash
@@ -21,6 +21,7 @@ ALLOWED_EXTENSIONS = set(['xml'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # set MongoDB details
 app.config['MONGO_DBNAME'] = config.get('Mongo_DB', 'db_name')
