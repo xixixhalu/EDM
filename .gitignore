@@ -1,10 +1,10 @@
 # configuration #
-config.properties
+#config.properties
 
 # Compiled Source #
 *.pyc
 
 # Generated Code #
 #/input/
-/generated_code/
+#/generated_code/
 
