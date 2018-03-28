@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 
 public class Adapter {
-    private static String serverIP = "0.0.0.0";
+    private static String serverIP = "127.0.0.1";
     private static String port = "2000";
     //static String serverUrl = "https://httpbin.org/post";
     private static String serverUrl = "http://" + serverIP + ":" + port + "/";

@@ -1,6 +1,6 @@
 // Change the url as required
 
-var server_ip = "0.0.0.0";
+var server_ip = "127.0.0.1";
 var port = "2000";
 var url = "http://"+server_ip+":"+port+"/";
 

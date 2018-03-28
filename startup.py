@@ -1,6 +1,6 @@
 import os
 
-import generate_code
+from code_generator import generate_code
 from utilities.config_util import ConfigUtil
 
 from flask import flash
@@ -21,6 +21,7 @@ ALLOWED_EXTENSIONS = set(['xml'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 # set MongoDB details
 app.config['MONGO_DBNAME'] = config.get('Mongo_DB', 'db_name')
@@ -35,7 +36,7 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('upload_xml.html')
+        return render_template('user_profile.html')
     return render_template('homepage.html')
 
 
@@ -63,6 +64,9 @@ def register():
     
     return 'That username already exists!'
 
+@app.route('/upload',)
+def upload_xml():
+    return render_template('xml_upload.html')    
 
 @app.route('/result', methods=['GET', 'POST'])
 def result():
