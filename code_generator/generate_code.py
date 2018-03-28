@@ -149,6 +149,7 @@ def generate_all(db_name):
                 os.makedirs(output_path)
             model_display_data["Adapter"][language] = {}
             model_display_data["Adapter"][language]["func_info_list"] = generate_adapter(language, str(server_ip), str(port), str(db_name))
+            model_display_data["Adapter"][language]["attribute_list"] = []
             temp_display_data[language] = generate_model(language, json_data, str(db_name))
 
         # TODO need update
@@ -165,8 +166,8 @@ def generate_all(db_name):
                     "attribute_list": temp_display_data[language][model]["attribute_list"]
                 }
 
-        for model in model_display_data:
+        '''for model in model_display_data:
             if model != "Adapter":
                 model_display_data[model]["attribute_list"] = temp_display_data["JavaScript"][model]["attribute_list"]
-
+'''
         return display_ip + ":" + str(port), model_display_data

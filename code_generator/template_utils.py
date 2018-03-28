@@ -4,12 +4,14 @@ TEMPLATE_PREFIX = "$"
 TEMPLATE_FUNC_MARK = "\$FUNC"
 TEMPLATE_FUNC_END_MARK = "\$ENDFUNC"
 
-TEMPLATE_LANGUAGES = ["JavaScript", "Java"]
+TEMPLATE_LANGUAGES = ["JavaScript", "Java", "Swift"]
 
 TEMPLATE_PATH = {"Java": "code_templates/java/",
-                 "JavaScript": "code_templates/javascript/"}
+                 "JavaScript": "code_templates/javascript/",
+                 "Swift": "code_templates/swift/"}
 LANGUAGE_SUFFIX = {"Java": ".java",
-                   "JavaScript": ".js"}
+                   "JavaScript": ".js",
+                   "Swift": ".swift"}
 
 # not used yet
 JAVA_TYPE_MAP = {"Integer": "int"}
@@ -18,7 +20,7 @@ LANGUAGE_TYPE_MAP = {"Java": JAVA_TYPE_MAP,
                      "JavaScript": JAVASCRIPT_TYPE_MAP}
 
 
-def template_output_path(dm_name, language, username = "default"):
+def template_output_path(dm_name, language, username="default"):
     return "generated_code/%s/%s/%s/" % (username, dm_name, language)
 
 
@@ -34,6 +36,9 @@ def get_examples(func_name, attribute_list):
         example_many = [{attr1_name: "some value (" + attr1_type + ")"},
                         {attr1_name: "some other value (" + attr1_type + ")"}]
         examples = [str(example_one), str(example_many)]
+    elif func_name == "createOne":
+        example_one = {attr1_name: "some value (" + attr1_type + ")"}
+        examples = [str(example_one)]
     elif func_name == "read" or func_name == "readOne":
         example_id = {"_id": "specific id (String)"}
         example_attr = {attr1_name: "some value (" + attr1_type + ")"}

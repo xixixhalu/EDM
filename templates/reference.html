@@ -76,7 +76,7 @@
                                  class="tab-pane active" >
                                 <!--Attribute List-->
 								<br>
-                                <p ng-repeat="attribute in details[class]['attribute_list'] track by $index">
+                                <p ng-repeat="attribute in details[class][language]['attribute_list'] track by $index">
                                     {{attribute.name}}: {{attribute.type}}
                                 </p>
 

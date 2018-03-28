@@ -17,17 +17,17 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
     //    url: 'getData.php'
     //}).then(function(data) {
     //    $scope.contents= data.data;
-		$scope.contents = model_display_data;
-        myArray = angular.fromJson($scope.contents);
+		//$scope.contents = model_display_data;
+        myArray = model_display_data;//angular.fromJson($scope.contents);
         $scope.details = myArray;
         console.log($scope.details);
         Object.keys(myArray).forEach(function(k){
             $scope.languages = Object.keys(myArray[k]);
-            $scope.languages.forEach(function(lan){
+            /*$scope.languages.forEach(function(lan){
                 if (lan === "attribute_list")
                     return;
             });
-            $scope.languages.splice($scope.languages.indexOf("attribute_list"), 1);
+            $scope.languages.splice($scope.languages.indexOf("attribute_list"), 1);*/
         });
 
         angular.forEach(myArray, function(value, key){
