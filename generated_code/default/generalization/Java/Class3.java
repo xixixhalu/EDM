@@ -76,4 +76,6 @@ public class Class3 {
         Adapter.delete(className, data, CBModel);
     }
     
+
+
 }

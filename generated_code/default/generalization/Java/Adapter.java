@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class Adapter {
     private static String serverIP = "0.0.0.0";
     private static String port = "2000";
@@ -31,7 +32,7 @@ public class Adapter {
         httpAsyncClient.start();
     }
 
-    private static List<NameValuePair> basicDataArgs(JsonObject data) {
+private static List<NameValuePair> basicDataArgs(JsonObject data) {
         if(data == null)
             throw new NullPointerException("data cannot be Null");
         String dataStr = data.toString();
@@ -163,5 +164,6 @@ public class Adapter {
         });
 
     }
+
 
 }
