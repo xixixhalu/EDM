@@ -10,10 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
     <basefont size="7">
+	<script>var model_display_data = {{ model_display_data|tojson|safe }};</script>
 </head>
 <body>
+{%raw%}
 <div class="jumbotron">
     <div class="container text-center">
         <h1>Executable Domain Modeling</h1>
@@ -82,14 +84,24 @@
                                     <br>
 									<div class="card card-default">
                                         <div class="card-header">{{detail['name']}}</div>
+										<div class="card" style="padding-left:20px">Examples of JSON Structure:<br>
+										<ul>
+											<div ng-repeat = "ex in detail['examples']">
+											<li>{{ex}}</li>
+											</div>
+										</ul>
+										</div>
                                         <div class="card-body">
                                             <pre ng-attr-id="{{class}}_{{language}}_{{$index}}">
                                                 <span ng-repeat="view in generateView(detail['body']) track by $index">{{view}}
                                                 </span>
                                             </pre>
+										</div>
+										<div class="card-footer">
                                             <button type="button" class="copy-button btn btn-primary pull-right"
-                                                    ng-click="CopyToClipboard(class, language, $index)">Copy Code</button>
-                                        </div>
+                                                    ng-click="CopyToClipboard(class, language, $index)">Copy Code
+											</button>
+										</div>
                                     </div>
 									<br>
                                 </div>
@@ -104,7 +116,6 @@
 <footer class="container-fluid text-center">
     <p>&copy; Copyright Protected. All rights reserved</p>
 </footer>
+{%endraw%}
 </body>
 </html>
-
-
