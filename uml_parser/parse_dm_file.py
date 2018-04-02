@@ -53,7 +53,7 @@ class Analyzer:
 
         dmo = DomainModel(_dmoName)
 
-
+        elem={}
         # NITIN : NOTE : Adding elements and their attributes/operations into model
         for element in elements:
             # NITIN : NOTE : If element is a definition of a class, then extract it's name, definition, attributes, relations
@@ -61,18 +61,30 @@ class Analyzer:
                 elemId = element.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
                 elemName = element.get('name').strip()
                 dmo.declareElement( elemName , elemId)
-                
+                elem[elemId]=elemName
+                print(elemId,elemName)
+
+        for element in elements:
+            if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 # NITIN : NOTE : Check if the element has any attributes defined and aadd them
+                elemName = element.get('name').strip()
                 elemAttributes = element.find('attributes')
                 if elemAttributes is not None:
                     for elemAttribute in elemAttributes:
                         elemAttributeName = elemAttribute.get('name')
                         elemAttributeType = elemAttribute.find('properties').get('type')
                         # NITIN : TODO : implementation only for simple attributes, check how complex attributes are represented in xml
-                        if elemAttributeType == "int" : elemAttributeTypeSetter = dt.Integer()
-                        if elemAttributeType == "string" : elemAttributeTypeSetter = dt.String()
-                        # NITIN : TODO : implement checker for other data datatypes like float etc.
-                        dmo.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
+
+                        #complex attribute
+                        if elemAttributeType in elem.values():
+                            AttributeTypeSetter=dt.ComplexType(elemAttributeType)
+                            dmo.defineComplexAttribute(elemName,elemAttributeName, elemAttributeType, AttributeTypeSetter) 
+                      
+                        #simple attribute
+                        else:
+                            elemAttributeTypeSetter=dt.SimpleType(elemAttributeType)
+                            dmo.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
+                            
                         # NITIN : TODO : extract other features like upper and lower bounds, scope,
 
                 # NITIN : TODO : Check if the element has any operations defined and aadd them, implement operations on domain model
@@ -86,8 +98,9 @@ class Analyzer:
                 if elemRelations is None : continue
                 for elemRelation in elemRelations:
                     relationId = elemRelation.get(self.xmiPrefixAppender('id',namespaces["xmi_namespace"]))
+                
+                    if not (elem.has_key(str(elemRelation.get('start'))) and elem.has_key(str(elemRelation.get('end')))): continue;
                     dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag))
-
    
         json_file = open("generated_code/default/"+output_filename+".json", "w")
         json_file.write(dmo.toJson())
@@ -102,33 +115,50 @@ class Analyzer:
         elements = root.findall("packagedElement")
         dmo = DomainModel(_dmoName)
 
+
+        #all attribute type
         elemType={}
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:DataType":
                 typeId=element.get(self.xmiPrefixAppender('id', namespaces["xmi_namespace"] ))
                 elemType[typeId]=element.get("name")
-
-
+        
+        #class
+        elem={}
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 elemId = element.get(self.xmiPrefixAppender('id', namespaces["xmi_namespace"] ))
                 elemName = element.get('name').strip()
                 dmo.declareElement(elemName , elemId)
-                print(elemName,elemId)
+                elem[elemId]=elemName
+                #print(elemName,elemId)
                 
+        #class attribute
+        for element in elements:
+            if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
+                elemName = element.get('name').strip()
                 elemAttributes = element.findall('ownedAttribute')
                 if elemAttributes is not None:
                     for elemAttribute in elemAttributes:
-                        elemAttributeName = elemAttribute.get('name')
-                        elemAttributeId = elemAttribute.get('type')
-                        elemAttributeType = elemType[elemAttributeId]
-                        print(elemAttributeName,elemAttributeType)
+                        AttributeName = elemAttribute.get('name')
+                        AttributeId = elemAttribute.get('type')
+                        #simple attribute
+                        if elemType.has_key(AttributeId):
+                            AttributeType = elemType[AttributeId]
+                           
+                            AttributeTypeSetter=dt.SimpleType(AttributeType) 
+                            dmo.defineSimpleAttribute(elemName, AttributeName, AttributeTypeSetter)
+
+                        #complex attribute
+                        elif elem.has_key(AttributeId):
+                            AttributeElemName = elem[AttributeId]
+                            print(AttributeName,AttributeType)
                         
-                        if elemAttributeType == "int" : elemAttributeTypeSetter = dt.Integer()
-                        if elemAttributeType == "string" : elemAttributeTypeSetter = dt.String()
-                       
-                        dmo.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
-                        
+                            AttributeTypeSetter=dt.ComplexType(AttributeElemName)
+                            dmo.defineComplexAttribute(elemName,AttributeName, AttributeElemName, AttributeTypeSetter)
+
+        #relationships  
+                
         #generalization
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
@@ -140,28 +170,32 @@ class Analyzer:
                     dmo.defineRelation(relationId, str(elemId), str(elemRelation.get('general')) , str("Generalization"))
 
 
-        #association/aggregation
+        #other relationship
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Association":
                 relationId = element.get(self.xmiPrefixAppender('id', namespaces["xmi_namespace"]))
                 ownedEnds=element.findall('ownedEnd')
+                start=ownedEnds[1].get('type')
+                end=ownedEnds[0].get('type')
+                
+                #aggregation
                 if ownedEnds[1].get('aggregation')=="shared":                 
-                    dmo.defineRelation(relationId, str(ownedEnds[1].get('type')), str(ownedEnds[0].get('type')) , str("Aggregation"))
-                    print(relationId, str(ownedEnds[1].get('type')), str(ownedEnds[0].get('type')) , str("Aggregation"))
+                    dmo.defineRelation(relationId, str(start), str(end) , str("Aggregation"))
+
+                #composition
+                elif ownedEnds[1].get('aggregation')=="composite":
+                    dmo.defineRelation(relationId, str(start), str(end) , str("Composition"))
+
+                #association
                 else:
                     dmo.defineRelation(relationId, str(ownedEnds[1].get('type')), str(ownedEnds[0].get('type')) , str("Association"))
-                    print(relationId, str(ownedEnds[1].get('type')), str(ownedEnds[0].get('type')) , str("Association"))
 
-
-
-   
-
+  
         json_file = open("generated_code/default/"+output_filename+".json", "w")
         json_file.write(dmo.toJson())
         json_file.close()
 
         return dmo.toJson()
-
 
 
 #if __name__=='__main__':
