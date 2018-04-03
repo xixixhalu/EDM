@@ -18,6 +18,8 @@ function is_array(x) {
 
 var DBAdapter = {};
 
+$FUNC Adapter
+
 // CRUD: createOne.
 // "collection" must be specified by the first parameter.
 // "data" must be specified as an object passed in by the second parameter.
@@ -180,6 +182,8 @@ function ajaxCall(operation, body, successCB, errorCB) {
         }
     });
 }
+
+$ENDFUNC
 
 
 

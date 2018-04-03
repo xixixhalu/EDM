@@ -112,8 +112,11 @@ def generate_adapter(language, server_ip, port, dm_name):
             "port": port}
     content = replace_words(adapter_template, data)
 
+    content, func_info_list = extract_funcs_info(content, [])
+
     with open(output_location, "w") as output_file:
         output_file.write(content)
+    return func_info_list
 
 
 """ This method creates the server js file"""
@@ -138,14 +141,16 @@ def generate_all(db_name):
         display_ip, server_ip, port = get_server_info()
 
         # create files for each language
-        model_display_data = {}
+        model_display_data = {"Adapter":{}}
+        temp_display_data = {}
         for language in TEMPLATE_LANGUAGES:
             output_path = template_output_path(db_name, language)
             if not os.path.isdir(output_path):
                 os.makedirs(output_path)
-
-            generate_adapter(language, str(server_ip), str(port), str(db_name))
-            model_display_data[language] = generate_model(language, json_data, str(db_name))
+            model_display_data["Adapter"][language] = {}
+            model_display_data["Adapter"][language]["func_info_list"] = generate_adapter(language, str(server_ip), str(port), str(db_name))
+            model_display_data["Adapter"][language]["attribute_list"] = []
+            temp_display_data[language] = generate_model(language, json_data, str(db_name))
 
         # TODO need update
         generate_server("Server", str(server_ip), str(port), str(db_name))
@@ -153,14 +158,16 @@ def generate_all(db_name):
         # structure adjustment for model_display_data
         # temporary solution, may change later
         # [language][model] ==> [model][language]
-        temp_structure = {}
-        for language in model_display_data:
-            for model in model_display_data[language]:
-                temp_structure.setdefault(model, {})[language] = {
-                    "func_info_list": model_display_data[language][model]["func_info_list"]}
 
-        for model in temp_structure:
-            temp_structure[model]["attribute_list"] = model_display_data["JavaScript"][model]["attribute_list"]
-        model_display_data = temp_structure
+        for language in temp_display_data:
+            for model in temp_display_data[language]:
+                model_display_data.setdefault(model, {})[language] = {
+                    "func_info_list": temp_display_data[language][model]["func_info_list"],
+                    "attribute_list": temp_display_data[language][model]["attribute_list"]
+                }
 
+        '''for model in model_display_data:
+            if model != "Adapter":
+                model_display_data[model]["attribute_list"] = temp_display_data["JavaScript"][model]["attribute_list"]
+'''
         return display_ip + ":" + str(port), model_display_data

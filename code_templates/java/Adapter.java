@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class Adapter {
     private static String serverIP = "$server_ip";
     private static String port = "$port";
@@ -30,6 +31,8 @@ public class Adapter {
     static {
         httpAsyncClient.start();
     }
+
+$FUNC Adapter
 
     private static List<NameValuePair> basicDataArgs(JsonObject data) {
         if(data == null)
@@ -163,5 +166,7 @@ public class Adapter {
         });
 
     }
+
+$ENDFUNC
 
 }
