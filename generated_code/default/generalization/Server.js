@@ -3,7 +3,7 @@
 /*
  Configure the variables below
  */
-var server_ip = "0.0.0.0";
+var server_ip = "127.0.0.1";
 var dbname = "generalization";
 var server_port = "2000";
 //declare what is the primary key for the table specified above.

@@ -105,3 +105,6 @@ def generate_all(db_name):
         generate_adapter("Adapter", str(server_ip), str(port), str(db_name))
         generate_server("Server", str(server_ip), str(port), str(db_name))
         return element_names, display_ip + ":" +str(port)
+
+
+

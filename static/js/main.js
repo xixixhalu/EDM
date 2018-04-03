@@ -12,28 +12,29 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
     $scope.isView = function (classInfo, lanInfo) {
         return classInfo+"_"+lanInfo;
     };
-    $http({
-        method: 'GET',
-        url: 'getData.php'
-    }).then(function(data) {
-        $scope.contents= data.data;
-        myArray = angular.fromJson($scope.contents);
+    //$http({
+    //    method: 'GET',
+    //    url: 'getData.php'
+    //}).then(function(data) {
+    //    $scope.contents= data.data;
+		//$scope.contents = model_display_data;
+        myArray = model_display_data;//angular.fromJson($scope.contents);
         $scope.details = myArray;
-        // console.log($scope.details);
+        console.log($scope.details);
         Object.keys(myArray).forEach(function(k){
             $scope.languages = Object.keys(myArray[k]);
-            $scope.languages.forEach(function(lan){
+            /*$scope.languages.forEach(function(lan){
                 if (lan === "attribute_list")
                     return;
             });
-            $scope.languages.splice($scope.languages.indexOf("attribute_list"), 1);
+            $scope.languages.splice($scope.languages.indexOf("attribute_list"), 1);*/
         });
 
         angular.forEach(myArray, function(value, key){
             $scope.functions = [];
             $scope.classes.push(key);
         });
-    });
+    //});
     $scope.generateView = function (data) {
         result = [];
         result = data.split(/\r?\n/);
