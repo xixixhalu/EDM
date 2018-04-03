@@ -1,0 +1,1552 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.0" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:thecustomprofile="http://www.sparxsystems.com/profiles/thecustomprofile/1.0">
+	<xmi:Documentation exporter="Enterprise Architect" exporterVersion="6.5"/>
+	<uml:Model xmi:type="uml:Model" name="EA_Model">
+		<ownedMember xmi:type="uml:Package" xmi:id="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" name="BadDriver">
+			<ownedComment xmi:type="uml:Comment" xmi:id="EAID_89C633FE_1929_4b6d_AE5F_5A20621E2A91" body="&lt;b&gt;&lt;i&gt;Step Three&lt;/i&gt;&lt;/b&gt;&#xA;&lt;b&gt;&#xA;&lt;/b&gt;&lt;b&gt;Report Consumer&lt;/b&gt; (e.g. insurance company) queries by license plate number and can see &lt;b&gt;Reviewed Bad Driver Reports&lt;/b&gt;">
+				<annotatedElement xmi:idref="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978"/>
+			</ownedComment>
+			<ownedComment xmi:type="uml:Comment" xmi:id="EAID_730E65F3_A5B5_40e7_B61C_BEA4C4173526" body="&lt;b&gt;&lt;i&gt;Step One&lt;/i&gt;&lt;/b&gt;&#xA;&lt;b&gt;&#xA;&lt;/b&gt;&lt;b&gt;Moblle App&lt;/b&gt; uploads &lt;b&gt;Video &lt;/b&gt;and &lt;b&gt;Video Metadata&lt;/b&gt; (location, timestamp, etc) to the &lt;b&gt;Report Poster's&lt;/b&gt; &lt;b&gt;Account&lt;/b&gt;.  &lt;b&gt;Report Poster&lt;/b&gt; adds &lt;b&gt;Report Description&lt;/b&gt; and posts the &lt;b&gt;Unreviewed Bad Driver Report&lt;/b&gt; to a &lt;b&gt;Review Queue&lt;/b&gt;">
+				<annotatedElement xmi:idref="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978"/>
+			</ownedComment>
+			<ownedComment xmi:type="uml:Comment" xmi:id="EAID_2350475B_00F0_4c97_B2EB_74AB98D4F57C" body="&lt;b&gt;&lt;i&gt;Step Two&lt;/i&gt;&lt;/b&gt;&#xA;&lt;b&gt;&#xA;&lt;/b&gt;&lt;b&gt;Report Reviewer&lt;/b&gt; reviews &lt;b&gt;Unreviewed Bad Driver Reports&lt;/b&gt; from the &lt;b&gt;Review Queue.&lt;/b&gt; When a &lt;b&gt;Bad Driver Report&lt;/b&gt; is verified by at least one independent &lt;b&gt;Report Reviewer,&lt;/b&gt; it is added to the &lt;b&gt;Bad Driver Database.&lt;/b&gt;  It remains in the &lt;b&gt;Review Queue&lt;/b&gt; until it has been verified by 3 independent &lt;b&gt;Report Reviewers&lt;/b&gt;.">
+				<annotatedElement xmi:idref="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978"/>
+			</ownedComment>
+			<ownedElement xmi:type="uml:Dependency" xmi:id="EAID_36DE086B_5127_432f_A344_658359E6726D" name="uploads" supplier="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" client="EAID_68332A87_36DB_4a5c_89F2_421A4049F796"/>
+			<ownedElement xmi:type="uml:Dependency" xmi:id="EAID_B0CEDCBB_92DD_4ee0_A884_285D5862B9E8" name="queries add views reports" supplier="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30" client="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F"/>
+			<ownedElement xmi:type="uml:Dependency" xmi:id="EAID_77DE661E_A08E_44c5_A06F_B4D9FDCD2218" name="creates" supplier="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" client="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922"/>
+			<ownedElement xmi:type="uml:Dependency" xmi:id="EAID_47BDB29E_1926_40ca_928B_E0CD05BC7E07" name="reviews reports in queue" supplier="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982" client="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F"/>
+			<ownedElement xmi:type="uml:Realization" xmi:id="EAID_BF712638_165B_47ee_B7CF_75C877C5DDFC" supplier="EAID_B650764A_0114_443c_97F8_39597ECDE7F7" client="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD"/>
+			<ownedElement xmi:type="uml:Realization" xmi:id="EAID_846942F9_66DD_4c56_A3B5_21DED8EF0610" supplier="EAID_B650764A_0114_443c_97F8_39597ECDE7F7" client="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91"/>
+			<ownedMember xmi:type="uml:Actor" xmi:id="EAID_68332A87_36DB_4a5c_89F2_421A4049F796" name="Mobile App"/>
+			<ownedMember xmi:type="uml:Actor" xmi:id="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F" name="Report Consumer"/>
+			<ownedMember xmi:type="uml:Actor" xmi:id="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922" name="Report Poster"/>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4">
+				<memberEnd xmi:idref="EAID_dst4740A6_ACBE_4ea5_BE97_2636226043D4"/>
+				<memberEnd xmi:idref="EAID_src4740A6_ACBE_4ea5_BE97_2636226043D4"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src4740A6_ACBE_4ea5_BE97_2636226043D4" association="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4" aggregation="shared">
+					<type xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Actor" xmi:id="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F" name="Report Reviewer"/>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B" name="Account">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_73891D79_E129_4d8e_92A8_1DA03F2E715D" name="phoneNumber" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000001_E129_4d8e_92A8_1DA03F2E715D" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000002_E129_4d8e_92A8_1DA03F2E715D" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_45C5E6E0_E675_4451_89D1_46676A7D4CCD" name="userName" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000003_E675_4451_89D1_46676A7D4CCD" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000004_E675_4451_89D1_46676A7D4CCD" value="1"/>
+					<type xmi:idref="EAJava_char"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_CFA79DD3_637B_4773_87A3_D90CFB66A065" name="password" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000005_637B_4773_87A3_D90CFB66A065" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000006_637B_4773_87A3_D90CFB66A065" value="1"/>
+					<type xmi:idref="EAJava_char"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_F1828228_DEF4_4a3e_84A9_151D1BC66C4B" name="accountType" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000007_DEF4_4a3e_84A9_151D1BC66C4B" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000008_DEF4_4a3e_84A9_151D1BC66C4B" value="1"/>
+					<type xmi:idref="EAJava_char"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_2C44ED42_D3EA_4022_816E_908A7BEE3D3E" name="fullName" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000009_D3EA_4022_816E_908A7BEE3D3E" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000010_D3EA_4022_816E_908A7BEE3D3E" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst4740A6_ACBE_4ea5_BE97_2636226043D4" association="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4">
+					<type xmi:idref="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922"/>
+				</ownedAttribute>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C">
+				<memberEnd xmi:idref="EAID_dst59B7D5_561D_48bc_9D64_8FB8B1C4B84C"/>
+				<memberEnd xmi:idref="EAID_src59B7D5_561D_48bc_9D64_8FB8B1C4B84C"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src59B7D5_561D_48bc_9D64_8FB8B1C4B84C" association="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C" aggregation="shared">
+					<type xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4">
+				<memberEnd xmi:idref="EAID_dst0CF4FC_D38E_4ae3_B929_4C47EDC36FE4"/>
+				<memberEnd xmi:idref="EAID_src0CF4FC_D38E_4ae3_B929_4C47EDC36FE4"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src0CF4FC_D38E_4ae3_B929_4C47EDC36FE4" association="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4" aggregation="shared">
+					<type xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30" name="Bad Driver Database"/>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C">
+				<memberEnd xmi:idref="EAID_dst322E12_2278_4ba7_B8D0_0702D20F355C"/>
+				<memberEnd xmi:idref="EAID_src322E12_2278_4ba7_B8D0_0702D20F355C"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src322E12_2278_4ba7_B8D0_0702D20F355C" association="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C" aggregation="shared">
+					<type xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" name="Bad Driver Report">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_671B65AF_494A_4c54_990D_7C4C7EA7DA3C" name="licensePlateNumber" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000011_494A_4c54_990D_7C4C7EA7DA3C" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000012_494A_4c54_990D_7C4C7EA7DA3C" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_5AD68C17_3334_4350_9F10_849621B82718" name="numApprovedReviews" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000013_3334_4350_9F10_849621B82718" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000014_3334_4350_9F10_849621B82718" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_050DFC8E_B414_4850_AD23_F116AF6C823A" name="videoClip" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000015_B414_4850_AD23_F116AF6C823A" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000016_B414_4850_AD23_F116AF6C823A" value="1"/>
+					<type xmi:idref="EAJava_Video"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_38EDB0A5_98BE_47f4_9A28_901CD21B6770" name="numRejectedReviews" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000017_98BE_47f4_9A28_901CD21B6770" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000018_98BE_47f4_9A28_901CD21B6770" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_1533B404_7B4F_4816_94DB_8C8D61A40598" name="reportId" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000019_7B4F_4816_94DB_8C8D61A40598" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000020_7B4F_4816_94DB_8C8D61A40598" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_6C14894A_EF56_46a2_8E5F_5C072BF915B3" name="aggregateReviewScore" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000021_EF56_46a2_8E5F_5C072BF915B3" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000022_EF56_46a2_8E5F_5C072BF915B3" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_058F715A_F8B5_4824_B581_BE6D661ED8D0" name="incidentDescription" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000023_F8B5_4824_B581_BE6D661ED8D0" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000024_F8B5_4824_B581_BE6D661ED8D0" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_94F68C63_C57B_492a_A7B5_7C2FA061AC1D" name="licenseState" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000025_C57B_492a_A7B5_7C2FA061AC1D" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000026_C57B_492a_A7B5_7C2FA061AC1D" value="1"/>
+					<type xmi:idref="EAJava_char"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_1BC35071_E2E9_43d9_882B_36653EB34B3B" name="severity" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000027_E2E9_43d9_882B_36653EB34B3B" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000028_E2E9_43d9_882B_36653EB34B3B" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_63186FEC_9E2F_474a_B812_7C9EE5111558" name="location" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000029_9E2F_474a_B812_7C9EE5111558" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000030_9E2F_474a_B812_7C9EE5111558" value="1"/>
+					<type xmi:idref="EAJava_lat-long"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_39EBA0C5_6748_437a_8597_8569751677C9" name="postingAccount" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000031_6748_437a_8597_8569751677C9" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000032_6748_437a_8597_8569751677C9" value="1"/>
+					<type xmi:idref="EAJava_Account"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_06E6E519_E11D_43b8_BCD5_D524F9349361" name="vehicleDescription" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000033_E11D_43b8_BCD5_D524F9349361" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000034_E11D_43b8_BCD5_D524F9349361" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_973A716C_DD4B_47a2_9617_7BBE103FFEE9" name="driverDescription" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000035_DD4B_47a2_9617_7BBE103FFEE9" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000036_DD4B_47a2_9617_7BBE103FFEE9" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_D6A11C28_A9D0_4afb_9F15_2A317A8160F6" name="date" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000037_A9D0_4afb_9F15_2A317A8160F6" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000038_A9D0_4afb_9F15_2A317A8160F6" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_763FF3AD_51B8_4c4e_9EB5_C15B0B38F19C" name="time" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000039_51B8_4c4e_9EB5_C15B0B38F19C" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000040_51B8_4c4e_9EB5_C15B0B38F19C" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_CE2FA7EC_7834_4d5d_BEFF_24DBFF8EA228" name="reporterName" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000041_7834_4d5d_BEFF_24DBFF8EA228" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000042_7834_4d5d_BEFF_24DBFF8EA228" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst322E12_2278_4ba7_B8D0_0702D20F355C" association="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C">
+					<type xmi:idref="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst59B7D5_561D_48bc_9D64_8FB8B1C4B84C" association="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C">
+					<type xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst5864CD_20D9_461e_BDF6_FA2A8D0B5129" association="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129">
+					<type xmi:idref="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982"/>
+				</ownedAttribute>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129">
+				<memberEnd xmi:idref="EAID_dst5864CD_20D9_461e_BDF6_FA2A8D0B5129"/>
+				<memberEnd xmi:idref="EAID_src5864CD_20D9_461e_BDF6_FA2A8D0B5129"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src5864CD_20D9_461e_BDF6_FA2A8D0B5129" association="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129" aggregation="shared">
+					<type xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2">
+				<memberEnd xmi:idref="EAID_dst43D217_B63C_4c57_8E1F_937389F306A2"/>
+				<memberEnd xmi:idref="EAID_src43D217_B63C_4c57_8E1F_937389F306A2"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src43D217_B63C_4c57_8E1F_937389F306A2" association="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2" aggregation="shared">
+					<type xmi:idref="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Association" xmi:id="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC">
+				<memberEnd xmi:idref="EAID_dst40A6F9_98BE_4a47_B009_6135B8ED72BC"/>
+				<memberEnd xmi:idref="EAID_src40A6F9_98BE_4a47_B009_6135B8ED72BC"/>
+				<ownedEnd xmi:type="uml:Property" xmi:id="EAID_src40A6F9_98BE_4a47_B009_6135B8ED72BC" association="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC" aggregation="shared">
+					<type xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91"/>
+				</ownedEnd>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" name="Review">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_D2FF3C07_DF6F_4d25_9EED_F2CCB908FE68" name="isApproved" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000043_DF6F_4d25_9EED_F2CCB908FE68" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000044_DF6F_4d25_9EED_F2CCB908FE68" value="1"/>
+					<type xmi:idref="EAJava_boolean"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_A2B0218A_71DB_48b6_98FD_743D7272FAB4" name="reviewScore" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000045_71DB_48b6_98FD_743D7272FAB4" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000046_71DB_48b6_98FD_743D7272FAB4" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_FA609633_D5AA_435f_8083_E6C8A66F4302" name="reviewComments" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000047_D5AA_435f_8083_E6C8A66F4302" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000048_D5AA_435f_8083_E6C8A66F4302" value="1"/>
+					<type xmi:idref="EAJava_string"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_B3202C10_3691_4673_965C_2AAF0E9EE66C" name="reviewConfidence" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000049_3691_4673_965C_2AAF0E9EE66C" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000050_3691_4673_965C_2AAF0E9EE66C" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst43D217_B63C_4c57_8E1F_937389F306A2" association="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2">
+					<type xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+				</ownedAttribute>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982" name="Review Queue">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_BEBCCAC7_98E0_4d09_B3EE_90750A1CE4AA" name="reportIDs" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000051_98E0_4d09_B3EE_90750A1CE4AA" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000052_98E0_4d09_B3EE_90750A1CE4AA" value="1"/>
+					<type xmi:idref="EAJava_array"/>
+				</ownedAttribute>
+				<ownedOperation xmi:id="EAID_4E6104F0_7049_4fc7_8EA3_9B66929813E6" name="getNextReport"/>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" name="Video">
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_B05CACDE_18BA_489b_85BA_66F88CFB8D1A" name="cloudLocation" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000053_18BA_489b_85BA_66F88CFB8D1A" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000054_18BA_489b_85BA_66F88CFB8D1A" value="1"/>
+					<type xmi:idref="EAJava_filePath"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_26DC9B58_86D3_4030_BC85_A23A45D40641" name="duration" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000055_86D3_4030_BC85_A23A45D40641" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000056_86D3_4030_BC85_A23A45D40641" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_8FA32D64_32C9_4076_848A_8DDCA511733D" name="speedInMPH" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000057_32C9_4076_848A_8DDCA511733D" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000058_32C9_4076_848A_8DDCA511733D" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_7440C5D1_9F81_458f_831A_7977E44A40CB" name="timeOfRecording" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000059_9F81_458f_831A_7977E44A40CB" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000060_9F81_458f_831A_7977E44A40CB" value="1"/>
+					<type xmi:idref="EAJava_time_Stamp"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_E9E768D0_9AC0_4291_B276_1E0D2981E0A2" name="sizeInMB" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000061_9AC0_4291_B276_1E0D2981E0A2" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000062_9AC0_4291_B276_1E0D2981E0A2" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_086BAE42_A248_4196_9705_47B896E456C6" name="locationRecorded" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000063_A248_4196_9705_47B896E456C6" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000064_A248_4196_9705_47B896E456C6" value="1"/>
+					<type xmi:idref="EAJava_lat-long"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_40E2743C_FE10_4605_830C_8CF76E4A50F0" name="isImmediateHazard" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000065_FE10_4605_830C_8CF76E4A50F0" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000066_FE10_4605_830C_8CF76E4A50F0" value="1"/>
+					<type xmi:idref="EAJava_boolean"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_CA3C6EE8_0DA0_4684_A7AE_66281931C6DA" name="framesPerSecond" visibility="private">
+					<lowerValue xmi:type="uml:LiteralInteger" xmi:id="EAID_LI000067_0DA0_4684_A7AE_66281931C6DA" value="1"/>
+					<upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="EAID_LI000068_0DA0_4684_A7AE_66281931C6DA" value="1"/>
+					<type xmi:idref="EAJava_int"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst0CF4FC_D38E_4ae3_B929_4C47EDC36FE4" association="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4">
+					<type xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+				</ownedAttribute>
+				<ownedAttribute xmi:type="uml:Property" xmi:id="EAID_dst40A6F9_98BE_4a47_B009_6135B8ED72BC" association="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC">
+					<type xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+				</ownedAttribute>
+			</ownedMember>
+			<ownedMember xmi:type="uml:Class" xmi:id="EAID_B650764A_0114_443c_97F8_39597ECDE7F7" name="Rejection Criteria"/>
+		</ownedMember>
+		<profileApplication xmi:type="uml:ProfileApplication" xmi:id="profileap_thecustomprofile">
+			<appliedProfile xmi:type="uml:Profile" href="http://www.sparxsystems.com/profiles/thecustomprofile/1.0#thecustomprofile"/>
+		</profileApplication>
+	</uml:Model>
+	<xmi:Extension extender="Enterprise Architect" extenderID="6.5">
+		<elements>
+			<element xmi:idref="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" xmi:type="uml:Package" name="BadDriver" scope="public">
+				<model package2="EAID_C70B3838_5769_4aed_8BAB_BB59E0AB6978" package="EAPK_049DF1A4_B26A_47c9_8ABD_EC8F7D380A56" tpos="4" ea_localid="4" ea_eleType="package"/>
+				<properties isSpecification="false" sType="Package" nType="0" scope="public"/>
+				<project phase="1.0" created="2018-03-26 19:50:56" modified="2018-03-26 19:51:11" complexity="1" status="Proposed"/>
+				<code/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="Model"/>
+				<packageproperties tpos="4"/>
+				<paths/>
+				<times created="2018-03-26 19:50:56" modified="2018-03-26 19:51:11" lastloaddate="2018-03-26 19:50:56" lastsavedate="2018-03-26 19:50:56"/>
+				<flags iscontrolled="FALSE" isprotected="FALSE" batchsave="0" batchload="0" usedtd="FALSE" logxml="FALSE" packageFlags="isModel=1;VICON=3;"/>
+			</element>
+			<element xmi:idref="EAID_68332A87_36DB_4a5c_89F2_421A4049F796" xmi:type="uml:Actor" name="Mobile App" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="19" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 19:54:41" modified="2018-03-26 19:54:46" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<links>
+					<Dependency xmi:id="EAID_36DE086B_5127_432f_A344_658359E6726D" start="EAID_68332A87_36DB_4a5c_89F2_421A4049F796" end="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F" xmi:type="uml:Actor" name="Report Consumer" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="30" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 21:00:05" modified="2018-03-26 21:00:19" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<links>
+					<Dependency xmi:id="EAID_B0CEDCBB_92DD_4ee0_A884_285D5862B9E8" start="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F" end="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922" xmi:type="uml:Actor" name="Report Poster" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="17" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 19:54:07" modified="2018-03-26 19:54:17" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<links>
+					<Dependency xmi:id="EAID_77DE661E_A08E_44c5_A06F_B4D9FDCD2218" start="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922" end="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+					<Aggregation xmi:id="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4" start="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B" end="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F" xmi:type="uml:Actor" name="Report Reviewer" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="18" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Actor" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 19:54:26" modified="2018-03-26 19:54:33" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<links>
+					<Dependency xmi:id="EAID_47BDB29E_1926_40ca_928B_E0CD05BC7E07" start="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F" end="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B" xmi:type="uml:Class" name="Account" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="20" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 19:55:09" modified="2018-03-26 19:55:13" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<attributes>
+					<attribute xmi:idref="EAID_73891D79_E129_4d8e_92A8_1DA03F2E715D" name="phoneNumber" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="1" ea_guid="{73891D79-E129-4d8e-92A8-1DA03F2E715D}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_45C5E6E0_E675_4451_89D1_46676A7D4CCD" name="userName" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="2" ea_guid="{45C5E6E0-E675-4451-89D1-46676A7D4CCD}"/>
+						<properties type="char" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="1"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_CFA79DD3_637B_4773_87A3_D90CFB66A065" name="password" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="3" ea_guid="{CFA79DD3-637B-4773-87A3-D90CFB66A065}"/>
+						<properties type="char" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="2"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_F1828228_DEF4_4a3e_84A9_151D1BC66C4B" name="accountType" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="4" ea_guid="{F1828228-DEF4-4a3e-84A9-151D1BC66C4B}"/>
+						<properties type="char" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="3"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_2C44ED42_D3EA_4022_816E_908A7BEE3D3E" name="fullName" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="5" ea_guid="{2C44ED42-D3EA-4022-816E-908A7BEE3D3E}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="4"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<links>
+					<Aggregation xmi:id="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4" start="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B" end="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922"/>
+					<Aggregation xmi:id="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C" start="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" end="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+					<Aggregation xmi:id="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4" start="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" end="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30" xmi:type="uml:Class" name="Bad Driver Database" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="25" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:24:47" modified="2018-03-26 20:24:57" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<links>
+					<Aggregation xmi:id="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C" start="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" end="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30"/>
+					<Dependency xmi:id="EAID_B0CEDCBB_92DD_4ee0_A884_285D5862B9E8" start="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F" end="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" xmi:type="uml:Class" name="Bad Driver Report" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="22" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 19:58:22" modified="2018-03-26 19:58:31" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<attributes>
+					<attribute xmi:idref="EAID_671B65AF_494A_4c54_990D_7C4C7EA7DA3C" name="licensePlateNumber" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="7" ea_guid="{671B65AF-494A-4c54-990D-7C4C7EA7DA3C}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_5AD68C17_3334_4350_9F10_849621B82718" name="numApprovedReviews" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="8" ea_guid="{5AD68C17-3334-4350-9F10-849621B82718}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="1"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_050DFC8E_B414_4850_AD23_F116AF6C823A" name="videoClip" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="9" ea_guid="{050DFC8E-B414-4850-AD23-F116AF6C823A}"/>
+						<properties type="Video" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="2"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_38EDB0A5_98BE_47f4_9A28_901CD21B6770" name="numRejectedReviews" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="10" ea_guid="{38EDB0A5-98BE-47f4-9A28-901CD21B6770}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="3"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_1533B404_7B4F_4816_94DB_8C8D61A40598" name="reportId" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="11" ea_guid="{1533B404-7B4F-4816-94DB-8C8D61A40598}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="4"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_6C14894A_EF56_46a2_8E5F_5C072BF915B3" name="aggregateReviewScore" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="12" ea_guid="{6C14894A-EF56-46a2-8E5F-5C072BF915B3}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="5"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_058F715A_F8B5_4824_B581_BE6D661ED8D0" name="incidentDescription" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="13" ea_guid="{058F715A-F8B5-4824-B581-BE6D661ED8D0}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="6"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_94F68C63_C57B_492a_A7B5_7C2FA061AC1D" name="licenseState" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="14" ea_guid="{94F68C63-C57B-492a-A7B5-7C2FA061AC1D}"/>
+						<properties type="char" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="7"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_1BC35071_E2E9_43d9_882B_36653EB34B3B" name="severity" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="15" ea_guid="{1BC35071-E2E9-43d9-882B-36653EB34B3B}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="8"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_63186FEC_9E2F_474a_B812_7C9EE5111558" name="location" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="16" ea_guid="{63186FEC-9E2F-474a-B812-7C9EE5111558}"/>
+						<properties type="lat-long" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="9"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_39EBA0C5_6748_437a_8597_8569751677C9" name="postingAccount" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="17" ea_guid="{39EBA0C5-6748-437a-8597-8569751677C9}"/>
+						<properties type="Account" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="10"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_06E6E519_E11D_43b8_BCD5_D524F9349361" name="vehicleDescription" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="18" ea_guid="{06E6E519-E11D-43b8-BCD5-D524F9349361}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="11"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_973A716C_DD4B_47a2_9617_7BBE103FFEE9" name="driverDescription" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="19" ea_guid="{973A716C-DD4B-47a2-9617-7BBE103FFEE9}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="12"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_D6A11C28_A9D0_4afb_9F15_2A317A8160F6" name="date" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="20" ea_guid="{D6A11C28-A9D0-4afb-9F15-2A317A8160F6}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="13"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_763FF3AD_51B8_4c4e_9EB5_C15B0B38F19C" name="time" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="21" ea_guid="{763FF3AD-51B8-4c4e-9EB5-C15B0B38F19C}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="14"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_CE2FA7EC_7834_4d5d_BEFF_24DBFF8EA228" name="reporterName" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="22" ea_guid="{CE2FA7EC-7834-4d5d-BEFF-24DBFF8EA228}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="15"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<links>
+					<Aggregation xmi:id="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C" start="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" end="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30"/>
+					<Aggregation xmi:id="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C" start="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" end="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+					<Aggregation xmi:id="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129" start="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" end="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982"/>
+					<Aggregation xmi:id="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2" start="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" end="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+					<Dependency xmi:id="EAID_77DE661E_A08E_44c5_A06F_B4D9FDCD2218" start="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922" end="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+					<Aggregation xmi:id="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC" start="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" end="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" xmi:type="uml:Class" name="Review" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="24" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:20:25" modified="2018-03-26 20:20:30" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<attributes>
+					<attribute xmi:idref="EAID_D2FF3C07_DF6F_4d25_9EED_F2CCB908FE68" name="isApproved" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="31" ea_guid="{D2FF3C07-DF6F-4d25-9EED-F2CCB908FE68}"/>
+						<properties type="boolean" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_A2B0218A_71DB_48b6_98FD_743D7272FAB4" name="reviewScore" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="32" ea_guid="{A2B0218A-71DB-48b6-98FD-743D7272FAB4}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="1"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_FA609633_D5AA_435f_8083_E6C8A66F4302" name="reviewComments" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="33" ea_guid="{FA609633-D5AA-435f-8083-E6C8A66F4302}"/>
+						<properties type="string" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="2"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_B3202C10_3691_4673_965C_2AAF0E9EE66C" name="reviewConfidence" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="34" ea_guid="{B3202C10-3691-4673-965C-2AAF0E9EE66C}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="3"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<links>
+					<Aggregation xmi:id="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2" start="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" end="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+					<Realisation xmi:id="EAID_BF712638_165B_47ee_B7CF_75C877C5DDFC" start="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" end="EAID_B650764A_0114_443c_97F8_39597ECDE7F7"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982" xmi:type="uml:Class" name="Review Queue" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="21" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 19:56:32" modified="2018-03-26 19:56:40" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<attributes>
+					<attribute xmi:idref="EAID_BEBCCAC7_98E0_4d09_B3EE_90750A1CE4AA" name="reportIDs" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="6" ea_guid="{BEBCCAC7-98E0-4d09-B3EE-90750A1CE4AA}"/>
+						<properties type="array" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<operations>
+					<operation xmi:idref="EAID_4E6104F0_7049_4fc7_8EA3_9B66929813E6" name="getNextReport" scope="Public">
+						<properties position="0"/>
+						<stereotype/>
+						<model ea_guid="{4E6104F0-7049-4fc7-8EA3-9B66929813E6}" ea_localid="1"/>
+						<type const="false" static="false" isAbstract="false" synchronised="0" concurrency="Sequential" pure="0" isQuery="false"/>
+						<behaviour/>
+						<code/>
+						<style/>
+						<styleex/>
+						<documentation/>
+						<tags/>
+						<xrefs/>
+					</operation>
+				</operations>
+				<links>
+					<Dependency xmi:id="EAID_47BDB29E_1926_40ca_928B_E0CD05BC7E07" start="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F" end="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982"/>
+					<Aggregation xmi:id="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129" start="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" end="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" xmi:type="uml:Class" name="Video" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="23" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Class" nType="0" scope="public" isRoot="false" isLeaf="false" isAbstract="false" isActive="false"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:11:46" modified="2018-03-26 20:11:58" complexity="1" status="Proposed"/>
+				<code product_name="Java" gentype="Java"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<attributes>
+					<attribute xmi:idref="EAID_B05CACDE_18BA_489b_85BA_66F88CFB8D1A" name="cloudLocation" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="23" ea_guid="{B05CACDE-18BA-489b-85BA-66F88CFB8D1A}"/>
+						<properties type="filePath" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="0"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_26DC9B58_86D3_4030_BC85_A23A45D40641" name="duration" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="24" ea_guid="{26DC9B58-86D3-4030-BC85-A23A45D40641}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="1"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_8FA32D64_32C9_4076_848A_8DDCA511733D" name="speedInMPH" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="25" ea_guid="{8FA32D64-32C9-4076-848A-8DDCA511733D}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="2"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_7440C5D1_9F81_458f_831A_7977E44A40CB" name="timeOfRecording" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="26" ea_guid="{7440C5D1-9F81-458f-831A-7977E44A40CB}"/>
+						<properties type="time Stamp" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="3"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_E9E768D0_9AC0_4291_B276_1E0D2981E0A2" name="sizeInMB" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="27" ea_guid="{E9E768D0-9AC0-4291-B276-1E0D2981E0A2}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="4"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_086BAE42_A248_4196_9705_47B896E456C6" name="locationRecorded" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="28" ea_guid="{086BAE42-A248-4196-9705-47B896E456C6}"/>
+						<properties type="lat-long" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="5"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_40E2743C_FE10_4605_830C_8CF76E4A50F0" name="isImmediateHazard" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="29" ea_guid="{40E2743C-FE10-4605-830C-8CF76E4A50F0}"/>
+						<properties type="boolean" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="6"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+					<attribute xmi:idref="EAID_CA3C6EE8_0DA0_4684_A7AE_66281931C6DA" name="framesPerSecond" scope="Private">
+						<initial/>
+						<documentation/>
+						<model ea_localid="30" ea_guid="{CA3C6EE8-0DA0-4684-A7AE-66281931C6DA}"/>
+						<properties type="int" collection="false" duplicates="0" changeability="changeable"/>
+						<coords ordered="0"/>
+						<containment containment="Not Specified" position="7"/>
+						<stereotype/>
+						<bounds lower="1" upper="1"/>
+						<options/>
+						<style/>
+						<styleex value="volatile=0;"/>
+						<tags/>
+						<xrefs/>
+					</attribute>
+				</attributes>
+				<links>
+					<Realisation xmi:id="EAID_846942F9_66DD_4c56_A3B5_21DED8EF0610" start="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" end="EAID_B650764A_0114_443c_97F8_39597ECDE7F7"/>
+					<Aggregation xmi:id="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4" start="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" end="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B"/>
+					<Aggregation xmi:id="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC" start="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" end="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A"/>
+					<Dependency xmi:id="EAID_36DE086B_5127_432f_A344_658359E6726D" start="EAID_68332A87_36DB_4a5c_89F2_421A4049F796" end="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_B650764A_0114_443c_97F8_39597ECDE7F7" xmi:type="uml:Requirement" name="Rejection Criteria" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="26" ea_eleType="element"/>
+				<properties isSpecification="false" sType="Requirement" nType="0" scope="public" stereotype="Functional"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:25:31" modified="2018-03-26 20:27:38" complexity="1" status="Proposed" difficulty="Medium" priority="Medium"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs value="$XREFPROP=$XID={87396ECD-EE80-4732-8691-31CEDD818B68}$XID;$NAM=Stereotypes$NAM;$TYP=element property$TYP;$VIS=Public$VIS;$PAR=0$PAR;$DES=@STEREO;Name=Functional;GUID={A87DC5CF-C962-4e05-B486-E1BE9FAF7E69};@ENDSTEREO;$DES;$CLT={B650764A-0114-443c-97F8-39597ECDE7F7}$CLT;$SUP=&lt;none&gt;$SUP;$ENDXREF;"/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+				<links>
+					<Realisation xmi:id="EAID_846942F9_66DD_4c56_A3B5_21DED8EF0610" start="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" end="EAID_B650764A_0114_443c_97F8_39597ECDE7F7"/>
+					<Realisation xmi:id="EAID_BF712638_165B_47ee_B7CF_75C877C5DDFC" start="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" end="EAID_B650764A_0114_443c_97F8_39597ECDE7F7"/>
+				</links>
+			</element>
+			<element xmi:idref="EAID_2350475B_00F0_4c97_B2EB_74AB98D4F57C" xmi:type="uml:Note" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="28" ea_eleType="element"/>
+				<properties documentation="&lt;b&gt;&lt;i&gt;Step Two&lt;/i&gt;&lt;/b&gt;&#xA;&lt;b&gt;&#xA;&lt;/b&gt;&lt;b&gt;Report Reviewer&lt;/b&gt; reviews &lt;b&gt;Unreviewed Bad Driver Reports&lt;/b&gt; from the &lt;b&gt;Review Queue.&lt;/b&gt; When a &lt;b&gt;Bad Driver Report&lt;/b&gt; is verified by at least one independent &lt;b&gt;Report Reviewer,&lt;/b&gt; it is added to the &lt;b&gt;Bad Driver Database.&lt;/b&gt;  It remains in the &lt;b&gt;Review Queue&lt;/b&gt; until it has been verified by 3 independent &lt;b&gt;Report Reviewers&lt;/b&gt;." isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:43:26" modified="2018-03-26 20:43:28" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+			</element>
+			<element xmi:idref="EAID_730E65F3_A5B5_40e7_B61C_BEA4C4173526" xmi:type="uml:Note" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="29" ea_eleType="element"/>
+				<properties documentation="&lt;b&gt;&lt;i&gt;Step One&lt;/i&gt;&lt;/b&gt;&#xA;&lt;b&gt;&#xA;&lt;/b&gt;&lt;b&gt;Moblle App&lt;/b&gt; uploads &lt;b&gt;Video &lt;/b&gt;and &lt;b&gt;Video Metadata&lt;/b&gt; (location, timestamp, etc) to the &lt;b&gt;Report Poster's&lt;/b&gt; &lt;b&gt;Account&lt;/b&gt;.  &lt;b&gt;Report Poster&lt;/b&gt; adds &lt;b&gt;Report Description&lt;/b&gt; and posts the &lt;b&gt;Unreviewed Bad Driver Report&lt;/b&gt; to a &lt;b&gt;Review Queue&lt;/b&gt;" isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:43:44" modified="2018-03-26 20:43:46" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+			</element>
+			<element xmi:idref="EAID_89C633FE_1929_4b6d_AE5F_5A20621E2A91" xmi:type="uml:Note" scope="public">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" tpos="0" ea_localid="27" ea_eleType="element"/>
+				<properties documentation="&lt;b&gt;&lt;i&gt;Step Three&lt;/i&gt;&lt;/b&gt;&#xA;&lt;b&gt;&#xA;&lt;/b&gt;&lt;b&gt;Report Consumer&lt;/b&gt; (e.g. insurance company) queries by license plate number and can see &lt;b&gt;Reviewed Bad Driver Reports&lt;/b&gt;" isSpecification="false" sType="Note" nType="0" scope="public"/>
+				<project author="Bowen" version="1.0" phase="1.0" created="2018-03-26 20:42:56" modified="2018-03-26 20:43:04" complexity="1" status="Proposed"/>
+				<code gentype="&lt;none&gt;"/>
+				<style appearance="BackColor=-1;BorderColor=-1;BorderWidth=-1;FontColor=-1;VSwimLanes=1;HSwimLanes=1;BorderStyle=0;"/>
+				<tags/>
+				<xrefs/>
+				<extendedProperties tagged="0" package_name="BadDriver"/>
+			</element>
+		</elements>
+		<connectors>
+			<connector xmi:idref="EAID_36DE086B_5127_432f_A344_658359E6726D">
+				<source xmi:idref="EAID_68332A87_36DB_4a5c_89F2_421A4049F796">
+					<model ea_localid="19" type="Actor" name="Mobile App"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91">
+					<model ea_localid="23" type="Class" name="Video"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="18"/>
+				<properties ea_type="Dependency" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels mt="uploads"/>
+				<extendedProperties/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_B0CEDCBB_92DD_4ee0_A884_285D5862B9E8">
+				<source xmi:idref="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F">
+					<model ea_localid="30" type="Actor" name="Report Consumer"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30">
+					<model ea_localid="25" type="Class" name="Bad Driver Database"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="20"/>
+				<properties ea_type="Dependency" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels mt="queries add views reports"/>
+				<extendedProperties/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_77DE661E_A08E_44c5_A06F_B4D9FDCD2218">
+				<source xmi:idref="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922">
+					<model ea_localid="17" type="Actor" name="Report Poster"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A">
+					<model ea_localid="22" type="Class" name="Bad Driver Report"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="10"/>
+				<properties ea_type="Dependency" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels mt="creates"/>
+				<extendedProperties/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4">
+				<source xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B">
+					<model ea_localid="20" type="Class" name="Account"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922">
+					<model ea_localid="17" type="Actor" name="Report Poster"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="19"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_47BDB29E_1926_40ca_928B_E0CD05BC7E07">
+				<source xmi:idref="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F">
+					<model ea_localid="18" type="Actor" name="Report Reviewer"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982">
+					<model ea_localid="21" type="Class" name="Review Queue"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="5"/>
+				<properties ea_type="Dependency" direction="Source -&gt; Destination"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels mt="reviews reports in queue"/>
+				<extendedProperties/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C">
+				<source xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A">
+					<model ea_localid="22" type="Class" name="Bad Driver Report"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B">
+					<model ea_localid="20" type="Class" name="Account"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="11"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4">
+				<source xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91">
+					<model ea_localid="23" type="Class" name="Video"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B">
+					<model ea_localid="20" type="Class" name="Account"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="13"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C">
+				<source xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A">
+					<model ea_localid="22" type="Class" name="Bad Driver Report"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30">
+					<model ea_localid="25" type="Class" name="Bad Driver Database"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="14"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129">
+				<source xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A">
+					<model ea_localid="22" type="Class" name="Bad Driver Report"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982">
+					<model ea_localid="21" type="Class" name="Review Queue"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="6"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2">
+				<source xmi:idref="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD">
+					<model ea_localid="24" type="Class" name="Review"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A">
+					<model ea_localid="22" type="Class" name="Bad Driver Report"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="15"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC">
+				<source xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91">
+					<model ea_localid="23" type="Class" name="Video"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A">
+					<model ea_localid="22" type="Class" name="Bad Driver Report"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="shared" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="12"/>
+				<properties ea_type="Aggregation" direction="Source -&gt; Destination"/>
+				<modifiers isRoot="false" isLeaf="false"/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_BF712638_165B_47ee_B7CF_75C877C5DDFC">
+				<source xmi:idref="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD">
+					<model ea_localid="24" type="Class" name="Review"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_B650764A_0114_443c_97F8_39597ECDE7F7">
+					<model ea_localid="26" type="Requirement" name="Rejection Criteria"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="17"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+			<connector xmi:idref="EAID_846942F9_66DD_4c56_A3B5_21DED8EF0610">
+				<source xmi:idref="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91">
+					<model ea_localid="23" type="Class" name="Video"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="false"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Non-Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</source>
+				<target xmi:idref="EAID_B650764A_0114_443c_97F8_39597ECDE7F7">
+					<model ea_localid="26" type="Requirement" name="Rejection Criteria"/>
+					<role visibility="Public" targetScope="instance"/>
+					<type aggregation="none" containment="Unspecified"/>
+					<constraints/>
+					<modifiers isOrdered="false" changeable="none" isNavigable="true"/>
+					<style value="Union=0;Derived=0;AllowDuplicates=0;Owned=0;Navigable=Navigable;"/>
+					<documentation/>
+					<xrefs/>
+					<tags/>
+				</target>
+				<model ea_localid="16"/>
+				<properties ea_type="Realisation" direction="Source -&gt; Destination"/>
+				<parameterSubstitutions/>
+				<documentation/>
+				<appearance linemode="3" linecolor="-1" linewidth="0" seqno="0" headStyle="0" lineStyle="0"/>
+				<labels/>
+				<extendedProperties virtualInheritance="0"/>
+				<style/>
+				<xrefs/>
+				<tags/>
+			</connector>
+		</connectors>
+		<primitivetypes>
+			<packagedElement xmi:type="uml:Package" xmi:id="EAPrimitiveTypesPackage" name="EA_PrimitiveTypes_Package">
+				<packagedElement xmi:type="uml:Package" xmi:id="EAJavaTypesPackage" name="EA_Java_Types_Package">
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_int" name="int">
+						<generalization xmi:type="uml:Generalization" xmi:id="EAJava_int_General">
+							<general href="http://schema.omg.org/spec/UML/2.0/uml.xml#Integer"/>
+						</generalization>
+					</packagedElement>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_char" name="char">
+						<generalization xmi:type="uml:Generalization" xmi:id="EAJava_char_General">
+							<general href="http://schema.omg.org/spec/UML/2.0/uml.xml#String"/>
+						</generalization>
+					</packagedElement>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_string" name="string"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_Video" name="Video"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_lat-long" name="lat-long"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_Account" name="Account"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_boolean" name="boolean">
+						<generalization xmi:type="uml:Generalization" xmi:id="EAJava_boolean_General">
+							<general href="http://schema.omg.org/spec/UML/2.0/uml.xml#Boolean"/>
+						</generalization>
+					</packagedElement>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_array" name="array"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_filePath" name="filePath"/>
+					<packagedElement xmi:type="uml:PrimitiveType" xmi:id="EAJava_time_Stamp" name="time Stamp"/>
+				</packagedElement>
+			</packagedElement>
+		</primitivetypes>
+		<profiles>
+			<uml:Profile xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.0" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmi:id="thecustomprofile" nsPrefix="thecustomprofile" name="thecustomprofile" metamodelReference="mmref01">
+				<ownedComment xmi:type="uml:Comment" xmi:id="comment01" annotatedElement="thecustomprofile">
+					<body> Version:1.0</body>
+				</ownedComment>
+				<packageImport xmi:id="mmref01">
+					<importedPackage href="http://schema.omg.org/spec/UML/2.0"/>
+				</packageImport>
+				<ownedMember xmi:type="uml:Stereotype" xmi:id="Functional" name="Functional">
+					<ownedAttribute xmi:type="uml:Property" xmi:id="Functional-base_Class" name="base_Class" association="Class_Functional">
+						<type href="http://schema.omg.org/spec/UML/2.0/uml.xml#Class"/>
+					</ownedAttribute>
+				</ownedMember>
+				<ownedMember xmi:type="uml:Extension" xmi:id="Class_Functional" name="A_Class_Functional" memberEnd="extension_Functional Functional-base_Class">
+					<ownedEnd xmi:id="extension_Functional" name="extension_Functional" type="Functional" isComposite="true" lower="0" upper="1" memberEnd="extension_Functional Functional-base_Class"/>
+				</ownedMember>
+			</uml:Profile>
+		</profiles>
+		<diagrams>
+			<diagram xmi:id="EAID_278F6BC1_7DCF_449d_BB4A_1D6B1B7ED38B">
+				<model package="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978" localID="3" owner="EAPK_C70B3838_5769_4aed_8BAB_BB59E0AB6978"/>
+				<properties name="Bad Driver Domain Model" type="Logical"/>
+				<project author="Bowen" version="1.0" created="2018-03-26 00:00:00" modified="2018-03-26 21:09:17"/>
+				<style1 value="ShowPrivate=1;ShowProtected=1;ShowPublic=1;HideRelationships=0;Locked=0;Border=0;HighlightForeign=0;PackageContents=1;SequenceNotes=0;ScalePrintImage=0;PPgs.cx=0;PPgs.cy=0;DocSize.cx=827;DocSize.cy=1169;ShowDetails=0;Orientation=P;Zoom=56;ShowTags=0;OpParams=1;VisibleAttributeDetail=0;ShowOpRetType=1;ShowIcons=1;CollabNums=0;HideProps=0;ShowReqs=0;ShowCons=0;PaperSize=9;HideParents=0;UseAlias=0;HideAtts=0;HideOps=0;HideStereo=0;HideElemStereo=0;ShowTests=0;ShowMaint=0;ConnectorNotation=UML 2.1;ExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;ShowNotes=0;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;"/>
+				<style2 value="ExcludeRTF=0;DocAll=0;HideQuals=0;AttPkg=1;ShowTests=0;ShowMaint=0;SuppressFOC=1;MatrixActive=0;SwimlanesActive=1;KanbanActive=0;MatrixLineWidth=1;MatrixLocked=0;TConnectorNotation=;TExplicitNavigability=0;AdvancedElementProps=1;AdvancedFeatureProps=1;AdvancedConnectorProps=1;ProfileData=;MDGDgm=;STBLDgm=;ShowNotes=0;VisibleAttributeDetail=0;ShowOpRetType=1;SuppressBrackets=0;SuppConnectorLabels=0;PrintPageHeadFoot=0;ShowAsList=0;SuppressedCompartments=;SaveTag=0CAC72B9;"/>
+				<swimlanes value="locked=false;orientation=0;width=0;inbar=false;names=false;color=0;bold=false;fcol=0;tcol=-1;ofCol=-1;hl=1;cls=0;"/>
+				<matrixitems value="locked=false;matrixactive=false;swimlanesactive=true;kanbanactive=false;width=1;"/>
+				<extendedProperties/>
+				<elements>
+					<element geometry="Left=892;Top=295;Right=937;Bottom=385;" subject="EAID_F8873D1C_12BA_4563_9E81_EA5F1F6C1E7F" seqno="1" style="DUID=5397EE96;"/>
+					<element geometry="Left=61;Top=760;Right=346;Bottom=857;" subject="EAID_730E65F3_A5B5_40e7_B61C_BEA4C4173526" seqno="2" style="DUID=C2AE7A87;"/>
+					<element geometry="Left=703;Top=40;Right=984;Bottom=154;" subject="EAID_2350475B_00F0_4c97_B2EB_74AB98D4F57C" seqno="3" style="DUID=614D504D;"/>
+					<element geometry="Left=730;Top=600;Right=994;Bottom=693;" subject="EAID_89C633FE_1929_4b6d_AE5F_5A20621E2A91" seqno="4" style="DUID=76C8641B;"/>
+					<element geometry="Left=523;Top=656;Right=681;Bottom=723;" subject="EAID_B650764A_0114_443c_97F8_39597ECDE7F7" seqno="5" style="DUID=C5A3948A;"/>
+					<element geometry="Left=553;Top=327;Right=719;Bottom=381;" subject="EAID_08CEC593_6FA1_4d4f_B876_B4A2F92F1B30" seqno="6" style="DUID=761E85C4;"/>
+					<element geometry="Left=519;Top=487;Right=678;Bottom=574;" subject="EAID_0186C550_EFE1_41b2_86E0_72B68CD823DD" seqno="7" style="DUID=107F3621;"/>
+					<element geometry="Left=256;Top=595;Right=424;Bottom=735;" subject="EAID_0A2FBA88_FDB8_45d5_9DE6_62CAC643CB91" seqno="8" style="DUID=845786D8;"/>
+					<element geometry="Left=276;Top=237;Right=456;Bottom=481;" subject="EAID_BF8AD83F_34C9_47d0_BF2E_CCE92E3DCB7A" seqno="9" style="DUID=E90263B8;"/>
+					<element geometry="Left=291;Top=54;Right=409;Bottom=124;" subject="EAID_A279121B_2DE6_42a7_88E7_E3C893D31982" seqno="10" style="DUID=379E79E1;"/>
+					<element geometry="Left=36;Top=331;Right=173;Bottom=433;" subject="EAID_2B984542_B66E_4cfc_89A3_5B11F5FC2F7B" seqno="11" style="DUID=878A767C;"/>
+					<element geometry="Left=42;Top=616;Right=87;Bottom=706;" subject="EAID_68332A87_36DB_4a5c_89F2_421A4049F796" seqno="12" style="DUID=19A34FD6;"/>
+					<element geometry="Left=612;Top=42;Right=657;Bottom=132;" subject="EAID_F765CCC2_E120_4cbd_A6F6_2171A8BBF77F" seqno="13" style="DUID=E29313D2;"/>
+					<element geometry="Left=62;Top=28;Right=107;Bottom=118;" subject="EAID_E3BF0AC2_B02E_4ec3_880E_DB883F3BD922" seqno="14" style="DUID=D27FE98D;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=4;$LLB=;LLT=;LMT=CX=117:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_B0CEDCBB_92DD_4ee0_A884_285D5862B9E8" style="Mode=3;EOID=761E85C4;SOID=5397EE96;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_C24740A6_ACBE_4ea5_BE97_2636226043D4" style="Mode=3;EOID=D27FE98D;SOID=878A767C;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=CX=37:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_36DE086B_5127_432f_A344_658359E6726D" style="Mode=3;EOID=845786D8;SOID=19A34FD6;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=3;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_BF712638_165B_47ee_B7CF_75C877C5DDFC" style="Mode=3;EOID=C5A3948A;SOID=107F3621;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_846942F9_66DD_4c56_A3B5_21DED8EF0610" style="Mode=3;EOID=C5A3948A;SOID=845786D8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_3E43D217_B63C_4c57_8E1F_937389F306A2" style="Mode=3;EOID=E90263B8;SOID=107F3621;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_89322E12_2278_4ba7_B8D0_0702D20F355C" style="Mode=3;EOID=761E85C4;SOID=E90263B8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_E10CF4FC_D38E_4ae3_B929_4C47EDC36FE4" style="Mode=3;EOID=878A767C;SOID=845786D8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_EE40A6F9_98BE_4a47_B009_6135B8ED72BC" style="Mode=3;EOID=E90263B8;SOID=845786D8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=4;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_B859B7D5_561D_48bc_9D64_8FB8B1C4B84C" style="Mode=3;EOID=878A767C;SOID=E90263B8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=2;$LLB=;LLT=;LMT=CX=33:CY=13:OX=4:OY=-16:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_77DE661E_A08E_44c5_A06F_B4D9FDCD2218" style="Mode=3;EOID=E90263B8;SOID=D27FE98D;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=1;$LLB=;LLT=;LMT=;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_BD5864CD_20D9_461e_BDF6_FA2A8D0B5129" style="Mode=3;EOID=379E79E1;SOID=E90263B8;Color=-1;LWidth=0;Hidden=0;"/>
+					<element geometry="SX=0;SY=0;EX=0;EY=0;EDGE=4;$LLB=;LLT=;LMT=CX=113:CY=13:OX=0:OY=0:HDN=0:BLD=0:ITA=0:UND=0:CLR=-1:ALN=1:DIR=0:ROT=0;LMB=;LRT=;LRB=;IRHS=;ILHS=;Path=;" subject="EAID_47BDB29E_1926_40ca_928B_E0CD05BC7E07" style="Mode=3;EOID=379E79E1;SOID=E29313D2;Color=-1;LWidth=0;Hidden=0;"/>
+				</elements>
+			</diagram>
+		</diagrams>
+	</xmi:Extension>
+	<thecustomprofile:Functional base_Class="EAID_B650764A_0114_443c_97F8_39597ECDE7F7"/>
+</xmi:XMI>
