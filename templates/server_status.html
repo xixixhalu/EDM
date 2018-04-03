@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>API References - Executable Domain Modeling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+    <basefont size="7">
+</head>
+<body>
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Executable Domain Modeling</h1>
+        <p>Convert XML files to real code</p>
+    </div>
+</div>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <a class="navbar-brand" href="#"><!-- Redirect to homepage here -->
+    <span class="fa fa-home"></span>
+  </a>
+  <ul class="navbar-nav col-sm-10 nav-justified">
+    <li class="nav-item">
+      <a class="nav-link" href="#">Description</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">API Reference</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Server Status</a>
+    </li>
+  </ul>
+  <div class="col-sm-2 nav-item"><a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a></div>
+</nav>
+
+<div class="container-fluid" style="margin-top:20px">
+	<h3>Server Status</h3>
+	<div class="container-fluid ">
+		<ul class="list-group">
+			<li class="list-group-item"> The status of the instance as seen on EC2 </li>
+			<li class="list-group-item"> Display the amount of data present</li>
+		</ul>
+	</div>
+</div>
+
+<footer class="container-fluid text-center fixed-bottom">
+    <p>&copy; Copyright Protected. All rights reserved</p>
+</footer>
+</body>
+</html>
