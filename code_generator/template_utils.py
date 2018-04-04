@@ -39,6 +39,10 @@ def get_examples(func_name, attribute_list):
     elif func_name == "createOne":
         example_one = {attr1_name: "some value (" + attr1_type + ")"}
         examples = [str(example_one)]
+    elif func_name == "createMany":
+        example_many = [{attr1_name: "some value (" + attr1_type + ")"},
+                        {attr1_name: "some other value (" + attr1_type + ")"}]
+        examples = [str(example_many)]
     elif func_name == "read" or func_name == "readOne":
         example_id = {"_id": "specific id (String)"}
         example_attr = {attr1_name: "some value (" + attr1_type + ")"}
@@ -59,7 +63,15 @@ def get_examples(func_name, attribute_list):
     return examples
 
 
-def extract_funcs_info(template_content, attribute_list):
+LANGUAGE_CALLFORM = {"Java": "%s.%s(%s);",
+                     "JavaScript": "%s.%s(%s, success(function), error(function))",
+                     "Swift": "%s.%s(%s)"}
+
+def get_example_callform(example_str, language, model_name, method_name):
+    return (LANGUAGE_CALLFORM[language] % (model_name, method_name, example_str)).encode("utf-8")
+
+
+def extract_funcs_info(template_content, language, model_name, attribute_list):
     pattern = TEMPLATE_FUNC_MARK + ''' (\S+)\s*(\{.*?\})?(.*?)''' + TEMPLATE_FUNC_END_MARK
     content = template_content
     func_info_list = []
@@ -68,10 +80,14 @@ def extract_funcs_info(template_content, attribute_list):
         if len(func_annotation) > 1:
             func_annotation = func_annotation[1:-1]
 
+        examples = get_examples(func_name, attribute_list)
+        example_callforms = [get_example_callform(example, language, model_name, func_name)
+                             for example in examples]
+
         func_info_list.append({"name": func_name,
                                "annotation": func_annotation,
                                "body": func_body,
-                               "examples": get_examples(func_name, attribute_list)})
+                               "examples": example_callforms})
     content = re.sub(TEMPLATE_FUNC_MARK + " (\S+)\s*(\{.*?\})?", "", content, 0, re.S)
     content = re.sub(TEMPLATE_FUNC_END_MARK + "\s?", "", content)
     return content, func_info_list
@@ -80,7 +96,7 @@ def extract_funcs_info(template_content, attribute_list):
 def list2template_str(name_list):
     result_str = ""
     for name in name_list:
-        print name
+        #print name
         result_str += "\"" + name + "\", "
     result_str = result_str[:-2]
     return result_str
@@ -89,7 +105,7 @@ def list2template_str(name_list):
 def replace_strlist(template_content, keyword, name_list):
     list_str = ""
     for name in name_list:
-        print name
+        #print name
         list_str += "\"" + name + "\", "
     list_str = list_str[:-2]
     content = template_content.replace(TEMPLATE_PREFIX + keyword, list_str)

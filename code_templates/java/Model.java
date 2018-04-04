@@ -23,9 +23,9 @@ public class $model {
     }
     $ENDFUNC
 
-    $FUNC readAll
-    public static void readAll(JsonObject data) {
-        class readAllCB {
+    $FUNC readMany
+    public static void readMany(JsonObject data) {
+        class readManyCB {
             public void successCB(String result) {
                 System.out.println("successCB: " + result);
             }
@@ -33,15 +33,14 @@ public class $model {
                 System.out.println("errorCB: " + message);
             }
         }
-        readAllCB CBModel = new readAllCB();
-        Adapter.readAll(className, data, CBModel);
+        readManyCB CBModel = new readManyCB();
+        Adapter.readMany(className, data, CBModel);
     }
     $ENDFUNC
 
-
-    $FUNC create
-    public static void create(JsonObject data) {
-        class createCB {
+    $FUNC createOne
+    public static void createOne(JsonObject data) {
+        class createOneCB {
             public void successCB(String result) {
                 System.out.println("successCB: " + result);
             }
@@ -49,8 +48,23 @@ public class $model {
                 System.out.println("errorCB: " + message);
             }
         }
-        createCB CBModel = new createCB();
-        Adapter.create(className, data, CBModel);
+        createOneCB CBModel = new createOneCB();
+        Adapter.createOne(className, data, CBModel);
+    }
+    $ENDFUNC
+
+    $FUNC createMany
+    public static void createMany(JsonArray data) {
+        class createManyCB {
+            public void successCB(String result) {
+                System.out.println("successCB: " + result);
+            }
+            public void errorCB(String message) {
+                System.out.println("errorCB: " + message);
+            }
+        }
+        createManyCB CBModel = new createManyCB();
+        Adapter.createMany(className, data, CBModel);
     }
     $ENDFUNC
 

@@ -38,6 +38,7 @@ def generate_model(language, json_data, dm_name):
     template_location = TEMPLATE_PATH[language] + "Model" + LANGUAGE_SUFFIX[language]
     output_path = template_output_path(dm_name, language)
 
+
     with open(template_location, "r") as template_file:
         model_template = template_file.read()
 
@@ -79,12 +80,14 @@ def generate_model(language, json_data, dm_name):
         content = replace_strlist(content, "attributes", attribute_names)
 
         # extract func info and remove func marks
-        content, func_info_list = extract_funcs_info(content, attribute_list)
+        output_location = output_path + elem_name + LANGUAGE_SUFFIX[language]
+
+        content, func_info_list = extract_funcs_info(content, language, elem_name, attribute_list)
         code_display_data[elem_name] = {"attribute_list": attribute_list,
-                                        "func_info_list": func_info_list}
+                                        "func_info_list": func_info_list,
+                                        "file_uri": output_location}
 
         # create final file
-        output_location = output_path + elem_name + LANGUAGE_SUFFIX[language]
         with open(output_location, "w") as output_file:
             output_file.write(content)
 
@@ -112,11 +115,16 @@ def generate_adapter(language, server_ip, port, dm_name):
             "port": port}
     content = replace_words(adapter_template, data)
 
-    content, func_info_list = extract_funcs_info(content, [])
+    content, func_info_list = extract_funcs_info(content, language, "Adapter", [])
+
+    code_display_data = {"func_info_list": func_info_list,
+                         "attribute_list": [],
+                         "file_uri": output_location
+                         }
 
     with open(output_location, "w") as output_file:
         output_file.write(content)
-    return func_info_list
+    return code_display_data
 
 
 """ This method creates the server js file"""
@@ -147,9 +155,9 @@ def generate_all(db_name):
             output_path = template_output_path(db_name, language)
             if not os.path.isdir(output_path):
                 os.makedirs(output_path)
-            model_display_data["Adapter"][language] = {}
-            model_display_data["Adapter"][language]["func_info_list"] = generate_adapter(language, str(server_ip), str(port), str(db_name))
-            model_display_data["Adapter"][language]["attribute_list"] = []
+            model_display_data["Adapter"][language] = generate_adapter(language, str(server_ip), str(port), str(db_name))
+            #model_display_data["Adapter"][language]["func_info_list"] = generate_adapter(language, str(server_ip), str(port), str(db_name))
+            #model_display_data["Adapter"][language]["attribute_list"] = []
             temp_display_data[language] = generate_model(language, json_data, str(db_name))
 
         # TODO need update
@@ -163,7 +171,8 @@ def generate_all(db_name):
             for model in temp_display_data[language]:
                 model_display_data.setdefault(model, {})[language] = {
                     "func_info_list": temp_display_data[language][model]["func_info_list"],
-                    "attribute_list": temp_display_data[language][model]["attribute_list"]
+                    "attribute_list": temp_display_data[language][model]["attribute_list"],
+                    "file_uri": temp_display_data[language][model]["file_uri"]
                 }
 
         '''for model in model_display_data:

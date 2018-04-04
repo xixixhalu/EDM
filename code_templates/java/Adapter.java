@@ -23,9 +23,7 @@ import java.util.stream.Collectors;
 public class Adapter {
     private static String serverIP = "$server_ip";
     private static String port = "$port";
-    //static String serverUrl = "https://httpbin.org/post";
     private static String serverUrl = "http://" + serverIP + ":" + port + "/";
-    //private static CloseableHttpClient httpClient = HttpClients.createDefault();
     private static CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.createDefault();
 
     static {
@@ -62,17 +60,17 @@ $FUNC Adapter
         callServer(collection, "readOne", dataArgs, CBModel);
     }
 
-    public static void readAll(String collection, JsonObject data, Object CBModel) {
+    public static void readMany(String collection, JsonObject data, Object CBModel) {
         List<NameValuePair> dataArgs = basicDataArgs(data);
         callServer(collection, "readAll", dataArgs, CBModel);
     }
 
-    public static void create(String collection, JsonObject data, Object CBModel){
+    public static void createOne(String collection, JsonObject data, Object CBModel){
         List<NameValuePair> dataArgs = basicDataArgs(data);
         callServer(collection, "create", dataArgs, CBModel);
     }
 
-    public static void create(String collection, JsonArray data, Object CBModel){
+    public static void createMany(String collection, JsonArray data, Object CBModel){
         List<NameValuePair> dataArgs = basicDataArgs(data);
         callServer(collection, "create", dataArgs, CBModel);
     }
@@ -106,7 +104,6 @@ $FUNC Adapter
         PostCall(url, params, CBModel);
     }
 
-    //java.io.UnsupportedEncodingException
     public static void PostCall(String url, List<NameValuePair> params, Object CBModel){
         Method successM, errorM;
         try {
@@ -121,13 +118,6 @@ $FUNC Adapter
         post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
 
         if (params != null) {
-//            StringEntity params = null;
-//            try {
-//                params = new StringEntity(data.toString());
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//            post.setEntity(params);
             try {
                 post.setEntity(new UrlEncodedFormEntity(params,"utf-8"));
             } catch (UnsupportedEncodingException e) {

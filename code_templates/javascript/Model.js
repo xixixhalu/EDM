@@ -9,11 +9,11 @@ $model.attributes = [            // Model attribute list
 
 // Model functions
 
-$FUNC create
+$FUNC createOne
 { just test
 lalala
 }
-$model.create = function(data, success, error) {
+$model.createOne = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -31,8 +31,27 @@ $model.create = function(data, success, error) {
 };
 $ENDFUNC
 
-$FUNC read
-$model.read = function(data, success, error) {
+$FUNC createMany
+$model.createMany = function(data, success, error) {
+    // Wrap data
+
+    // Define callback function
+    function successCB(msg) {
+        // Success handling
+        success(msg);
+    }
+
+    function errorCB(msg) {
+        // Error handling
+        error(msg);
+    }
+
+    DBAdapter.createMany($model.name, data, successCB, errorCB);
+};
+$ENDFUNC
+
+$FUNC readOne
+$model.readOne = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -47,6 +66,25 @@ $model.read = function(data, success, error) {
     }
 
     DBAdapter.readOne($model.name, data, successCB, errorCB);
+};
+$ENDFUNC
+
+$FUNC readMany
+$model.readMany = function(data, success, error) {
+    // Wrap data
+
+    // Define callback function
+    function successCB(msg) {
+        // Success handling
+        success(msg);
+    }
+
+    function errorCB(msg) {
+        // Error handling
+        error(msg);
+    }
+
+    DBAdapter.readMany($model.name, data, successCB, errorCB);
 };
 $ENDFUNC
 
