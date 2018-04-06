@@ -202,35 +202,15 @@ def register():
 def upload_xml():
     return render_template('xml_upload.html')
 
-
-@app.route('/uploadtodb', methods=['POST'])
-@login_required
-def uploadtodb():
-    username = request.form['username']
-    dmname = request.form['dmname']
-
-    response = {}
-
-    if username == None or dmname == None or len(username) == 0 or len(
-            dmname) == 0:
-        response["status"] = "fail"
-        response["response"] = "Insufficient parameters"
-        return jsonify(response)
-
-    if 'modelfile' not in request.files:
-        response["status"] = "fail"
-        response["response"] = "model file not exist"
-        return jsonify(response)
-    f = request.files['modelfile']
-    if f.filename == '':
-        response["status"] = "fail"
-        response["response"] = "file not selected"
-        return jsonify(response)
-
-    allcontent = ''
-    with f.open(mode='r') as textfile:
-        allcontent = textfile.read()
-    b64content = base64.standard_b64encode(allcontent)
+# Parameters: 
+# username: str or unicode
+# dmname: str or unicode
+# filecontent : str, text content of the model file
+# Returns: bool, True if successfully saved
+def saveFileToDB(username,dmname,filecontent):
+    if type(filecontent) is not str:
+        return False
+    b64content = base64.standard_b64encode(filecontent)
     bincontent = binary.Binary(b64content)
     fileid = mongo.db.filedb.insert({"file": bincontent})
 
@@ -271,8 +251,39 @@ def uploadtodb():
         }
     })
 
-    response["status"] = "success"
-    response["response"] = "successfully upload model file"
+    return True
+
+@app.route('/uploadtodb', methods=['POST'])
+@login_required
+def uploadtodb():
+    username = request.form['username']
+    dmname = request.form['dmname']
+
+    response = {}
+
+    if username == None or dmname == None or len(username) == 0 or len(
+            dmname) == 0:
+        response["status"] = "fail"
+        response["response"] = "Insufficient parameters"
+        return jsonify(response)
+
+    if 'modelfile' not in request.files:
+        response["status"] = "fail"
+        response["response"] = "model file not exist"
+        return jsonify(response)
+    f = request.files['modelfile']
+    if f.filename == '':
+        response["status"] = "fail"
+        response["response"] = "file not selected"
+        return jsonify(response)
+
+    allcontent = f.read()
+    if saveFileToDB(username,dmname,allcontent) is True:
+        response["status"] = "success"
+        response["response"] = "successfully upload model file"
+    else:
+        response["status"] = "fail"
+        response["response"] = "error in saving to database"
     return jsonify(response)
 
 
@@ -294,7 +305,9 @@ def result():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filename_str = filename.split(".")[0]
-            #!!!
+            
+            allcontent=file.read()
+            saveFileToDB(current_user.username,filename_str,allcontent)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     #Parse XML and generate JSON
@@ -338,7 +351,7 @@ def filelist():
     response = {}
     findresult = mongo.db.history.find_one({
         "username": current_user.username,
-    },{"username":0,"uploads":1,"_id":0})
+    },{"_id":0,"username":0})
 
     if findresult is None:
         response["message"] = "no such user"
@@ -346,7 +359,7 @@ def filelist():
         for i, imode in enumerate(findresult["uploads"]):
             for j, jfile in enumerate(imode["files"]):
                 fileid = jfile["file"]
-                prefix = "/downloadfile/" + current_user.username + "/"
+                prefix = "/downloadfile?username=" + current_user.username + "&fileid="
                 findresult["uploads"][i]["files"][j]["file"]=str(fileid)
                 findresult["uploads"][i]["files"][j]["fileurl"] = prefix + str(fileid)
 
@@ -360,7 +373,7 @@ def filelist():
 def downloadfile():
     response = {}
     username = request.args.get('username')
-    fileid = request.args.get('fileid')
+    fileid = ObjectId(request.args.get('fileid'))
     if current_user.username != username:
         response["message"] = "file not belong to this user"
         return response
@@ -382,7 +395,7 @@ def downloadfile():
 
         response["message"] = "no such file"
 
-    return response
+    return jsonify(response)
 
 
 @app.route('/requesttoken')
