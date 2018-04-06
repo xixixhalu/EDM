@@ -20,12 +20,15 @@ class DomainModel:
  	# NITIN : Element must be declared before being used
 	def declareElement(self , _ElementName, _id):
 		# NITIN : NOTE : create a unique id for each element, used for associations
+                _ElementName=_ElementName.lower().replace(" ","_")
 		newElement = self.Element(_ElementName , _id)
 		self.ElementDirectory[_id] = newElement
 		self.ElementReference[_ElementName] = _id
+              
 
 	# NITIN : NOTE : Define simple atrribute on a declared element
 	def defineSimpleAttribute(self , _ElementName , _AttributeName , _AttributeType): 
+                _ElementName=_ElementName.lower().replace(" ","_")
 		try:
 			assert self.isElementDeclared(_ElementName)
 		except:
@@ -36,13 +39,16 @@ class DomainModel:
 
 	# NITIN : NOTE : Define a attribute of the type of another element
 	def defineComplexAttribute(self, _ElementName , _AttributeName , _AttributeElementName , _AttributeType):
+                _ElementName=_ElementName.lower().replace(" ","_")
+                _AttributeElementName=_AttributeElementName.lower().replace(" ","_")
 		try:
-			assert isElementDeclared(_ElementName)
+			assert self.isElementDeclared(_ElementName)
 		except:
 			raise e.SimpleException("No such element declared, check for declaration of element :" + _ElementName)
 
-		if not isElementDeclared(_AttributeElementName) : raise e.SimpleException("Attempt to create attribute of type " + _AttributeElementType + " which is not declared .")
-
+		if not self.isElementDeclared(_AttributeElementName) : 
+                    raise e.SimpleException("Attempt to create attribute of type " + _AttributeElementType + " which is not declared .")
+               
 		id = self.ElementReference[_ElementName]
 		self.ElementDirectory[id].addComplexAttribute(_AttributeName, _AttributeElementName, _AttributeType)
 
@@ -58,9 +64,17 @@ class DomainModel:
 			relation = dt.Association(_id, _start, _end)
 		elif RelationType == "Aggregation":
 			relation = dt.Aggregation(_id, _start, _end)
+                        
+                        #add start node to end node as an attribute
+                        elemName = str(self.ElementDirectory[_start].ElementName)
+                        elemAttributeTypeSetter = dt.SimpleType("string")
+                        elemAttributeName=str(self.ElementDirectory[_end].ElementName)+"_id"
+                        self.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
 		elif RelationType == "Generalization":
 			relation = dt.Generalization(_id, _start, _end)
-		else :
+                elif RelationType == "Composition":
+                        relation = dt.Composition(_id, _start, _end)
+		else:
 			raise e.SimpleException("Type of relation not defined : " + RelationType)
 
 
@@ -71,8 +85,9 @@ class DomainModel:
 
 	# NITIN : NOTE : Make an element an extension of another element, basically imports all the base element's attributes and functions
 	def extendElement(self, _ElementName, _ExtensionType):
+                _ElementName=_ElementName.lower().replace(" ","_")
 		if not isinstance(_ExtensionType, dt.ExtensionType): raise e.SimpleException("_AttributeType has to be ExtensionType.")
-
+                
 		id = self.ElementReference[_ElementName]
 		self.ElementReference[id].extendElement(_ExtensionType)
 
