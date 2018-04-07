@@ -1,9 +1,10 @@
 class $model {
 
 // attributes: {$attributes}
+var tableName = "$model"
 
 $FUNC createOne
-func createOne(tableName: String, data: JSON) {
+func createOne(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
@@ -15,7 +16,7 @@ func createOne(tableName: String, data: JSON) {
 $ENDFUNC
 
 $FUNC createMany
-func createMany(tableName: String, data: JSON) {
+func createMany(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
@@ -27,7 +28,7 @@ func createMany(tableName: String, data: JSON) {
 $ENDFUNC
 
 $FUNC readOne
-func readOne(tableName: String, data: JSON) {
+func readOne(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
@@ -39,7 +40,7 @@ func readOne(tableName: String, data: JSON) {
 $ENDFUNC
 
 $FUNC readMany
-func readMany(tableName: String, data: JSON) {
+func readMany(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
@@ -51,7 +52,7 @@ func readMany(tableName: String, data: JSON) {
 $ENDFUNC
 
 $FUNC update
-func update(tableName: String, search: JSON, update: JSON) {
+func update(search: JSON, update: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
@@ -64,7 +65,7 @@ func update(tableName: String, search: JSON, update: JSON) {
 $ENDFUNC
 
 $FUNC delete
-func delete(tableName: String, data: JSON) {
+func delete(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
