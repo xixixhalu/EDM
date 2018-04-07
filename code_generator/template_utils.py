@@ -94,7 +94,7 @@ def remove_indent(func_str):
         if match_obj.span()[1] < indent:
             indent = match_obj.span()[1]
 
-    for i in range(0, len(func_strs) - 1):
+    for i in range(0, len(func_strs)):
         if len(func_strs[i])==0:
             continue
         func_strs[i] = func_strs[i][indent:]
