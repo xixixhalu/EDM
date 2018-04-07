@@ -76,7 +76,7 @@
                                  class="tab-pane active" >
                                 <!--Attribute List-->
 								<br>
-                                <p ng-repeat="attribute in details[class][language]['attribute_list'] track by $index">
+                                <p ng-repeat="attribute in details[class]['attribute_list'] track by $index">
                                     {{attribute.name}}: {{attribute.type}}
                                 </p>
 
@@ -92,10 +92,7 @@
                                         </ul>
                                         </div>
                                         <div class="card-body">
-                                            <pre ng-attr-id="{{class}}_{{language}}_{{$index}}">
-                                                <span ng-repeat="view in generateView(detail['body']) track by $index">{{view}}
-                                                </span>
-                                            </pre>
+                                            <pre ng-attr-id="{{class}}_{{language}}_{{$index}}"><span ng-repeat="view in generateView(detail['body']) track by $index">{{view}}</span></pre>
                                         </div>
                                         <div class="card-footer">
                                             <button type="button" class="copy-button btn btn-primary pull-right"
