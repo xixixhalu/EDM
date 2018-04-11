@@ -1,0 +1,10 @@
+# configuration #
+#config.properties
+
+# Compiled Source #
+*.pyc
+
+# Generated Code #
+#/input/
+#/generated_code/
+
