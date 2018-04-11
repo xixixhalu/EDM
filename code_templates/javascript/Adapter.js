@@ -86,13 +86,13 @@ DBAdapter.readOne = function(collection, data, successCB, errorCB) {
     }
 };
 
-// CRUD: readAll.
+// CRUD: readMany.
 // "collection" must be specified in by the first parameter.
 // "data" must be specified as an object by the second parameter.
 // Example,
 // collection : "table1",
 // data : {"x" : 1234}
-DBAdapter.readAll = function(collection, body, successCB, errorCB) {
+DBAdapter.readMany = function(collection, body, successCB, errorCB) {
     if (is_defined(collection) && is_defined(data)) {
         var body = {
             collection : collection,
