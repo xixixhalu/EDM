@@ -19,7 +19,13 @@ from bson import binary
 from bson.objectid import ObjectId
 import pytz
 
-
+# User calss used in flask_login
+# When a User instance created, if will check if this
+# user is in the usermetadata database. If the user is
+# not in the database, __init__ function will create a
+# token for this user and save this user into database.
+# This calss also provide 3 static method used to create
+# or refresh token. 
 class User(UserMixin):
     def __init__(self, mongodbengine, username):
         self.username = username
@@ -31,6 +37,7 @@ class User(UserMixin):
         if findresult is not None:
             if findresult["validtill"] is not None:
                 tempvalidtill = findresult["validtill"]
+                # check if current time is more than valid-till time 
                 delta = tempvalidtill-dt.datetime.now(pytz.utc)
                 if not delta >= dt.timedelta():
                     self.refreshToken(self.username, self.dbengine)
@@ -84,6 +91,9 @@ class User(UserMixin):
 
         return False
 
+    # this method will be called whenever using login_required decorator
+    # currently, it only check if user's token is expired.
+    # additional authentication for user can be add here.
     def is_authenticated(self):
         delta = dt.datetime.now(pytz.utc) - self.validtill
         if not delta >= dt.timedelta():
@@ -94,6 +104,7 @@ class User(UserMixin):
             self.key = newfind["key"]
         return True
 
+    # get User class instance by given username
     def get_id(self):
         tempusername = self.username
         return tempusername.decode('utf-8')
@@ -121,12 +132,14 @@ app.config['MONGO_URI'] = config.get('Mongo_DB', 'mongo_db_uri')
 app.config['LOGIN_DISABLED']=False
 mongo = PyMongo(app)
 
+# set flask_login
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-
+# flask_login will use this method to get User class
+# by given username
 @login_manager.user_loader
 def load_user(user_id):
     if user_id is not None:
@@ -161,6 +174,7 @@ def login():
                              'password'].encode('utf-8'):
             session['username'] = request.form['uname']
             newuser = User(mongo, request.form['uname'])
+            #login user in flask_login
             login_user(newuser)
             return redirect(url_for('index'))
     return 'Invalid username/password combination'
@@ -210,10 +224,13 @@ def upload_xml():
 def saveFileToDB(username,dmname,filecontent):
     if type(filecontent) is not str:
         return False
+    # to save file as bson, we need base64 encode first 
     b64content = base64.standard_b64encode(filecontent)
+    # get bson object
     bincontent = binary.Binary(b64content)
     fileid = mongo.db.filedb.insert({"file": bincontent})
 
+    #if this user doesn't upload history in database, create one
     userresult = mongo.db.history.find_one({"username": username})
     if userresult == None:
         mongo.db.history.insert({"username": username, "uploads": []})
@@ -253,6 +270,7 @@ def saveFileToDB(username,dmname,filecontent):
 
     return True
 
+# add file to database without generate server code
 @app.route('/uploadtodb', methods=['POST'])
 @login_required
 def uploadtodb():
@@ -286,7 +304,7 @@ def uploadtodb():
         response["response"] = "error in saving to database"
     return jsonify(response)
 
-
+# generate server code and save file into database
 @app.route('/result', methods=['GET', 'POST'])
 @login_required
 def result():
@@ -306,6 +324,7 @@ def result():
             filename = secure_filename(file.filename)
             filename_str = filename.split(".")[0]
             
+            # save file into database
             allcontent=file.read()
             saveFileToDB(current_user.username,filename_str,allcontent)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -341,10 +360,12 @@ def generated_code(path):
 def logout():
     # remove the username from the session if it is there
     session.pop('username', None)
+    #logout user in flask_login
     logout_user()
     return redirect(url_for('index'))
 
-
+# return user's upload history,
+# every file will be given its fileid and download url
 @app.route('/filelist')
 @login_required
 def filelist():
@@ -367,7 +388,7 @@ def filelist():
 
     return jsonify(response)
 
-
+# return xml by given fileid
 @app.route('/downloadfile',methods=['GET'])
 @login_required
 def downloadfile():
@@ -397,7 +418,10 @@ def downloadfile():
 
     return jsonify(response)
 
-
+# return token for current user
+# because when User instance initial, it will check
+# if token is valid and refresh token if it is expired,
+# so this method will always return valid token.
 @app.route('/requesttoken')
 @login_required
 def requesttoken():
@@ -406,7 +430,8 @@ def requesttoken():
     response['key'] = userprofile.key
     return jsonify(response)
 
-
+# this api is used by generated server to check if 
+# token and username is valid
 @app.route('/verifykey', methods=['POST'])
 def verifykeyapi():
     response = {}
@@ -419,13 +444,13 @@ def verifykeyapi():
 
     return jsonify(response)
 
-
 def verifykey(username, usertoken, dbengine):
     authentcol = dbengine.db.authentication
     findresult = authentcol.find_one({"username": username})
     if findresult == None:
         return False
 
+    # check if current token of this user is expired
     validtill = findresult["validtill"]
     delta = dt.datetime.now(pytz.utc) - validtill
     if not delta >= dt.timedelta():
