@@ -39,7 +39,7 @@ class User(UserMixin):
                 tempvalidtill = findresult["validtill"]
                 # check if current time is more than valid-till time 
                 delta = tempvalidtill-dt.datetime.now(pytz.utc)
-                if not delta >= dt.timedelta():
+                if delta < dt.timedelta():
                     self.refreshToken(self.username, self.dbengine)
                 newfind = authentcol.find_one({"username": self.username})
                 self.validtill = newfind["validtill"]
@@ -86,7 +86,7 @@ class User(UserMixin):
                     "validtill": newvalidtill
                 }},
                 upsert=False)
-            if updateresult.modified_count > 0:
+            if updateresult['updatedExisting'] is True:
                 return True
 
         return False
@@ -96,7 +96,7 @@ class User(UserMixin):
     # additional authentication for user can be add here.
     def is_authenticated(self):
         delta = dt.datetime.now(pytz.utc) - self.validtill
-        if not delta >= dt.timedelta():
+        if delta >= dt.timedelta():
             User.refreshToken(self.username, self.dbengine)
             authentcol = self.dbengine.db.authentication
             newfind = authentcol.find_one({"username": self.username})
@@ -453,7 +453,7 @@ def verifykey(username, usertoken, dbengine):
     # check if current token of this user is expired
     validtill = findresult["validtill"]
     delta = dt.datetime.now(pytz.utc) - validtill
-    if not delta >= dt.timedelta():
+    if delta >= dt.timedelta():
         User.refreshToken(username, dbengine)
         findresult = authentcol.find_one({"username": username})
     if findresult["key"] == usertoken:
