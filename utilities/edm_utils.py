@@ -10,3 +10,6 @@ def copyDirLink(src, dst):
         if exc.errno == errno.ENOTDIR:
             shutil.copy(src, dst)
         else: raise
+
+def generate_user_credentials(db_name):
+	return db_name + "_user", db_name + "_pwd"

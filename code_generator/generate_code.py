@@ -3,8 +3,9 @@ import json
 import os
 
 from utilities.config_util import ConfigUtil
-from utilities import port_scanner
+from utilities import port_scanner, edm_utils
 from code_generator.template_utils import *
+from database_manager.setup import DBUtilities
 
 
 def get_server_info():
@@ -21,7 +22,10 @@ def get_server_info():
     port = port_scanner.runPortScan(from_port, to_port)
     return display_ip, server_ip, port
 
-
+def configure_db(db_name):
+    dbutils = DBUtilities()
+    dbutils.setup(configDictionary={"host":"127.0.0.1","port":27017})
+    dbutils.createWithUser(db_name)
 
 def generate_model(language, json_data, dm_name):
     """
@@ -118,11 +122,15 @@ def generate_adapter(language, server_ip, port, dm_name):
 
 """ This method creates the server js file"""
 def generate_server(server_filename, server_ip, port, dm_name):
-    server_template_file = open("code_templates/"+server_filename, "r").read()
+    configure_db(dm_name)
 
+    server_template_file = open("code_templates/"+server_filename, "r").read()
+    db_user, db_password = edm_utils.generate_user_credentials(dm_name)
     data = {"server_ip": server_ip,
             "port": port,
-            "dbname": dm_name}
+            "dbname": dm_name, 
+            "db_user": db_user, 
+            "db_password": db_password}
     content = replace_words(server_template_file, data)
     server_code = open("generated_code/default/" + dm_name + "/Server.js", "w")
     server_code.write(content)
