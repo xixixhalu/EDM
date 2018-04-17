@@ -1,8 +1,7 @@
 import os
-from errors import exceptions as e
 from pymongo import MongoClient
 import json
-
+from utilities import edm_utils, exceptions as e
 
 class DBUtilities:
 	
@@ -38,17 +37,23 @@ class DBUtilities:
 			print "call setup() on the DBUtilities and pass config file to it"
 
 		elements = jsonDMO[domainModelName]['elements']
-
 		db = self.client.domainModelName
-
 		for obj in elements:
 			print str(obj['elementName'])
 			db.create_collection(str(obj['elementName']))
-
 		print db.collection_names()
 
 
-
+	def createWithUser(self, domainModelName):
+		db = self.client[domainModelName]
+		db_user, db_password = edm_utils.generate_user_credentials(domainModelName)
+		try:
+			db.create_collection("default")
+			db.command("dropUser", db_user)
+		except Exception as ex:
+			pass
+		db.command("createUser", db_user, pwd=db_password, roles=['readWrite'])
+		print("Added user " + db_user + " to mongo db " + domainModelName)
 
 	def createOrUpdateDB(self, jsonDMO):
 		if self.client is None:
