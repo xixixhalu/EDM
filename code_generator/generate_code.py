@@ -117,17 +117,41 @@ def generate_adapter(language, server_ip, port, dm_name):
 
 
 """ This method creates the server js file"""
-def generate_server(server_filename, server_ip, port, dm_name):
+def generate_server(server_filename, server_ip, port, dm_name, json_data):
     server_template_file = open("code_templates/"+server_filename, "r").read()
-
+    class_template = open("code_templates/"+ "class_template", "r").read()
+    db_connection_template = open("code_templates/"+ "db_connection_template", "r").read()
+    db_ops_template = open("code_templates/"+ "db_ops_template", "r").read()
+    authen_template = open("code_templates/"+ "authen_template", "r").read()
+    
+    elements = None
+    for model_name in json_data:
+        elements = json_data[model_name].get("elements")
+    # deliver template for each model
+    elem_names = [str(element["elementName"]) for element in elements]
     data = {"server_ip": server_ip,
             "port": port,
-            "dbname": dm_name}
+            "dbname": dm_name,
+        "collection_names" : str(elem_names)}
     content = replace_words(server_template_file, data)
-    server_code = open("generated_code/default/" + dm_name + "/Server.js", "w")
+    server_code = open("generated_code/default/" + dm_name + "/Server/Server.js", "w")
     server_code.write(content)
     server_code.close()
+    for elem_name in elem_names :
+        output_location = "generated_code/default/" + dm_name + "/Server/" + elem_name + ".js"
+        with open(output_location, "w") as output_file:
+            output_file.write(class_template)
+    output_location = "generated_code/default/" + dm_name + "/Server/" + "db_connection" + ".js"
+    with open(output_location, "w") as output_file:
+        output_file.write(db_connection_template)
 
+    output_location = "generated_code/default/" + dm_name + "/Server/" + "dbOps" + ".js"
+    with open(output_location, "w") as output_file:
+        output_file.write(db_ops_template)
+    
+    output_location = "generated_code/default/" + dm_name + "/Server/" + "authen" + ".js"
+    with open(output_location, "w") as output_file:
+        output_file.write(authen_template)
 
 def generate_all(db_name):
     # reading json data
@@ -135,6 +159,7 @@ def generate_all(db_name):
 
     with open(file_path + db_name + ".json") as json_input:
         json_data = json.load(json_input)
+        print json.dumps(json_data, indent=2)
         display_ip, server_ip, port = get_server_info()
 
         # create files for each language
@@ -147,8 +172,9 @@ def generate_all(db_name):
             generate_adapter(language, str(server_ip), str(port), str(db_name))
             model_display_data[language] = generate_model(language, json_data, str(db_name))
 
+
         # TODO need update
-        generate_server("Server", str(server_ip), str(port), str(db_name))
+        generate_server("Server", str(server_ip), str(port), str(db_name), json_data)
 
         # structure adjustment for model_display_data
         # temporary solution, may change later
