@@ -1,11 +1,18 @@
+//use angularJS to help implement the reference page ---- // Xuan Zhu
 var app = angular.module('myApp', []);
 app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
+    //$scope.classes is used to store all the classes generated when the data is loaded:
     $scope.classes = [];
+    //$scope.details is used to store all the source code data
     $scope.details = [];
+    //$scope.languages is used to store all the languages
     $scope.languages = [];
+
+    //control the display of each class
     $scope.changeParentTab = function(tab) {
         $scope.view_tab = tab;
     };
+    //control the display of each tab based on the class and language information
     $scope.changeChildTab = function (classInfo, lanInfo) {
         $scope.view = classInfo+"_"+lanInfo;
     };
@@ -32,15 +39,20 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
 
         angular.forEach(myArray, function(value, key){
             $scope.functions = [];
+            //dymically load the classes info to classes array
             $scope.classes.push(key);
         });
     //});
+
+    //this is used to split the source code of the data and store in an array
+    //used the array in html page to generate the content of each span element
     $scope.generateView = function (data) {
         result = [];
         result = data.split(/\r?\n/);
         return result;
     }
 
+    //This function is used to copy the code to clipboard:
     $scope.CopyToClipboard = function(classInfo, lanInfo, index) {
         // Create a new textarea element and give it id='t'
         var containerid = classInfo+"_"+lanInfo+"_"+index;
@@ -58,6 +70,7 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         document.execCommand('copy');
         // Remove the textarea
         document.body.removeChild(textarea);
+        //Remind that you have successfully copied the code to clipboard
         alert("Your code has been copied to clipboard");
     };
 }]);
