@@ -1,5 +1,33 @@
+html,body{
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+div#container{
+	position:relative;
+	margin:0 auto;
+	height:auto !important;
+	height:100%;
+	min-height:100%;
+}
+
+div#content{
+	padding: 1em 1em 5em;
+}
+
+div#footer{
+	position:absolute;
+	width:100%;
+	bottom:0;
+	background-color: #e9ecef;
+    color: #000000;
+    padding: 20px;
+    margin-top: 10px;
+}
+
 .jumbotron{
-	padding: 2em;
+	padding: 2px;
 	margin-bottom: 5px;
 }
 
@@ -12,10 +40,12 @@
 }
 
 footer {
+	position:relative;
+	bottom:0;
     width: 100%;
     background-color: #e9ecef;
     color: #000000;
-    padding: 25px;
+    padding: 20px;
     margin-top: 10px;
 }
 
@@ -120,7 +150,7 @@ label{
 }
 
 .container {
-	padding: 16px;
+	padding: 10px;
 }
 
 widget-area.blank {
