@@ -1,105 +1,111 @@
+<!--The homepage is the initial page for the tool. The page displays some information about the tool. Also provides options to log into an existing account of sign up with the system-->
 <!DOCTYPE html>
 <html ng-app>
-  <head>
-    <meta charset="utf-8">
-    <title>Executable Domain Modeling</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-	<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
-	<basefont size="7">
-  </head>
-  <body>
-	<div class="jumbotron">
-		<div class="container text-center">
-			<h1>Executable Domain Modeling</h1>      
-			<p>Convert XML files to real code</p>
+	<head>
+		<meta charset="utf-8">
+		<title>Executable Domain Modeling</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+	</head>
+	<body>
+		<div id="container">
+			<!--Shows the title of the project - Page Header-->
+			<div class="jumbotron">
+				<div class="container text-center">
+					<h1>Executable Domain Modeling</h1>      
+					<p>Convert XML files to real code</p>
+				</div>
+			</div>
+			<div id="content">
+				<!--Button for Login (Creates a modal for the login screen)-->
+				<div class="buttons" align="right">
+					<button type="button" class="btn btn-primary btn-md" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
+				</div>
+				<!--Page Content: Displays information about the Online EDM tool-->
+				<div class="container" align="center" style="font-size:20px; width:70%">
+					<h2>Convert your domain model to code in just one click</h2>
+					<br>
+					<p>Software Development is labor-intensive, time consuming, error-prone and expensive. With time constraints and limited resources, as-build systems often don't match designs and fail to meet requirements.</p>
+					<p>Our efforts are focused on enabling rapid and continuous delivery while leveraging parallelism in development via automatic code generation, specifically making domain models instantly executable. </p>
+					<p>As a tool support to the solution, we describe a code generator to enable parallel development of services. It uses UML class diagram to model the problem domain, then rapidly realize the domain model as a set of NoSQL database collections, automate the generation of common database access.</p>
+					<p class="font-weight-bold">Sign up today for a free trial of our tool</p>
+					<!--Button for Signup (sign up screen also appears as a modal-->
+					<button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('signup').style.display='block'">Sign Up</button>
+				</div>
+				<!--Structure of Login Modal-->
+				<div id="login" class="modal">
+					<form class="modal-content animate" action="/new.html">
+						<div class="container">
+							<div class="lcontainer">
+								<img src="avatar.png" class="avatar">
+							</div>
+							<label for="uname"><b>Username</b></label>
+							<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
+							<label for="psw"><b>Password</b></label>
+							<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
+							<label>
+								<input type="checkbox" name="remember"> Remember me
+							</label>
+							<button type="submit" class="btn btn-success btn-md fullbutton">Login</button>
+						</div>
+						<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
+							<button type="button" onclick="document.getElementById('login').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
+						</div>
+					</form>
+				</div>
+				<!--Structure of Signup Modal-->
+				<div id="signup" class="modal">
+					<form class="modal-content animate" action="/new.html">
+						<div class="container">
+							<div class="lcontainer">
+								<img src="avatar.png" class="avatar">
+							</div>
+							<label for="email"><b>Email</b></label>
+							<input type="text" placeholder="Enter Email" name="email" class="form-control" required>
+							<label for="uname"><b>Username</b></label>
+							<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
+							<label for="psw"><b>Password</b></label>
+							<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
+							<br><br>
+							<button type="submit" class="btn btn-success btn-md fullbutton">Sign Up</button>
+						</div>
+						<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
+							<button type="button" onclick="document.getElementById('signup').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<!--Shows copyright as page footer-->
+			<div id="footer" align="center">
+				<p>&copy; Copyright Protected. All rights reserved</p> 
+			</div>
 		</div>
-	</div>
-	<div class="buttons" align="right">
-		<button type="button" class="btn btn-primary btn-md" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
-	</div>
-	<div class="container" align="center" style="font-size:20px; width:70%">
-		<h2>Convert your domain model to code in just one click</h2>
-		<br>
-		<p>Software Development is labor-intensive, time consuming, error-prone and expensive. With time constraints and limited resources, as-build systems often don't match designs and fail to meet requirements.</p>
-		<p>Our efforts are focused on enabling rapid and continuous delivery while leveraging parallelism in development via automatic code generation, specifically making domain models instantly executable. </p>
-		<p>As a tool support to the solution, we describe a code generator to enable parallel development of services. It uses UML class diagram to model the problem domain, then rapidly realize the domain model as a set of NoSQL database collections, automate the generation of common database access.</p>
-		<br>
-		<p class="font-weight-bold">Sign up today for a free trial of our tool</p>
-		<button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('signup').style.display='block'">Sign Up</button>
-	</div>
-	
-	<div id="login" class="modal">
-		<form class="modal-content animate" enctype="multipart/form-data" action="{{ url_for('login')}}" method="post" >
-			<div class="container">
-				<div class="lcontainer">
-					<img src="avatar.png" class="avatar">
-				</div>
-				<label for="uname"><b>Username</b></label>
-				<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
-				<label for="psw"><b>Password</b></label>
-				<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
-				<label>
-					<input type="checkbox" name="remember"> Remember me
-				</label>
-				<button type="submit" class="btn btn-success btn-md fullbutton">Login</button>
-			</div>
-			<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
-				<button type="button" onclick="document.getElementById('login').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
-			</div>
-		</form>
-	</div>
-	
-	<div id="signup" class="modal">
-		<form class="modal-content animate" enctype="multipart/form-data" action="{{ url_for('register')}}" method="post" >
-			<div class="container">
-				<div class="lcontainer">
-					<img src="avatar.png" class="avatar">
-				</div>
-				<label for="email"><b>Email</b></label>
-				<input type="text" placeholder="Enter Email" name="email" class="form-control" required>
-				<label for="uname"><b>Username</b></label>
-				<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
-				<label for="psw"><b>Password</b></label>
-				<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
-				<br><br>
-				<button type="submit" class="btn btn-success btn-md fullbutton">Sign Up</button>
-			</div>
-			<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
-				<button type="button" onclick="document.getElementById('signup').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
-			</div>
-		</form>
-	</div>
+		<!--Script to close the modal if clicked outside the target area-->
+		<script>
+			// Get the modal
+			var modal = document.getElementById('login');
 
-	<footer class="container-fluid text-center">
-	  <p>&copy; Copyright Protected. All rights reserved</p> 
-	</footer>
-	
-	<script>
-		// Get the modal
-		var modal = document.getElementById('login');
-
-		// When the user clicks anywhere outside of the modal, close it
-		window.onclick = function(event) {
-			if (event.target == modal) {
-				modal.style.display = "none";
+			// When the user clicks anywhere outside of the modal, close it
+			window.onclick = function(event) {
+				if (event.target == modal) {
+					modal.style.display = "none";
+				}
 			}
-		}
-	</script>
-	<script>
-		// Get the modal
-		var modal2 = document.getElementById('signup');
+		</script>
+		<script>
+			// Get the modal
+			var modal2 = document.getElementById('signup');
 
-		// When the user clicks anywhere outside of the modal, close it
-		window.onclick = function(event) {
-			if (event.target == modal2) {
-				modal2.style.display = "none";
+			// When the user clicks anywhere outside of the modal, close it
+			window.onclick = function(event) {
+				if (event.target == modal2) {
+					modal2.style.display = "none";
+				}
 			}
-		}
-	</script>
-	
-  </body>
+		</script>
+	</body>
 </html>

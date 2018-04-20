@@ -1,57 +1,69 @@
+<!--The description page gives a brief description about our project //Xuan Zhu-->
 <!DOCTYPE html>
 <html ng-app>
-<head>
-    <meta charset="utf-8">
-    <title>API References - Executable Domain Modeling</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
-    <basefont size="7">
-</head>
-<body>
-<div class="jumbotron">
-    <div class="container text-center">
-        <h1>Executable Domain Modeling</h1>
-        <p>Convert XML files to real code</p>
-    </div>
-</div>
-
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-  <a class="navbar-brand" href="#"><!-- Redirect to homepage here -->
-    <span class="fa fa-home"></span>
-  </a>
-  <ul class="navbar-nav col-sm-10 nav-justified">
-    <li class="nav-item">
-      <a class="nav-link" href="#">Description</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">API Reference</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#">Server Status</a>
-    </li>
-  </ul>
-  <div class="col-sm-2 nav-item"><a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a></div>
-</nav>
-
-<div class="container-fluid" style="margin-top:20px">
-	<h3>Description &nbsp<span class="fa fa-archive"></span></h3>
-	<div class="container-fluid ">
-		<ul class="list-group">
-			<li class="list-group-item"> Description of the database created </li>
-			<li class="list-group-item"> Table names and field description in case of RDBMS/ Collection names in case of NoSQL database</li>
-			<li class="list-group-item"> Details of where the DB server is hosted </li>
-		</ul>
-	</div>
-</div>
-
-<footer class="container-fluid text-center fixed-bottom">
-    <p>&copy; Copyright Protected. All rights reserved</p>
-</footer>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<title>API References - Executable Domain Modeling</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+		<basefont size="7">
+	</head>
+	<body>
+		<div id="container">
+			<!--Show the title of the project -- header // Xuan Zhu-->
+			<div class="jumbotron">
+				<div class="container text-center">
+					<h1>Executable Domain Modeling</h1>
+					<p>Convert XML files to real code</p>
+				</div>
+			</div>
+			<!--Nav bars -- help redirect to different pages-->
+			<nav class="navbar navbar-expand-sm bg-dark navbar-dark col-sm-12">
+				<!-- Redirect to homepage here -->
+				<ul class="navbar-nav nav-justified col-sm-12">
+					<li class="nav-brand">
+						<a class="nav-link" href="#"><span class="fa fa-home"></span></a>
+					</li>
+					<!--Redirect to description page here!-->
+					<li class="nav-item">
+						<a class="nav-link" href="#">Description</a>
+					</li>
+					<!--Redirect to API reference page here!-->
+					<li class="nav-item">
+						<a class="nav-link" href="#">API Reference</a>
+					</li>
+					<!--Redirect to server status page here!-->
+					<li class="nav-item">
+						<a class="nav-link" href="#">Server Status</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a>
+					</li>
+				</ul>
+			</nav>
+			<div id="content">
+				<!--The main content on the page: A brief description about our project here-->
+				<div class="container-fluid" style="margin-top:20px">
+					<h3>Description &nbsp<span class="fa fa-archive"></span></h3>
+					<div class="container-fluid ">
+						<ul class="list-group">
+							<li class="list-group-item"> Description of the database created </li>
+							<li class="list-group-item"> Table names and field description in case of RDBMS/ Collection names in case of NoSQL database</li>
+							<li class="list-group-item"> Details of where the DB server is hosted </li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--show the copyright as footer-->
+			<div id="footer" align="center">
+				<p>&copy; Copyright Protected. All rights reserved</p>
+			</div>
+		</div>
+	</body>
 </html>
