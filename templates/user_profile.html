@@ -1,99 +1,105 @@
+<!--The user profile page displays information regarding user's existing instances and allows the user to generate a new instance -->
 <!DOCTYPE html>
 <html ng-app>
-<head>
-    <meta charset="utf-8">
-    <title>API References - Executable Domain Modeling</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
-    <basefont size="7">
-</head>
-<body>
-<div class="jumbotron">
-    <div class="container text-center">
-        <h1>Executable Domain Modeling</h1>
-        <p>Convert XML files to real code</p>
-    </div>
-</div>
+	<head>
+		<meta charset="utf-8">
+		<title>API References - Executable Domain Modeling</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+		<basefont size="7">
+	</head>
+	<body>
+		<div id="container">
+			<!--Shows the title of the page - Project header -->
+			<div class="jumbotron">
+				<div class="container text-center">
+					<h1>Executable Domain Modeling</h1>
+					<p>Convert XML files to real code</p>
+				</div>
+			</div>
+			<div id="content">
+				<!-- Main content of the page: A table representing all the existing instances -->
+				<div class="container-fluid">
+					<div class="content">
+						<div class="row">
+							<div class="col-md-12 col-sm-12">
+								<!--Button to logout from the current user session-->
+								<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
+							</div>
+						</div>
+						<br>
+						<div style="overflow-x:auto;overflow-y:auto;height:250px;">
+							<table class="table table-hover table-responsive-sm">
+								<thead class="thead-dark">
+									<tr>
+										<th scope="col">ID</th>
+										<th scope="col">Domain</th>
+										<th scope="col">Status</th>
+										<th scope="col">Details</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>ABC123</td>
+										<td>DadDriver</td>
+										<td>Running</td>
+										<td><a href="#">Link to Instance</a></td>
+									</tr>
+									<tr>
+										<td>XYZ321</td>
+										<td>Management</td>
+										<td>Terminated</td>
+										<td><a href="#">Link to Instance</a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<br>
+						<!-- This extra code is to display the instances as widgets instead of a table
+						<div class="row" id="widget-box">
+							<div class="col-md-4">
+								<div class="widget-area no-padding blank">
+									<div class="user_profile">
+										<span id="instance_info" style="color: white">16 instances</span>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="widget-area no-padding blank">
+									<div class="user_profile">
+										<span id="class_info">25 classes</span>
+									</div>
+								</div>
+							</div>
 
-<div class="container-fluid">
-    <div class="content">
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
-            </div>
-        </div>
-		<br>
-        <div style="overflow-x:auto;overflow-y:auto;height:250px;">
-            <table class="table table-hover table-responsive-sm">
-			    <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-					    <th scope="col">Domain</th>
-					    <th scope="col">Status</th>
-					    <th scope="col">Details</th>
-                    </tr>
-			    </thead>
-				<tbody>
-					<tr>
-						<td>ABC123</td>
-						<td>DadDriver</td>
-						<td>Running</td>
-						<td><a href="#">Link to Instance</a></td>
-					</tr>
-					<tr>
-						<td>XYZ321</td>
-						<td>Management</td>
-						<td>Terminated</td>
-						<td><a href="#">Link to Instance</a></td>
-					</tr>
-				</tbody>
-            </table>
-        </div>
-		<br>
-		<!--
-        <div class="row" id="widget-box">
-            <div class="col-md-4">
-                <div class="widget-area no-padding blank">
-                    <div class="user_profile">
-                        <span id="instance_info" style="color: white">16 instances</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="widget-area no-padding blank">
-                    <div class="user_profile">
-                        <span id="class_info">25 classes</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="widget-area no-padding blank">
-                    <div class="user_profile">
-                        <span id="function_info">78 functions</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-		-->
-        <div class="row">
-            <div class="col-md-4 offset-md-4" id="new_button">
-                <button class="btn btn-lg btn-primary btn-block" href="#">New Instance</button>
-            </div>
-        </div>
-    </div>
-
-</div>
-<footer class="container-fluid text-center">
-    <p>&copy; Copyright Protected. All rights reserved</p>
-</footer>
-</body>
+							<div class="col-md-4">
+								<div class="widget-area no-padding blank">
+									<div class="user_profile">
+										<span id="function_info">78 functions</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						-->
+						<div class="row">
+						<!--Button to generate a new instance-->
+							<div class="col-md-4 offset-md-4" id="new_button">
+								<button class="btn btn-lg btn-primary btn-block" href="#">New Instance</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--Show the copyright as a footer-->
+			<div id="footer" align="center">
+				<p>&copy; Copyright Protected. All rights reserved</p>
+			</div>
+		</div>
+	</body>
 </html>
-
-

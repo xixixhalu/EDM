@@ -1,5 +1,33 @@
+html,body{
+	margin:0;
+	padding:0;
+	height:100%;
+}
+
+div#container{
+	position:relative;
+	margin:0 auto;
+	height:auto !important;
+	height:100%;
+	min-height:100%;
+}
+
+div#content{
+	padding: 1em 1em 5em;
+}
+
+div#footer{
+	position:absolute;
+	width:100%;
+	bottom:0;
+	background-color: #e9ecef;
+	color: #000000;
+	padding: 20px;
+	margin-top: 10px;
+}
+
 .jumbotron{
-	padding: 2em;
+	padding: 2px;
 	margin-bottom: 5px;
 }
 
@@ -11,39 +39,31 @@
 	font-size: 1.5em;
 }
 
-footer {
-    width: 100%;
-    background-color: #e9ecef;
-    color: #000000;
-    padding: 25px;
-    margin-top: 10px;
-}
-
 .sidenav {
-    background-color: #f1f1f1;
-    height: 100%;
-    padding: 10px;
+	background-color: #f1f1f1;
+	height: 100%;
+	padding: 10px;
 }
 
 /* .row.content {height: 1000px} */
 
 pre{
-    word-break: keep-all;
-    white-space: pre-wrap;
-    counter-reset: line;
+	word-break: keep-all;
+	white-space: pre-wrap;
+	counter-reset: line;
 }
 
 pre span:before {
-    counter-increment: line;
-    content: counter(line);
-    display: inline-block;
-    padding: 0.5em;
+	counter-increment: line;
+	content: counter(line);
+	display: inline-block;
+	padding: 0.5em;
 	margin-right: 0.5em
-    color: #888
+	color: #888
 }
 
 pre span {
-    display: block;
+	display: block;
 	line-height: 0.5;
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
@@ -51,7 +71,7 @@ pre span {
 }
 
 .panel {
-    margin-top: 1.5em;
+	margin-top: 1.5em;
 }
 
 input[type=text], input[type=password] {
@@ -61,7 +81,7 @@ input[type=text], input[type=password] {
 	display: inline-block;
 	border: 1px solid #ccc;
 	box-sizing: border-box;
-	}
+}
 	
 .fullbutton {
 	width:100%;
@@ -120,84 +140,84 @@ label{
 }
 
 .container {
-	padding: 16px;
+	padding: 10px;
 }
 
 widget-area.blank {
-    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    -ms-box-shadow: none;
-    -o-box-shadow: none;
-    box-shadow: none;
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-ms-box-shadow: none;
+	-o-box-shadow: none;
+	box-shadow: none;
 }
 
 .widget-area {
-    background-color: #fff;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -ms-border-radius: 4px;
-    -o-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-    -ms-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-    -o-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
-    float: left;
-    margin-top: 30px;
-    padding: 25px 30px;
-    position: relative;
-    width: 100%;
+	background-color: #fff;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	-ms-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	-o-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	float: left;
+	margin-top: 30px;
+	padding: 25px 30px;
+	position: relative;
+	width: 100%;
 }
 
 .user_profile {
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -ms-border-radius: 4px;
-    -o-border-radius: 4px;
-    border-radius: 4px;
-    float: left;
-    overflow: hidden;
-    width: 100%;
-    font-weight: bold;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+	float: left;
+	overflow: hidden;
+	width: 100%;
+	font-weight: bold;
 }
 
 .user_profile > span#instance_info {
-    background: #48a4dc;
-    color: white;
+	background: #48a4dc;
+	color: white;
 }
 
 .user_profile > span#class_info {
-    background: #3b5998;
-    color: white;
+	background: #3b5998;
+	color: white;
 }
 
 .user_profile> span#function_info {
-    background: #ff604f;
-    color: white;
+	background: #ff604f;
+	color: white;
 }
 
 .user_profile > span {
-    float: left;
-    font-size: 28px;
-    height: 110px;
-    line-height: 110px;
-    text-align: center;
-    width: 100%;
+	float: left;
+	font-size: 28px;
+	height: 110px;
+	line-height: 110px;
+	text-align: center;
+	width: 100%;
 }
 
 #widget-box {
-    margin-top: 2%;
-    margin-bottom: 5%;
+	margin-top: 2%;
+	margin-bottom: 5%;
 
 }
 
 #new_button {
-    margin-bottom: 5%;
+	margin-bottom: 5%;
 }
 
 #log_out {
-    margin-top: 0.4%;
+	margin-top: 0.4%;
 	padding-right: 5px;
 }
