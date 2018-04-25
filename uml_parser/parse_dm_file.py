@@ -111,7 +111,7 @@ class Analyzer:
                 for elemRelation in elemRelations: 
                     # ZHIYUN: ignore relations to class not existing in the domain
                     if not (elem.has_key(str(elemRelation.get('start'))) and elem.has_key(str(elemRelation.get('end')))): continue;
-<<<<<<< HEAD
+
 
                     relationId = elemRelation.get(self.xmiPrefixAppender('id',namespaces["xmi_namespace"]))
 
@@ -126,20 +126,13 @@ class Analyzer:
                             endUpperValue=upperValues[relationId][1]
                         dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag), startUpperValue, endUpperValue)
 
-
-
-  
-        json_file = open("generated_code/default/"+output_filename+".json", "w")
-=======
-                    dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag))
-
         file_path = "generated_code/default/" + _dmoName + "/"
         if not os.path.exists(file_path):
             os.makedirs(file_path)
         edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
         json_file = open(file_path + output_filename + ".json", "w")
 
->>>>>>> 77ea7cc7f79fb71937f2a280fb3069e956228ce5
+
         json_file.write(dmo.toJson())
         json_file.close()
 
@@ -228,11 +221,7 @@ class Analyzer:
                 else:
                     dmo.defineRelation(relationId,  str(start.get('type')), str(end.get('type')) , str("Association"),startUpperVaule,endUpperValue)
 
-<<<<<<< HEAD
 
-        
-        json_file = open("generated_code/default/"+output_filename+".json", "w")
-=======
   
         file_path = "generated_code/default/" + _dmoName + "/"
         if not os.path.exists(file_path):
@@ -240,7 +229,6 @@ class Analyzer:
         edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
         json_file = open(file_path + output_filename + ".json", "w")
         
->>>>>>> 77ea7cc7f79fb71937f2a280fb3069e956228ce5
         json_file.write(dmo.toJson())
         json_file.close()
 
