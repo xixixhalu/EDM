@@ -3,9 +3,9 @@
 /*
  Configure the variables below
  */
-var server_ip = "$server_ip";
-var dbname = "$dbname";
-var server_port = "$port";
+var server_ip = "127.0.0.1";
+var dbname = "generalization";
+var server_port = "2000";
 //declare what is the primary key for the table specified above.
 var primary_key = '_id';
 

@@ -1,15 +1,15 @@
 
-var $model = {};
+var Class3 = {};
 
-$model.name = $name;              // Model name
+Class3.name = "Class3";              // Model name
 
-$model.attributes = [            // Model attribute list
-    $attributes
+Class3.attributes = [            // Model attribute list
+    
 ];
 
 // Model functions
 
-$model.create$model = function(data, success, error) {
+Class3.create = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -23,10 +23,10 @@ $model.create$model = function(data, success, error) {
         error(msg);
     }
 
-    DBAdapter.createOne($model.name, data, successCB, errorCB);
+    DBAdapter.createOne(Class3.name, data, successCB, errorCB);
 };
 
-$model.read$model = function(data, success, error) {
+Class3.read = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -40,10 +40,10 @@ $model.read$model = function(data, success, error) {
         error(msg);
     }
 
-    DBAdapter.readOne($model.name, data, successCB, errorCB);
+    DBAdapter.readOne(Class3.name, data, successCB, errorCB);
 };
 
-$model.update$model = function(search, update, success, error) {
+Class3.update = function(search, update, success, error) {
     // Wrap data
     var data = {
         oldData : search,
@@ -61,10 +61,10 @@ $model.update$model = function(search, update, success, error) {
         error(msg);
     }
 
-    DBAdapter.update($model.name, data, successCB, errorCB);
+    DBAdapter.update(Class3.name, data, successCB, errorCB);
 };
 
-$model.delete$model = function(data, success, error) {
+Class3.delete = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -78,10 +78,10 @@ $model.delete$model = function(data, success, error) {
         error(msg);
     }
 
-    DBAdapter.delete($model.name, data, successCB, errorCB);
+    DBAdapter.delete(Class3.name, data, successCB, errorCB);
 };
 
-$model.get = function(id, success, error) {
+Class3.get = function(id, success, error) {
     // Wrap data
     var data = {"_id" : id};
 
@@ -96,10 +96,10 @@ $model.get = function(id, success, error) {
         error(msg);
     }
 
-    DBAdapter.readOne($model.name, data, successCB, errorCB);
+    DBAdapter.readOne(Class3.name, data, successCB, errorCB);
 };
 
-$model.set = function(id, newData, success, error) {
+Class3.set = function(id, newData, success, error) {
     // Wrap data
     var data = {"_id" : id, "newData" : newData};
 
@@ -114,9 +114,9 @@ $model.set = function(id, newData, success, error) {
         error(msg);
     }
 
-    DBAdapter.update($model.name, data, successCB, errorCB);
+    DBAdapter.update(Class3.name, data, successCB, errorCB);
 };
 
 // Add the other functions here
 
-// $methods
+// 
