@@ -1,16 +1,16 @@
 
-var Class1 = {};
+var class1 = {};
 
-Class1.name = "Class1";              // Model name
+class1.name = "class1";              // Model name
 
-Class1.attributes = [            // Model attribute list
+class1.attributes = [            // Model attribute list
     "class1Attribute1"
 ];
 
 // Model functions
 
 
-Class1.create = function(data, success, error) {
+class1.createOne = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -24,10 +24,10 @@ Class1.create = function(data, success, error) {
         error(msg);
     }
 
-    DBAdapter.createOne(Class1.name, data, successCB, errorCB);
+    DBAdapter.createOne(class1.name, data, successCB, errorCB);
 };
 
-Class1.read = function(data, success, error) {
+class1.createMany = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -41,10 +41,44 @@ Class1.read = function(data, success, error) {
         error(msg);
     }
 
-    DBAdapter.readOne(Class1.name, data, successCB, errorCB);
+    DBAdapter.createMany(class1.name, data, successCB, errorCB);
 };
 
-Class1.update = function(search, update, success, error) {
+class1.readOne = function(data, success, error) {
+    // Wrap data
+
+    // Define callback function
+    function successCB(msg) {
+        // Success handling
+        success(msg);
+    }
+
+    function errorCB(msg) {
+        // Error handling
+        error(msg);
+    }
+
+    DBAdapter.readOne(class1.name, data, successCB, errorCB);
+};
+
+class1.readMany = function(data, success, error) {
+    // Wrap data
+
+    // Define callback function
+    function successCB(msg) {
+        // Success handling
+        success(msg);
+    }
+
+    function errorCB(msg) {
+        // Error handling
+        error(msg);
+    }
+
+    DBAdapter.readMany(class1.name, data, successCB, errorCB);
+};
+
+class1.update = function(search, update, success, error) {
     // Wrap data
     var data = {
         oldData : search,
@@ -62,10 +96,10 @@ Class1.update = function(search, update, success, error) {
         error(msg);
     }
 
-    DBAdapter.update(Class1.name, data, successCB, errorCB);
+    DBAdapter.update(class1.name, data, successCB, errorCB);
 };
 
-Class1.delete = function(data, success, error) {
+class1.delete = function(data, success, error) {
     // Wrap data
 
     // Define callback function
@@ -79,10 +113,10 @@ Class1.delete = function(data, success, error) {
         error(msg);
     }
 
-    DBAdapter.delete(Class1.name, data, successCB, errorCB);
+    DBAdapter.delete(class1.name, data, successCB, errorCB);
 };
 
-Class1.get = function(id, success, error) {
+class1.get = function(id, success, error) {
     // Wrap data
     var data = {"_id" : id};
 
@@ -97,10 +131,10 @@ Class1.get = function(id, success, error) {
         error(msg);
     }
 
-    DBAdapter.readOne(Class1.name, data, successCB, errorCB);
+    DBAdapter.readOne(class1.name, data, successCB, errorCB);
 };
 
-Class1.set = function(id, newData, success, error) {
+class1.set = function(id, newData, success, error) {
     // Wrap data
     var data = {"_id" : id, "newData" : newData};
 
@@ -115,7 +149,7 @@ Class1.set = function(id, newData, success, error) {
         error(msg);
     }
 
-    DBAdapter.update(Class1.name, data, successCB, errorCB);
+    DBAdapter.update(class1.name, data, successCB, errorCB);
 };
 
 // Add the other functions here

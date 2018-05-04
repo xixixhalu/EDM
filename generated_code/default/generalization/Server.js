@@ -8,6 +8,8 @@ var dbname = "generalization";
 var server_port = "2000";
 //declare what is the primary key for the table specified above.
 var primary_key = '_id';
+var db_user = "generalization_user"
+var db_password = "generalization_pwd"
 
 /*
  Required node module
@@ -23,7 +25,7 @@ var ObjectId = mongodb.ObjectId;
  change the IP and keyspace so that it is according to your setting.
  */
 
-var url = "mongodb://"+server_ip+":27017/"+dbname;
+var url = "mongodb://"+db_user+":"+db_password+"@"+server_ip+":27017/"+dbname;
 var db;
 client.connect(url, function (err, database) {
     if (err) {
