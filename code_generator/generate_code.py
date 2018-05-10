@@ -1,7 +1,3 @@
-import json
-
-import os
-
 from utilities.config_util import ConfigUtil
 from utilities import port_scanner, edm_utils
 from code_generator.template_utils import *
@@ -20,171 +16,99 @@ def get_server_info():
     to_port = config.getInt('Port', 'to_port')
 
     port = port_scanner.runPortScan(from_port, to_port)
-    return display_ip, server_ip, port
+    return str(display_ip), str(server_ip), str(port)
+
 
 def configure_db(db_name):
     dbutils = DBUtilities()
     dbutils.setup(configDictionary={"host":"127.0.0.1","port":27017})
     dbutils.createWithUser(db_name)
 
-def generate_model(language, json_data, dm_name):
-    """
-    This method parses json input and replaces the
-    respective values in the template and generates the target model file
 
+def generate_model(language, template_model):
+    """
+    Creates the Model code file with a specific language
     :param language: the language name. eg: 'JavaScript'
-    :param json_data: a dict contains json data from xml_parser.
-    :param dm_name: the domain model name
-
-    :return code_display_data: a dict contains data will be used in code display page
+    :param template_model: template model for a class, see class TemplateModel
+    :return: data used for code display in web page
     """
+    template = template_model.get_template(language)
 
-    template_location = TEMPLATE_PATH[language] + "Model" + LANGUAGE_SUFFIX[language]
-    output_path = template_output_path(dm_name, language)
+    data = {"model": template_model.name,
+            "name": template_model.name}
+    strlists = {"attributes": template_model.attribute_names}
+    template.render(tofile=True, reset=False, replace_words=data, replace_strlists=strlists)
 
-
-    with open(template_location, "r") as template_file:
-        model_template = template_file.read()
-
-    method_template_location = TEMPLATE_PATH[language] + "Method" + LANGUAGE_SUFFIX[language]
-    with open(method_template_location, "r") as template_file:
-        method_template = template_file.read()
-
-    elements = None
-    for model_name in json_data:
-        elements = json_data[model_name].get("elements")
-
-    # deliver template for each model
-    code_display_data = {}
-    for element in elements:
-        # read info form json data
-        elem_name = element.get("elementName")
-
-        element_attrs = element.get("Attributes").get("Simple")
-        attribute_list = [{"name": attribute["name"],
-                           "type": attribute["details"]["type"]}
-                          for attribute in element_attrs]
-        attribute_names = [attrs["name"] for attrs in attribute_list]
-
-        content = model_template
-
-        # add methods
-        # XXX need test and more functions
-        method_names = element["Operations"]
-        method_content = ""
-        for method_name in method_names:
-            method_content += replace_words(method_template, {"method": method_name,
-                                                              "parameters": ""})
-        content = replace_words(content, {"methods": method_content})
-
-        # replace variables
-        data = {"model": elem_name,
-                "name": elem_name}
-        content = replace_words(content, data)
-        content = replace_strlist(content, "attributes", attribute_names)
-
-        # extract func info and remove func marks
-        output_location = output_path + elem_name + LANGUAGE_SUFFIX[language]
-
-        content, func_info_list = extract_funcs_info(content, language, elem_name, attribute_list)
-        code_display_data[elem_name] = {"attribute_list": attribute_list,
-                                        "func_info_list": func_info_list,
-                                        "file_uri": output_location}
-
-        # create final file
-        with open(output_location, "w") as output_file:
-            output_file.write(content)
-
+    code_display_data = template.get_display_data()
     return code_display_data
-
 
 
 def generate_adapter(language, server_ip, port, dm_name):
     """
-    This method creates the adapter script file from the template
-
+    Creates the adapter code file with a specific language
     :param language: the language name. eg: 'JavaScript'
-    :param server_ip: the ip of the restful api server.
-    :param port: the port of the restful api server.
+    :param server_ip: the ip of the REST api server.
+    :param port: the port of the REST api server.
     :param dm_name: the domain model name
+    :return: data used for code display in web page
     """
-    template_location = TEMPLATE_PATH[language] + "Adapter" + LANGUAGE_SUFFIX[language]
-    output_path = template_output_path(dm_name, language)
-    output_location = output_path + "Adapter" + LANGUAGE_SUFFIX[language]
-
-    with open(template_location, "r") as template_file:
-        adapter_template = template_file.read()
+    template = AdapterTemplate(language, dm_name)
 
     data = {"server_ip": server_ip,
             "port": port}
-    content = replace_words(adapter_template, data)
+    template.render(tofile=True, reset=False, replace_words=data)
 
-    content, func_info_list = extract_funcs_info(content, language, "Adapter", [])
-
-    code_display_data = {"func_info_list": func_info_list,
-                         "attribute_list": [],
-                         "file_uri": output_location
-                         }
-
-    with open(output_location, "w") as output_file:
-        output_file.write(content)
+    code_display_data = template.get_display_data()
     return code_display_data
 
 
-""" This method creates the server js file"""
-def generate_server(server_filename, server_ip, port, dm_name):
+# TODO need integration with new Server templates
+def generate_server(server_ip, port, dm_name):
+    """
+    Creates the server code file for the REST services
+    :param server_ip: the ip of the REST api server.
+    :param port: the port of the REST api server.
+    :param dm_name: the domain model name
+    """
     configure_db(dm_name)
-
-    server_template_file = open("code_templates/"+server_filename, "r").read()
     db_user, db_password = edm_utils.generate_user_credentials(dm_name)
+
+    template = ServerTemplate(dm_name)
     data = {"server_ip": server_ip,
             "port": port,
             "dbname": dm_name, 
             "db_user": db_user, 
             "db_password": db_password}
-    content = replace_words(server_template_file, data)
-    server_code = open("generated_code/default/" + dm_name + "/Server.js", "w")
-    server_code.write(content)
-    server_code.close()
+    template.render(tofile=True, reset=False, replace_words=data)
 
 
-def generate_all(db_name):
-    # reading json data
-    file_path = "generated_code/default/"+db_name+"/"
+def generate_all(dm_name):
+    """
+    generate a set of code files from JSON
+    :param dm_name: name of the domain model
+    :return: data used for code display in web page
 
-    with open(file_path + db_name + ".json") as json_input:
+    NOTE don't consider the case that a class model called "Adapter"
+    """
+    file_location = "generated_code/default/" + dm_name + "/" + dm_name + ".json"
+    with open(file_location) as json_input:
         json_data = json.load(json_input)
         display_ip, server_ip, port = get_server_info()
+        print(display_ip + ":" + port)
 
-        # create files for each language
-        model_display_data = {"Adapter":{}}
-        temp_display_data = {}
-        for language in TEMPLATE_LANGUAGES:
-            output_path = template_output_path(db_name, language)
-            if not os.path.isdir(output_path):
-                os.makedirs(output_path)
-            model_display_data["Adapter"][language] = generate_adapter(language, str(server_ip), str(port), str(db_name))
-            #model_display_data["Adapter"][language]["func_info_list"] = generate_adapter(language, str(server_ip), str(port), str(db_name))
-            #model_display_data["Adapter"][language]["attribute_list"] = []
-            temp_display_data[language] = generate_model(language, json_data, str(db_name))
+        model_display_data = {}
+        # generate adapter code files
+        model_display_data["Adapter"] = {language: generate_adapter(language, server_ip, port, dm_name)
+                                         for language in TEMPLATE_LANGUAGES}
 
-        # TODO need update
-        generate_server("Server", str(server_ip), str(port), str(db_name))
+        # read all the class models from json_data
+        template_models = TemplateModel.extract_models(json_data)
+        # generate class model code files
+        for template_model in template_models:
+            model_display_data[template_model.name] = {language: generate_model(language, template_model)
+                                                       for language in TEMPLATE_LANGUAGES}
 
-        # structure adjustment for model_display_data
-        # temporary solution, may change later
-        # [language][model] ==> [model][language]
+        # generate server code file
+        generate_server(server_ip, port, dm_name)
 
-        for language in temp_display_data:
-            for model in temp_display_data[language]:
-                model_display_data.setdefault(model, {})[language] = {
-                    "func_info_list": temp_display_data[language][model]["func_info_list"],
-                    "attribute_list": temp_display_data[language][model]["attribute_list"],
-                    "file_uri": temp_display_data[language][model]["file_uri"]
-                }
-
-        '''for model in model_display_data:
-            if model != "Adapter":
-                model_display_data[model]["attribute_list"] = temp_display_data["JavaScript"][model]["attribute_list"]
-'''
-        return display_ip + ":" + str(port), model_display_data
+        return model_display_data

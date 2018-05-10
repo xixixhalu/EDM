@@ -329,24 +329,20 @@ def result():
             saveFileToDB(current_user.username,filename_str,allcontent)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-    #Parse XML and generate JSON
+    # Parse XML and generate JSON
     ana.DM_File_Analyze('input', {'DM_Input_type': "Simple_XML"}, filename_str)
 
-    # NOTE the code below have changed and not compatible with old html files
-    #Parse JSON and generate code
-    server_url, model_display_data = generate_code.generate_all(filename_str)
+    # Parse JSON and generate code
+    model_display_data = generate_code.generate_all(filename_str)
 
-    print server_url
-
-    #Pass required data to the template
+    # Pass required data to the template
     description_data = {
-        "model_display_data": model_display_data,
-        "db_name": filename_str,
-        "server_url": server_url
+        "model_display_data": model_display_data
+        #"db_name": filename_str,
+        #"server_url": server_url
     }
 
-    #Render the template
-    # XXX need test
+    # Render the template
     return render_template('reference.html', **description_data)
 
 
