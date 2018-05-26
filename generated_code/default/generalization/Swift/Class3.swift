@@ -1,45 +1,69 @@
-class Class3 {
+class class3 {
 
 // attributes: {}
+var tableName = "class3"
 
-func createOne(tableName: String, data: JSON) {
+func createOne(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
         func errorCB(_ result:Any) -> Void {
             print(result)
         }
-        adpter.createOne(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
-        }
+        adapter.createOne(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
+}
 
-func delete(tableName: String, data: JSON) {
+func createMany(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
         func errorCB(_ result:Any) -> Void {
             print(result)
         }
-        adpter.delete(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
-        }
+        adapter.createMany(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
+}
 
-func readOne(tableName: String, data: JSON) {
+func readOne(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
         func errorCB(_ result:Any) -> Void {
             print(result)
         }
-        adpter.readOne(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
-    }
+        adapter.readOne(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
+}
 
-func update(tableName: String, update: JSON) {
+func readMany(data: JSON) {
         func successCB(_ result: Any)-> Void {
             print(result)
         }
         func errorCB(_ result:Any) -> Void {
             print(result)
         }
-        adpter.update(tableName: collection, data: update, successCB: successCB, errorCB: errorCB)
-    }
+        adapter.readMany(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
+}
+
+func update(search: JSON, update: JSON) {
+        func successCB(_ result: Any)-> Void {
+            print(result)
+        }
+        func errorCB(_ result:Any) -> Void {
+            print(result)
+        }
+        let data = ["oldData": search, "newData": update]
+        adapter.update(tableName: collection, data: update, successCB: successCB, errorCB: errorCB)
+}
+
+func delete(data: JSON) {
+        func successCB(_ result: Any)-> Void {
+            print(result)
+        }
+        func errorCB(_ result:Any) -> Void {
+            print(result)
+        }
+        adapter.delete(tableName: tableName, data: data, successCB: successCB, errorCB: errorCB)
+}
+
+
 
 }

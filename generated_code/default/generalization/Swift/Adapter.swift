@@ -40,6 +40,16 @@ func callServer(_ operation: String, _ body: Dictionary<String, Any>, _ successC
         }
     }
 
+    // TODO test
+    func createMany(tableName collection: String, data:JSON, successCB: @escaping (_ result: Any)-> Void, errorCB: @escaping (_ result: Any) -> Void ) {
+        if data != JSON.null && !collection.isEmpty && isArray(data: data) {
+            let body = ["collection": collection, "data": String(describing:data)]
+            callServer("/create", body, successCB, errorCB)
+        } else {
+            errorCB("Error:" + "Invalid Parameter")
+        }
+    }
+
     func readOne(tableName collection: String, data:JSON, successCB: @escaping (_ result: Any)-> Void, errorCB: @escaping (_ result: Any) -> Void ) {
         if data != JSON.null && !collection.isEmpty {
             if data["._id"] != JSON.null {
@@ -49,6 +59,15 @@ func callServer(_ operation: String, _ body: Dictionary<String, Any>, _ successC
                 let body = ["collection": collection, "data": String(describing:data)]
                 callServer("/readOne", body, successCB, errorCB)
             }
+        } else {
+            errorCB("Error:" + "Invalid Parameter")
+        }
+    }
+
+    func readMany(tableName collection: String, data:JSON, successCB: @escaping (_ result: Any)-> Void, errorCB: @escaping (_ result: Any) -> Void ) {
+        if data != JSON.null && !collection.isEmpty {
+            let body = ["collection": collection, "data": String(describing:data)]
+            callServer("/readOne", body, successCB, errorCB)
         } else {
             errorCB("Error:" + "Invalid Parameter")
         }

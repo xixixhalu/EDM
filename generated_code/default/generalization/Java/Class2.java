@@ -1,13 +1,39 @@
 import com.google.gson.JsonObject;
 
 
-public class Class2 {
+public class class2 {
 
-    public static String className = "Class2";
+    public static String className = "class2";
     public static String[] attributes = {
         "class2Attribute2", "class2Attribute1"
     };
 
+    public static void createOne(JsonObject data) {
+        class createOneCB {
+            public void successCB(String result) {
+                System.out.println("successCB: " + result);
+            }
+            public void errorCB(String message) {
+                System.out.println("errorCB: " + message);
+            }
+        }
+        createOneCB CBModel = new createOneCB();
+        Adapter.createOne(className, data, CBModel);
+    }
+    
+    public static void createMany(JsonArray data) {
+        class createManyCB {
+            public void successCB(String result) {
+                System.out.println("successCB: " + result);
+            }
+            public void errorCB(String message) {
+                System.out.println("errorCB: " + message);
+            }
+        }
+        createManyCB CBModel = new createManyCB();
+        Adapter.createMany(className, data, CBModel);
+    }
+    
     public static void readOne(JsonObject data) {
         class readOneCB {
             public void successCB(String result) {
@@ -21,8 +47,8 @@ public class Class2 {
         Adapter.readOne(className, data, CBModel);
     }
     
-    public static void readAll(JsonObject data) {
-        class readAllCB {
+    public static void readMany(JsonObject data) {
+        class readManyCB {
             public void successCB(String result) {
                 System.out.println("successCB: " + result);
             }
@@ -30,26 +56,11 @@ public class Class2 {
                 System.out.println("errorCB: " + message);
             }
         }
-        readAllCB CBModel = new readAllCB();
-        Adapter.readAll(className, data, CBModel);
+        readManyCB CBModel = new readManyCB();
+        Adapter.readMany(className, data, CBModel);
     }
     
-
-    public static void create(JsonObject data) {
-        class createCB {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
-        createCB CBModel = new createCB();
-        Adapter.create(className, data, CBModel);
-    }
-    
-
-    public static void update(JsonObject data) {
+    public static void update(JsonObject searchData, JsonObject updateData) {
         class updateCB {
             public void successCB(String result) {
                 System.out.println("successCB: " + result);
@@ -58,11 +69,13 @@ public class Class2 {
                 System.out.println("errorCB: " + message);
             }
         }
+        JsonObject data = new JsonObject();
+        data.add("oldData",search);
+        data.add("newData",update);
         updateCB CBModel = new updateCB();
         Adapter.update(className, data, CBModel);
     }
     
-
     public static void delete(JsonObject data) {
         class deleteCB {
             public void successCB(String result) {
