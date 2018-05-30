@@ -23,7 +23,7 @@ class Analyzer:
         global output_filename
         output_filename = filename
         DM_File_type = config['DM_Input_type']
-        if DM_File_type == "Simple_XML":       
+        if DM_File_type == "Simple_XML":      
             retObj = self.SimpleXMLUtil(PROJECT_DIR + "/" + filename+".xml", filename)
             if retObj is None:
                 raise e.SimpleException("xml file not provided in the directory, check if file with extension .xml is uploaded")
@@ -34,6 +34,7 @@ class Analyzer:
         global output_filename
         # NITIN : TODO : check how to handle namepspaces dynamically later
         namespaces = {"xmi_namespace": "http://schema.omg.org/spec/XMI/2.1"}
+
         myDMO = ET.parse(dmoFile)
         root = myDMO.getroot()
 

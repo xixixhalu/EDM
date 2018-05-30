@@ -323,11 +323,13 @@ def result():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filename_str = filename.split(".")[0]
+
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
             # save file into database
+            file.stream.seek(0)
             allcontent=file.read()
             saveFileToDB(current_user.username,filename_str,allcontent)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
     # Parse XML and generate JSON
     ana.DM_File_Analyze('input', {'DM_Input_type': "Simple_XML"}, filename_str)
