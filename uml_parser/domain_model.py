@@ -20,6 +20,7 @@ class DomainModel:
  	# NITIN : Element must be declared before being used
 	def declareElement(self , _ElementName, _id):
 		# NITIN : NOTE : create a unique id for each element, used for associations
+                # ZHIYUN: format element name
                 _ElementName=_ElementName.lower().replace(" ","_")
 		newElement = self.Element(_ElementName , _id)
 		self.ElementDirectory[_id] = newElement
@@ -28,6 +29,7 @@ class DomainModel:
 
 	# NITIN : NOTE : Define simple atrribute on a declared element
 	def defineSimpleAttribute(self , _ElementName , _AttributeName , _AttributeType): 
+                # ZHIYUN: format element name
                 _ElementName=_ElementName.lower().replace(" ","_")
 		try:
 			assert self.isElementDeclared(_ElementName)
@@ -39,6 +41,7 @@ class DomainModel:
 
 	# NITIN : NOTE : Define a attribute of the type of another element
 	def defineComplexAttribute(self, _ElementName , _AttributeName , _AttributeElementName , _AttributeType):
+                # ZHIYUN: format element name
                 _ElementName=_ElementName.lower().replace(" ","_")
                 _AttributeElementName=_AttributeElementName.lower().replace(" ","_")
 		try:
@@ -53,27 +56,27 @@ class DomainModel:
 		self.ElementDirectory[id].addComplexAttribute(_AttributeName, _AttributeElementName, _AttributeType)
 
 	# NITIN : NOTE : Define relations between element
-	def defineRelation(self, _id, _start, _end, RelationType = "Association"):
+	def defineRelation(self, _id,_start, _end,_RelationType = "Association", _startUpperVaule="unknown",_endUpperValue="unknown"):
 		if _id in self.Relations : return
 
 		# NITIN : TODO : handle exceptions without stopping execution of program
 		if not self.ElementDirectory.has_key(_start) : raise e.SimpleException("Starting Element of relation not defined, startId : " + _start)
 		if not self.ElementDirectory.has_key(_end) : raise e.SimpleException("Ending Element of relation not defined, startId : " + _end)
 
-		if RelationType == "Association":
-			relation = dt.Association(_id, _start, _end)
-		elif RelationType == "Aggregation":
-			relation = dt.Aggregation(_id, _start, _end)
+		if _RelationType == "Association":
+			relation = dt.Association(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
+		elif _RelationType == "Aggregation":
+			relation = dt.Aggregation(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
                         
-                        #add start node to end node as an attribute
+                        #ZHIYUN: add end to start class as an attribute for aggregation relation
                         elemName = str(self.ElementDirectory[_start].ElementName)
                         elemAttributeTypeSetter = dt.SimpleType("string")
                         elemAttributeName=str(self.ElementDirectory[_end].ElementName)+"_id"
                         self.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
-		elif RelationType == "Generalization":
-			relation = dt.Generalization(_id, _start, _end)
-                elif RelationType == "Composition":
-                        relation = dt.Composition(_id, _start, _end)
+		elif _RelationType == "Generalization":
+			relation = dt.Generalization(_id,_start, _end, _RelationType)
+                elif _RelationType == "Composition":
+                        relation = dt.Composition(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
 		else:
 			raise e.SimpleException("Type of relation not defined : " + RelationType)
 
@@ -184,10 +187,10 @@ class DomainModel:
 				return_obj["Attributes"]["Complex"].append(attrObj)
 
 			for relation in self.relationsFromThisElement:
-				return_obj["Relations"]["From"].append(relation.toJson())
+				return_obj["Relations"]["From"].append(relation.toJson("from"))
 
 			for relation in self.relationsToThisElement:
-				return_obj["Relations"]["To"].append(relation.toJson())
+				return_obj["Relations"]["To"].append(relation.toJson("to"))
 
 			# NITIN : TODO : write implementation to add the operation in this element to json
 
