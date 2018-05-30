@@ -40,6 +40,7 @@ class Analyzer:
         documentation=root.find('xmi_namespace:Documentation', namespaces)
         exporter=documentation.get('exporter')
         
+        # ZHIYUN: call corresponding parser for xml file
         if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,_dmoName)
         elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,_dmoName) 
         else: raise e.SimpleException("parser for your xml exporter is not provided")
@@ -52,35 +53,35 @@ class Analyzer:
         if elements is not None : elements = elements.findall("element")
 
         dmo = DomainModel(_dmoName)
+        
 
+        # ZHIYUN: adding elements into model
         elem={}
-        # NITIN : NOTE : Adding elements and their attributes/operations into model
         for element in elements:
-            # NITIN : NOTE : If element is a definition of a class, then extract it's name, definition, attributes, relations
+            # ZHIYUN : extract element if it's a definition of a class
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 elemId = element.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
                 elemName = element.get('name').strip()
                 dmo.declareElement( elemName , elemId)
                 elem[elemId]=elemName
-                print(elemId,elemName)
+      
 
+        # ZHIYUN: adding attributes to element
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
-                # NITIN : NOTE : Check if the element has any attributes defined and aadd them
                 elemName = element.get('name').strip()
                 elemAttributes = element.find('attributes')
                 if elemAttributes is not None:
                     for elemAttribute in elemAttributes:
                         elemAttributeName = elemAttribute.get('name')
                         elemAttributeType = elemAttribute.find('properties').get('type')
-                        # NITIN : TODO : implementation only for simple attributes, check how complex attributes are represented in xml
 
-                        #complex attribute
+                        # ZHIYUN: add complex attributes
                         if elemAttributeType in elem.values():
                             AttributeTypeSetter=dt.ComplexType(elemAttributeType)
                             dmo.defineComplexAttribute(elemName,elemAttributeName, elemAttributeType, AttributeTypeSetter) 
                       
-                        #simple attribute
+                        #s ZHIYUN: add simple attributes
                         else:
                             elemAttributeTypeSetter=dt.SimpleType(elemAttributeType)
                             dmo.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
@@ -89,24 +90,48 @@ class Analyzer:
 
                 # NITIN : TODO : Check if the element has any operations defined and aadd them, implement operations on domain model
 
-                
-        # NITIN : NOTE : Adding relations on elemnets into model
+
+
+
+        # ZHIYUN: iterate all upper value of relation                
+	connectors=definition.find('connectors').findall('connector')
+        upperValues={}
+        for connector in connectors:
+            relationId=connector.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
+            startUpperValue=connector.find('source').find('type').get('multiplicity')
+            endUpperValue=connector.find('target').find('type').get('multiplicity')
+            upperValues[relationId]=[startUpperValue,endUpperValue]
+
+
+        # ZHIYUN: adding relations to elemnents
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
-
                 elemRelations = element.find('links')
                 if elemRelations is None : continue
-                for elemRelation in elemRelations:
-                    relationId = elemRelation.get(self.xmiPrefixAppender('id',namespaces["xmi_namespace"]))
-                
+                for elemRelation in elemRelations: 
+                    # ZHIYUN: ignore relations to class not existing in the domain
                     if not (elem.has_key(str(elemRelation.get('start'))) and elem.has_key(str(elemRelation.get('end')))): continue;
-                    dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag))
+
+
+                    relationId = elemRelation.get(self.xmiPrefixAppender('id',namespaces["xmi_namespace"]))
+
+                    if(elemRelation.tag=='Generalization'):
+                        dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')), str(elemRelation.tag))
+                    else:
+                        # ZHIYUN: add upper value to relation
+                        startUpperValue='unknown'  
+                        endUpperValue='unknown'
+                        if upperValues.has_key(relationId): 
+                            startUpperValue=upperValues[relationId][0]
+                            endUpperValue=upperValues[relationId][1]
+                        dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag), startUpperValue, endUpperValue)
 
         file_path = "generated_code/default/" + _dmoName + "/"
         if not os.path.exists(file_path):
             os.makedirs(file_path)
         edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
         json_file = open(file_path + output_filename + ".json", "w")
+
 
         json_file.write(dmo.toJson())
         json_file.close()
@@ -121,14 +146,14 @@ class Analyzer:
         dmo = DomainModel(_dmoName)
 
 
-        #all attribute type
+        # ZHIYUN: store all mapping of attribute id to its name
         elemType={}
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:DataType":
                 typeId=element.get(self.xmiPrefixAppender('id', namespaces["xmi_namespace"] ))
                 elemType[typeId]=element.get("name")
         
-        #class
+        # ZHIYUN: adding elements into model
         elem={}
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
@@ -136,9 +161,9 @@ class Analyzer:
                 elemName = element.get('name').strip()
                 dmo.declareElement(elemName , elemId)
                 elem[elemId]=elemName
-                #print(elemName,elemId)
+ 
                 
-        #class attribute
+        # ZHIYUN: adding attributes to element
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 elemName = element.get('name').strip()
@@ -147,24 +172,22 @@ class Analyzer:
                     for elemAttribute in elemAttributes:
                         AttributeName = elemAttribute.get('name')
                         AttributeId = elemAttribute.get('type')
-                        #simple attribute
+                        
+                        # ZHIYUN: add simple attributes
                         if elemType.has_key(AttributeId):
-                            AttributeType = elemType[AttributeId]
-                           
+                            AttributeType = elemType[AttributeId]      
                             AttributeTypeSetter=dt.SimpleType(AttributeType) 
                             dmo.defineSimpleAttribute(elemName, AttributeName, AttributeTypeSetter)
 
-                        #complex attribute
+                        # ZHIYUN: add complex attribute
                         elif elem.has_key(AttributeId):
                             AttributeElemName = elem[AttributeId]
-                            print(AttributeName,AttributeType)
-                        
                             AttributeTypeSetter=dt.ComplexType(AttributeElemName)
                             dmo.defineComplexAttribute(elemName,AttributeName, AttributeElemName, AttributeTypeSetter)
 
-        #relationships  
+        # ZHIYUN: adding relations to elemnents 
                 
-        #generalization
+        # ZHIYUN: add generalization relations
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 elemId = element.get(self.xmiPrefixAppender('id', namespaces["xmi_namespace"] ))
@@ -172,28 +195,32 @@ class Analyzer:
                 if elemRelations is None : continue
                 for elemRelation in elemRelations:
                     relationId = elemRelation.get(self.xmiPrefixAppender('id',namespaces["xmi_namespace"]))                  
+                   
+
                     dmo.defineRelation(relationId, str(elemId), str(elemRelation.get('general')) , str("Generalization"))
 
 
-        #other relationship
+        # ZHIYUN: add other relations
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Association":
                 relationId = element.get(self.xmiPrefixAppender('id', namespaces["xmi_namespace"]))
                 ownedEnds=element.findall('ownedEnd')
-                start=ownedEnds[1].get('type')
-                end=ownedEnds[0].get('type')
-                
-                #aggregation
-                if ownedEnds[1].get('aggregation')=="shared":                 
-                    dmo.defineRelation(relationId, str(start), str(end) , str("Aggregation"))
+                start=ownedEnds[1]
+                end=ownedEnds[0]
 
-                #composition
-                elif ownedEnds[1].get('aggregation')=="composite":
-                    dmo.defineRelation(relationId, str(start), str(end) , str("Composition"))
-
-                #association
+                # ZHIYUN: add upper value of start and end class to relation
+                startUpperVaule="unknown"
+                endUpperValue='unknown'
+                if(start.find('upperValue') is not None): startUpperVaule=start.find('upperValue').get('value')
+                if(end.find('upperValue') is not None): endUpperValue=end.find('upperValue').get('value')
+                # ZHIYUN: add relations      
+                if start.get('aggregation')=="shared":                 
+                    dmo.defineRelation(relationId, str(start.get('type')), str(end.get('type')),str("Aggregation"), startUpperVaule,endUpperValue)
+                elif start.get('aggregation')=="composite":
+                    dmo.defineRelation(relationId,  str(start.get('type')), str(end.get('type')) , str("Composition"),startUpperVaule,endUpperValue)
                 else:
-                    dmo.defineRelation(relationId, str(ownedEnds[1].get('type')), str(ownedEnds[0].get('type')) , str("Association"))
+                    dmo.defineRelation(relationId,  str(start.get('type')), str(end.get('type')) , str("Association"),startUpperVaule,endUpperValue)
+
 
   
         file_path = "generated_code/default/" + _dmoName + "/"
@@ -208,7 +235,8 @@ class Analyzer:
         return dmo.toJson()
 
 
+# ZHIYUN: test code
 #if __name__=='__main__':
  #   ana = analyzer()
-  #  ana.DM_File_Analyze('Input', {'DM_Input_type': "Simple_XML"}, 'Generalization_vp')
+  #  ana.DM_File_Analyze('Input', {'DM_Input_type': "Simple_XML"}, 'one_to_many')
          
