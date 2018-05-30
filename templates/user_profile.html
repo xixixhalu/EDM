@@ -29,6 +29,7 @@
 					<div class="content">
 						<div class="row">
 							<div class="col-md-12 col-sm-12">
+                                Welcome {{ session['username'] }}!
 								<!--Button to logout from the current user session-->
 								<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
 							</div>
@@ -90,7 +91,7 @@
 						<div class="row">
 						<!--Button to generate a new instance-->
 							<div class="col-md-4 offset-md-4" id="new_button">
-								<button class="btn btn-lg btn-primary btn-block" href="#">New Instance</button>
+								<button class="btn btn-lg btn-primary btn-block" href="{{ url_for('upload_xml') }}">New Instance</button>
 							</div>
 						</div>
 					</div>
