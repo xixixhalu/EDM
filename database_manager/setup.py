@@ -48,7 +48,7 @@ class DBUtilities:
 		db = self.client[domainModelName]
 		db_user, db_password = edm_utils.generate_user_credentials(domainModelName)
 		try:
-			db.create_collection("default")
+			db.create_collection(domainModelName)
 			db.command("dropUser", db_user)
 		except Exception as ex:
 			pass
