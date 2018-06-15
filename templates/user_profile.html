@@ -30,8 +30,11 @@
 						<div class="row">
 							<div class="col-md-12 col-sm-12">
                                 Welcome {{ session['username'] }}!
-								<!--Button to logout from the current user session-->
-								<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
+								<!--Button to logout from the current user session -->
+								<form action="/logout">				
+									<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+								</form>
+
 							</div>
 						</div>
 						<br>
