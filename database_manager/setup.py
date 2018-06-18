@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import json
 from utilities import edm_utils, exceptions as e
 
+
 class DBUtilities:
 	
 	# NITIN : NOTE : Usage is as follows : .setup(configDictionary={dict}) or .setup(configFile='/path/to/configFile'), priority given to configDictionary
@@ -47,8 +48,8 @@ class DBUtilities:
 	def createWithUser(self, domainModelName):
 		db = self.client[domainModelName]
 		db_user, db_password = edm_utils.generate_user_credentials(domainModelName)
+	
 		try:
-			db.create_collection("default")
 			db.command("dropUser", db_user)
 		except Exception as ex:
 			pass
