@@ -1,5 +1,5 @@
 var express = require('express');
-var router = express.Router();
+var router = express();
 
 
 
@@ -13,17 +13,28 @@ var authen = require("./authen.js");
 router.post('/create', function (req, res) {
     if (typeof(req.body.collection) !== 'undefined' &&
         typeof(req.body.data) !== 'undefined') {
-        authen.process(req, 1, function(result, error) {
+        authen.verify(req, function(result, error) {
             if (error == 0)
             {
-                res.send(result);
-            }
-            else if (error == 1)
+                var data = JSON.parse(req.body.data);
+                var collection = req.body.collection;
+
+                //DB create
+                dbOps.create(collection, data, function(result) {
+                        if (!result) 
+                        {
+                            res.send(null);
+                        }
+                        else 
+                        {
+                            res.send(result);
+                        }
+                    });
+                
+            }else if (error == 1)
             {
                 res.sendStatus(500);
-            }
-            else
-            {
+            }else{
                 res.send("Invalid Authentication");
             }
         });
@@ -37,20 +48,37 @@ router.post('/readOne', function (req, res) {
         res.send({});
         return;
     }
-    authen.process(req, 2, function(result, error) {
+
+    authen.verify(req, function(result, error) {
             if (error == 0)
             {
-                res.send(result);
-            }
-            else if (error == 1)
+                var collection = req.body.collection;
+                if(req.body.hasOwnProperty('data')){
+                    var data = JSON.parse(req.body.data);
+                }
+                if(req.body.hasOwnProperty('_id')){
+                    var _id = req.body._id;
+                }
+
+                //DB readOne
+                dbOps.readOne(collection, _id, data, function(result) {
+                    if (!result) 
+                    {
+                        res.send(null);
+                    }
+                    else 
+                    {
+                        res.send(result);
+                    }
+                });        
+            }else if (error == 1)
             {
                 res.sendStatus(500);
-            }
-            else
-            {
+            }else{
                 res.send("Invalid Authentication");
             }
-    });
+        });
+
 });
 
 //CRUD: ReadAll
@@ -60,20 +88,34 @@ router.post('/readAll', function (req, res) {
         res.send([]);
         return;
     }
-    authen.process(req, 3, function(result, error) {
-        if (error == 0)
-        {
-            res.send(result);
-        }
-        else if (error == 1)
-        {
-            res.sendStatus(500);
-        }
-        else
-        {
-            res.send("Invalid Authentication");
-        }
+    authen.verify(req, function(result, error) {
+            if (error == 0)
+            {
+                var collection = req.body.collection;
+                if(req.body.hasOwnProperty('data')){
+                    var data = JSON.parse(req.body.data);
+                }
+
+                //DB readAll
+                dbOps.readAll(collection, data, function(result) {
+                    if (!result) 
+                    {
+                        res.send(null);
+                    }
+                    else 
+                    {
+                        res.send(result);
+                    }
+                });      
+
+            }else if (error == 1)
+            {
+                res.sendStatus(500);
+            }else{
+                res.send("Invalid Authentication");
+            }
     });
+
 });
 
 //CRUD: Delete
@@ -82,20 +124,37 @@ router.delete('/delete', function (req, res) {
         res.send();
         return;
     }
-    authen.process(req, 4, function(result, error) {
-        if (error == 0)
-        {
-            res.send(result);
-        }
-        else if (error == 1)
-        {
-            res.sendStatus(500);
-        }
-        else
-        {
-            res.send("Invalid Authentication");
-        }
+    authen.verify(req, function(result, error) {
+            if (error == 0)
+            {
+                var collection = req.body.collection;
+                if(req.body.hasOwnProperty('data')){
+                    var data = JSON.parse(req.body.data);
+                }
+                if(req.body.hasOwnProperty('_id')){
+                    var _id = req.body._id;
+                }
+
+                //DB delete
+                dbOps.delete(collection, _id, data, function(result) {
+                    if (!result) 
+                    {
+                        res.send(null);
+                    }
+                    else 
+                    {
+                        res.send(result);
+                    }
+                });
+
+            }else if (error == 1)
+            {
+                res.sendStatus(500);
+            }else{
+                res.send("Invalid Authentication");
+            }
     });
+
 });
 
 //CRUD: Update
@@ -105,20 +164,34 @@ router.put('/update', function (req, res) {
         res.send();
         return;
     }
-    authen.process(req, 5, function(result, error) {
-        if (error == 0)
-        {
-            res.send(result);
-        }
-        else if (error == 1)
-        {
-            res.sendStatus(500);
-        }
-        else
-        {
-            res.send("Invalid Authentication");
-        }
+    authen.verify(req, function(result, error) {
+            if (error == 0)
+            {
+                var collection = req.body.collection;
+                var newData = JSON.parse(req.body.newData);
+
+                if(req.body.hasOwnProperty('oldData')){
+                    var oldData = JSON.parse(req.body.oldData);
+                }
+
+                if(req.body.hasOwnProperty('_id')){
+                    var _id = req.body._id;
+                }
+
+                //DB update
+                dbOps.update(collection, _id, newData, oldData, function(result) {
+                        res.send(result);
+                });
+
+
+            }else if (error == 1)
+            {
+                res.sendStatus(500);
+            }else{
+                res.send("Invalid Authentication");
+            }
     });
+
 });
 
 module.exports = router;
