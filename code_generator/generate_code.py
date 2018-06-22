@@ -62,25 +62,64 @@ def generate_adapter(language, server_ip, port, dm_name):
     return code_display_data
 
 
-# TODO need integration with new Server templates
-def generate_server(server_ip, port, dm_name):
+""" This method creates the server js file"""
+def generate_server(server_ip, port, dm_name, json_data):
     """
     Creates the server code file for the REST services
     :param server_ip: the ip of the REST api server.
     :param port: the port of the REST api server.
     :param dm_name: the domain model name
+    :json_data: the domain model json structure
     """
-    configure_db(dm_name)
-    db_user, db_password = edm_utils.generate_user_credentials(dm_name)
 
-    template = ServerTemplate(dm_name)
+    server_template = open("code_templates/" + "Server", "r").read()
+    class_template = open("code_templates/"+ "class_template", "r").read()
+    db_connection_template = open("code_templates/"+ "db_connection_template", "r").read()
+    db_ops_template = open("code_templates/"+ "db_ops_template", "r").read()
+    authen_template = open("code_templates/"+ "authen_template", "r").read()
+
+    output_path = "generated_code/default/" + dm_name + "/Server/"
+    if not os.path.isdir(output_path):
+        os.makedirs(output_path)
+    
+    elements = None
+    for model_name in json_data:
+        elements = json_data[model_name].get("elements")
+    # deliver template for each model
+    elem_names = [str(element["elementName"]) for element in elements]
     data = {"server_ip": server_ip,
             "port": port,
-            "dbname": dm_name, 
-            "db_user": db_user, 
-            "db_password": db_password}
-    template.render(tofile=True, reset=False, replace_words=data)
+            "dbname": dm_name,
+            "collection_names" : str(elem_names)}
+    content = replace_words(server_template, data)
+    server_code = open(output_path + "Server" + ".js", "w")
+    server_code.write(content)
+    server_code.close()
 
+    for elem_name in elem_names :
+        output_location = output_path + elem_name + ".js"
+        with open(output_location, "w") as output_file:
+            output_file.write(class_template)
+
+    # generate server db connection file
+    output_location = output_path + "db_connection" + ".js"
+    configure_db(dm_name)
+    db_user, db_password = edm_utils.generate_user_credentials(dm_name)
+    data = {"db_user": db_user, 
+            "db_password": db_password}
+    with open(output_location, "w") as output_file:
+        content = replace_words(db_connection_template, data)
+        output_file.write(content)
+
+    # generate server db dbOps file
+    output_location = output_path + "dbOps" + ".js"
+    with open(output_location, "w") as output_file:
+        output_file.write(db_ops_template)
+
+    # generate server authentication file
+    output_location = output_path + "authen" + ".js"
+    with open(output_location, "w") as output_file:
+        output_file.write(authen_template)
 
 def generate_all(dm_name):
     """
@@ -93,10 +132,12 @@ def generate_all(dm_name):
     file_location = "generated_code/default/" + dm_name + "/" + dm_name + ".json"
     with open(file_location) as json_input:
         json_data = json.load(json_input)
+        #print json.dumps(json_data, indent=2)
         display_ip, server_ip, port = get_server_info()
         print(display_ip + ":" + port)
 
         model_display_data = {}
+
         # generate adapter code files
         model_display_data["Adapter"] = {language: generate_adapter(language, server_ip, port, dm_name)
                                          for language in TEMPLATE_LANGUAGES}
@@ -108,7 +149,9 @@ def generate_all(dm_name):
             model_display_data[template_model.name] = {language: generate_model(language, template_model)
                                                        for language in TEMPLATE_LANGUAGES}
 
-        # generate server code file
-        generate_server(server_ip, port, dm_name)
 
+        # generate server code files
+        generate_server(str(server_ip), str(port), dm_name, json_data)
+
+        #return display_ip + ":" + str(port), model_display_data
         return model_display_data

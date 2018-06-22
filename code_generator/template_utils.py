@@ -15,6 +15,31 @@ LANGUAGE_SUFFIX = {"Java": ".java",
                    "JavaScript": ".js",
                    "Swift": ".swift"}
 
+def list2template_str(name_list):
+    result_str = ""
+    for name in name_list:
+        print name
+        result_str += "\"" + name + "\", "
+    result_str = result_str[:-2]
+    return result_str
+
+
+def replace_strlist(template_content, keyword, name_list):
+    list_str = ""
+    for name in name_list:
+        print name
+        list_str += "\"" + name + "\", "
+    list_str = list_str[:-2]
+    content = template_content.replace(TEMPLATE_PREFIX + keyword, list_str)
+    return content
+
+
+def replace_words(template_content, replacements):
+    content = template_content
+    for key in replacements:
+        replacement = replacements[key]
+        content = content.replace(TEMPLATE_PREFIX + key, replacement)
+    return content
 
 def template_output_path(dm_name, language=None, username="default"):
     if language:
@@ -330,6 +355,7 @@ class AdapterTemplate(Template):
         Template.render(self, tofile, reset)
 
 
+# Legacy class
 class ServerTemplate(Template):
     """
     Template class for Server code file
