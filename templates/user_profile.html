@@ -1,6 +1,6 @@
 <!--The user profile page displays information regarding user's existing instances and allows the user to generate a new instance -->
 <!DOCTYPE html>
-<html ng-app>
+<html>
 	<head>
 		<meta charset="utf-8">
 		<title>API References - Executable Domain Modeling</title>
@@ -11,8 +11,10 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/profile.js') }}"></script>
 		<basefont size="7">
+		<script>var history_data = {{ history_data|tojson|safe }};</script>
+	</head>
 	</head>
 	<body>
 		<div id="container">
@@ -38,7 +40,58 @@
 							</div>
 						</div>
 						<br>
-						<div style="overflow-x:auto;overflow-y:auto;height:250px;">
+						{%raw%}
+						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;height:250px;">
+							<!-- Refer to https://getbootstrap.com/docs/4.0/components/collapse/ -->
+							<div id="accordion">
+								<div class="card" ng-repeat="history in histories track by $index">
+									<div class="card-header" id="heading{{$index}}">
+										<h5 class="mb-0">
+											<button class="btn btn-link collapsed btn_dashboard" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
+											  Project - {{history.domainModelName}} : {{history.length}} instances
+											</button>
+										</h5>
+									</div>
+
+									<div id="collapse{{$index}}" class="collapse" aria-labelledby="heading{{$index}}" data-parent="#accordion">
+										<table class="table table-hover table-responsive-sm">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col">ID</th>
+													<th scope="col">Date</th>
+													<th scope="col">Status</th>
+													<th scope="col">Operation</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr ng-repeat="file in history.files">
+													<td>{{file.id}}</td>
+													<td>{{file.date}}</td>
+													<td>Terminated <button class="operation btn" title="Launch the Server">
+														<i class="fa fa-play"></i>
+														</button>
+													</td>
+													<td>
+													<button class="operation btn" title="Update Domain Model">
+														<i class="fa fa-edit"></i>
+													</button>
+													<button class="operation btn" title="Delete the Instance">
+														<i class="fa fa-close"></i>
+													</button>
+													<button class="operation btn" title="Go to Details">
+														<i class="fa fa-angle-right"></i>
+													</button>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+			            </div>
+			            {%endraw%}
+						<!-- This extra code is to display the instances as a list in a table -->
+						<!-- <div style="overflow-x:auto;overflow-y:auto;height:250px;">
 							<table class="table table-hover table-responsive-sm">
 								<thead class="thead-dark">
 									<tr>
@@ -63,7 +116,7 @@
 									</tr>
 								</tbody>
 							</table>
-						</div>
+						</div> -->
 						<br>
 						<!-- This extra code is to display the instances as widgets instead of a table
 						<div class="row" id="widget-box">

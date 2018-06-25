@@ -218,6 +218,31 @@ widget-area.blank {
 }
 
 #log_out {
-	margin-top: 0.4%;
+	/*margin-top: 0.4%;*/
 	padding-right: 5px;
+}
+
+
+
+/*Style for the user profile*/
+
+.card-header {
+	padding: 0.2rem 0rem;
+}
+
+.btn_dashboard {
+	text-decoration: none !important;
+	font-size: 15pt;
+	color: black;
+}
+
+.operation.btn {
+    border: none; /* Remove borders */
+    font-size: 10px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+.operation.btn:hover {
+    background-color: grey;
 }

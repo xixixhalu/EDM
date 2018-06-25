@@ -18,6 +18,7 @@ import base64
 from bson import binary
 from bson.objectid import ObjectId
 import pytz
+from bson.json_util import dumps
 
 # User calss used in flask_login
 # When a User instance created, if will check if this
@@ -159,7 +160,19 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     if 'username' in session:
-        return render_template('user_profile.html')
+        history = mongo.db.history
+        history_data = history.find_one({'username': session['username']})
+
+        if history_data is None:
+            history_data = []
+        else:
+            history_data = dumps(history_data['uploads'])
+
+        # Pass required data to the template
+        description_data = {
+            "history_data": history_data
+        }
+        return render_template('user_profile.html', **description_data)
     return render_template('homepage.html')
 
 
@@ -239,7 +252,7 @@ def saveFileToDB(username,dmname,filecontent):
         "username": username,
         "uploads": {
             "$elemMatch": {
-                "domainModeName": dmname
+                "domainModelName": dmname
             }
         }
     })
@@ -250,7 +263,7 @@ def saveFileToDB(username,dmname,filecontent):
         }, {
             "$push": {
                 "uploads": {
-                    "domainModeName": dmname,
+                    "domainModelName": dmname,
                     "files": []
                 }
             }
@@ -258,7 +271,7 @@ def saveFileToDB(username,dmname,filecontent):
 
     mongo.db["history"].update({
         "username": username,
-        "uploads.domainModeName": dmname
+        "uploads.domainModelName": dmname
     }, {
         "$push": {
             "uploads.$.files": {
@@ -330,7 +343,7 @@ def result():
             file.stream.seek(0)
             allcontent=file.read()
             saveFileToDB(current_user.username,filename_str,allcontent)
-
+            
     # Parse XML and generate JSON
     ana.DM_File_Analyze('input', {'DM_Input_type': "Simple_XML"}, filename_str)
 
