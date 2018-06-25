@@ -343,7 +343,7 @@ def result():
             file.stream.seek(0)
             allcontent=file.read()
             saveFileToDB(current_user.username,filename_str,allcontent)
-
+            
     # Parse XML and generate JSON
     ana.DM_File_Analyze('input', {'DM_Input_type': "Simple_XML"}, filename_str)
 
