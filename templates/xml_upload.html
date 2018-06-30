@@ -16,6 +16,22 @@
 	</head>
 	<body>
 		<div id="container">
+			{% with messages = get_flashed_messages() %}
+			  {% if messages %}
+			    <div class="alert alert-warning" role="alert" style="float:left; width:100%;">
+			    {% for message in messages %}
+			      {{ message }}
+			    </div>
+			    {% endfor %}
+			    <script type="text/javascript">
+			    	window.setTimeout(function () {
+					    $(".alert-warning").fadeTo(500, 0).slideUp(500, function () {
+					        $(this).remove();
+					    });
+					}, 2000);
+			    </script>
+			  {% endif %}
+			{% endwith %}
 			<!--Use the bootstrap jumbotron element to show the header-->
 			<div class="jumbotron">
 				<div class="container text-center">

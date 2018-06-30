@@ -2,6 +2,7 @@ import os
 
 from code_generator import generate_code
 from utilities.config_util import ConfigUtil
+from utilities.file_op import *
 
 from flask import flash, Response, jsonify
 from flask import render_template, Flask, request, redirect, url_for, send_from_directory, session
@@ -19,6 +20,7 @@ from bson import binary
 from bson.objectid import ObjectId
 import pytz
 from bson.json_util import dumps
+import uuid
 
 # User calss used in flask_login
 # When a User instance created, if will check if this
@@ -208,6 +210,9 @@ def register():
             'email': request.form['email']
         })
         session['username'] = request.form['uname']
+        newuser = User(mongo, request.form['uname'])
+        #login user in flask_login
+        login_user(newuser)
 
         key = User.create_random_key()
         validtill = User.create_expiry_object()
@@ -233,8 +238,9 @@ def upload_xml():
 # username: str or unicode
 # dmname: str or unicode
 # filecontent : str, text content of the model file
+# pathid : str, uuid, direct to the corresponding output path
 # Returns: bool, True if successfully saved
-def saveFileToDB(username,dmname,filecontent):
+def saveFileToDB(username, dmname, filecontent):
     if type(filecontent) is not str:
         return False
     # to save file as bson, we need base64 encode first 
@@ -281,8 +287,8 @@ def saveFileToDB(username,dmname,filecontent):
         }
     })
 
-    return True
-
+    return fileid
+'''
 # add file to database without generate server code
 @app.route('/uploadtodb', methods=['POST'])
 @login_required
@@ -316,12 +322,16 @@ def uploadtodb():
         response["status"] = "fail"
         response["response"] = "error in saving to database"
     return jsonify(response)
+'''
 
 # generate server code and save file into database
 @app.route('/result', methods=['GET', 'POST'])
 @login_required
 def result():
     filename_str = ""
+
+    output_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
+
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -337,28 +347,37 @@ def result():
             filename = secure_filename(file.filename)
             filename_str = filename.split(".")[0]
 
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            all_content = file.read()
             
             # save file into database
-            file.stream.seek(0)
-            allcontent=file.read()
-            saveFileToDB(current_user.username,filename_str,allcontent)
+            file_id = saveFileToDB(current_user.username, filename_str, all_content)
+
+            # save file to path
+            output_dir = output_dir + "/" + filename_str + "/" + str(file_id)
+            with safe_open_w(output_dir + "/" + filename) as f:
+                f.write(all_content)
+                       
+            # Parse XML and generate JSON
+            ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
             
-    # Parse XML and generate JSON
-    ana.DM_File_Analyze('input', {'DM_Input_type': "Simple_XML"}, filename_str)
+            # Parse JSON and generate code
+            model_display_data = generate_code.generate_all(filename_str, output_dir)
 
-    # Parse JSON and generate code
-    model_display_data = generate_code.generate_all(filename_str)
+            # Pass required data to the template
+            description_data = {
+                "model_display_data": model_display_data
+                #"db_name": filename_str,
+                #"server_url": server_url
+            }
 
-    # Pass required data to the template
-    description_data = {
-        "model_display_data": model_display_data
-        #"db_name": filename_str,
-        #"server_url": server_url
-    }
+            # Render the template
+            return render_template('reference.html', **description_data)
+            
+        else:
+            flash('File type is not allowed')
+            return redirect(request.url)
+    return redirect(url_for('upload_xml'))
 
-    # Render the template
-    return render_template('reference.html', **description_data)
 
 
 @app.route('/generated_code/<path:path>')

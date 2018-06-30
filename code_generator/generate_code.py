@@ -25,14 +25,14 @@ def configure_db(db_name):
     dbutils.createWithUser(db_name)
 
 
-def generate_model(language, template_model):
+def generate_model(language, template_model, output_dir):
     """
     Creates the Model code file with a specific language
     :param language: the language name. eg: 'JavaScript'
     :param template_model: template model for a class, see class TemplateModel
     :return: data used for code display in web page
     """
-    template = template_model.get_template(language)
+    template = ModelTemplate(language, template_model.dm_name, template_model, output_dir)
 
     data = {"model": template_model.name,
             "name": template_model.name}
@@ -43,16 +43,17 @@ def generate_model(language, template_model):
     return code_display_data
 
 
-def generate_adapter(language, server_ip, port, dm_name):
+def generate_adapter(language, server_ip, port, dm_name, output_dir):
     """
     Creates the adapter code file with a specific language
     :param language: the language name. eg: 'JavaScript'
     :param server_ip: the ip of the REST api server.
     :param port: the port of the REST api server.
     :param dm_name: the domain model name
+    :output_path: the output path
     :return: data used for code display in web page
     """
-    template = AdapterTemplate(language, dm_name)
+    template = AdapterTemplate(language, dm_name, output_dir)
 
     data = {"server_ip": server_ip,
             "port": port}
@@ -63,7 +64,7 @@ def generate_adapter(language, server_ip, port, dm_name):
 
 
 """ This method creates the server js file"""
-def generate_server(server_ip, port, dm_name, json_data):
+def generate_server(server_ip, port, output_path, dm_name, json_data):
     """
     Creates the server code file for the REST services
     :param server_ip: the ip of the REST api server.
@@ -78,7 +79,7 @@ def generate_server(server_ip, port, dm_name, json_data):
     db_ops_template = open("code_templates/"+ "db_ops_template", "r").read()
     authen_template = open("code_templates/"+ "authen_template", "r").read()
 
-    output_path = "generated_code/default/" + dm_name + "/Server/"
+    output_path = output_path + "/Server/"
     if not os.path.isdir(output_path):
         os.makedirs(output_path)
     
@@ -122,7 +123,7 @@ def generate_server(server_ip, port, dm_name, json_data):
     with open(output_location, "w") as output_file:
         output_file.write(authen_template)
 
-def generate_all(dm_name):
+def generate_all(dm_name, output_dir):
     """
     generate a set of code files from JSON
     :param dm_name: name of the domain model
@@ -130,7 +131,7 @@ def generate_all(dm_name):
 
     NOTE don't consider the case that a class model called "Adapter"
     """
-    file_location = "generated_code/default/" + dm_name + "/" + dm_name + ".json"
+    file_location = output_dir + "/" + dm_name + ".json"
     with open(file_location) as json_input:
         json_data = json.load(json_input)
         #print json.dumps(json_data, indent=2)
@@ -140,19 +141,19 @@ def generate_all(dm_name):
         model_display_data = {}
 
         # generate adapter code files
-        model_display_data["Adapter"] = {language: generate_adapter(language, server_ip, port, dm_name)
+        model_display_data["Adapter"] = {language: generate_adapter(language, server_ip, port, dm_name, output_dir)
                                          for language in TEMPLATE_LANGUAGES}
 
         # read all the class models from json_data
         template_models = TemplateModel.extract_models(json_data)
         # generate class model code files
         for template_model in template_models:
-            model_display_data[template_model.name] = {language: generate_model(language, template_model)
+            model_display_data[template_model.name] = {language: generate_model(language, template_model, output_dir)
                                                        for language in TEMPLATE_LANGUAGES}
 
 
         # generate server code files
-        generate_server(str(server_ip), str(port), dm_name, json_data)
+        generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
 
         #return display_ip + ":" + str(port), model_display_data
         return model_display_data
