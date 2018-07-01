@@ -236,6 +236,10 @@ widget-area.blank {
 	color: black;
 }
 
+.operation {
+	display: inline
+}
+
 .operation.btn {
     border: none; /* Remove borders */
     font-size: 10px; /* Set a font size */

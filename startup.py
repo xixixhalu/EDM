@@ -3,6 +3,7 @@ import os
 from code_generator import generate_code
 from utilities.config_util import ConfigUtil
 from utilities.file_op import *
+from database_manager.dbOps import dbOps
 
 from flask import flash, Response, jsonify
 from flask import render_template, Flask, request, redirect, url_for, send_from_directory, session
@@ -378,7 +379,31 @@ def result():
             return redirect(request.url)
     return redirect(url_for('upload_xml'))
 
+@app.route('/deleteinstance', methods=['GET', 'POST'])
+@login_required
+def delete_instance():
+    if request.method == 'POST':
+        file_id = request.form['fileId']
+        domain_model_name = request.form['domainModelName']
 
+        if file_id is None:
+            flash('File id is not specified')
+            return redirect(request.url)
+
+        if domain_model_name is None:
+            flash('Domain model name is not specified')
+            return redirect(request.url)
+
+        username = session['username']
+
+        dbOps.deleteInstanceFromDB(mongo, username, domain_model_name, file_id)
+        
+        file_dir = os.path.join(config.get('Output', 'output_path')) + "/" + username + "/" + domain_model_name + "/" + file_id
+        safe_delete_dir(file_dir)
+
+        flash('Successfully deleted')
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 @app.route('/generated_code/<path:path>')
 @login_required
