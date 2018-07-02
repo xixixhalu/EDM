@@ -3,6 +3,10 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 
 class dbOps:
+    @staticmethod
+    def getAuthenKey(mongo, username):
+        user = mongo.db.authentication.find_one({'username': username})
+        return user['key']
 
     @staticmethod
     def deleteInstanceFromDB(mongo, username, modelName, fileId):

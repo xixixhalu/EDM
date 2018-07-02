@@ -2,7 +2,7 @@ import os
 
 from code_generator import generate_code
 from utilities.config_util import ConfigUtil
-from utilities.file_op import *
+from utilities.file_op import fileOps
 from database_manager.dbOps import dbOps
 
 from flask import flash, Response, jsonify
@@ -329,11 +329,10 @@ def uploadtodb():
 @app.route('/result', methods=['GET', 'POST'])
 @login_required
 def result():
-    filename_str = ""
-
-    output_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
 
     if request.method == 'POST':
+        filename_str = ""
+        output_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -355,20 +354,22 @@ def result():
 
             # save file to path
             output_dir = output_dir + "/" + filename_str + "/" + str(file_id)
-            with safe_open_w(output_dir + "/" + filename) as f:
+            with fileOps.safe_open_w(output_dir + "/" + filename) as f:
                 f.write(all_content)
                        
             # Parse XML and generate JSON
             ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
             
             # Parse JSON and generate code
-            model_display_data = generate_code.generate_all(filename_str, output_dir)
+            model_display_data, server_url = generate_code.generate_all(filename_str, output_dir)
+
+            authen_key = dbOps.getAuthenKey(mongo, session['username'])
 
             # Pass required data to the template
             description_data = {
-                "model_display_data": model_display_data
-                #"db_name": filename_str,
-                #"server_url": server_url
+                "model_display_data": model_display_data,
+                "server_url": server_url,
+                "authen_key" : authen_key
             }
 
             # Render the template
@@ -399,11 +400,35 @@ def delete_instance():
         dbOps.deleteInstanceFromDB(mongo, username, domain_model_name, file_id)
         
         file_dir = os.path.join(config.get('Output', 'output_path')) + "/" + username + "/" + domain_model_name + "/" + file_id
-        safe_delete_dir(file_dir)
+        fileOps.safe_delete_dir(file_dir)
 
         flash('Successfully deleted')
         return redirect(url_for('index'))
     return redirect(url_for('index'))
+
+@app.route('/detailinstance', methods=['GET'])
+@login_required
+def detail_instance():
+
+    file_id = request.args['fileId']
+    domain_model_name = request.args['domainModelName']
+
+    json_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
+    json_dir = json_dir + "/" + domain_model_name + "/" + str(file_id)
+
+    # Parse JSON and generate code
+    model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
+
+    authen_key = dbOps.getAuthenKey(mongo, session['username'])
+
+    # Pass required data to the template
+    description_data = {
+        "model_display_data": model_display_data,
+        "server_url": server_url,
+        "authen_key": authen_key
+    }
+
+    return render_template('reference.html', **description_data)
 
 @app.route('/generated_code/<path:path>')
 @login_required

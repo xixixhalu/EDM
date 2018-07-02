@@ -102,9 +102,15 @@
 														<i class="fa fa-close"></i>
 														</button>
 													</form>
-													<button class="operation btn" title="Go to Details">
-														<i class="fa fa-angle-right"></i>
-													</button>
+													{%endraw%}
+													<form class="operation" action="{{ url_for('detail_instance') }}" method="GET">
+													{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Go to Details">
+															<i class="fa fa-angle-right"></i>
+														</button>
+													</form>
 													</td>
 												</tr>
 											</tbody>
