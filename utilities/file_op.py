@@ -17,7 +17,7 @@ class fileOps:
     def safe_open_w(path):
         ''' Open "path" for writing, creating any parent directories as needed.
         '''
-        mkdir_p(os.path.dirname(path))
+        fileOps.mkdir_p(os.path.dirname(path))
         return open(path, 'w')
 
     @staticmethod

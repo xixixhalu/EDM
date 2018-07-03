@@ -419,6 +419,8 @@ def detail_instance():
     # Parse JSON and generate code
     model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
 
+    # display_ip, server_ip, port = get_server_info()
+    # server_url = display_ip + ":" + port
     authen_key = dbOps.getAuthenKey(mongo, session['username'])
 
     # Pass required data to the template
