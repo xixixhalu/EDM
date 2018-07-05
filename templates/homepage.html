@@ -41,7 +41,7 @@
 					<form class="modal-content animate" action="{{ url_for('login') }}" method="post">
 						<div class="container">
 							<div class="lcontainer">
-								<img src="avatar.png" class="avatar">
+								<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">   
 							</div>
 							<label for="uname"><b>Username</b></label>
 							<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
@@ -59,10 +59,10 @@
 				</div>
 				<!--Structure of Signup Modal-->
 				<div id="signup" class="modal">
-					<form class="modal-content animate" action="{{ url_for('register') }}" method="post">
+					<form class="modal-content animate" action="{{ url_for('static',filename='img/avatar.png') }}" method="post">
 						<div class="container">
 							<div class="lcontainer">
-								<img src="avatar.png" class="avatar">
+								<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">
 							</div>
 							<label for="email"><b>Email</b></label>
 							<input type="text" placeholder="Enter Email" name="email" class="form-control" required>
