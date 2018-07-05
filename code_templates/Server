@@ -4,7 +4,7 @@
  Configure the variables below
  */
 var server_ip = "$server_ip";
-var dbname = "$dbname";
+var dbname = "$db_name";
 var server_port = "$port";
 //declare what is the primary key for the table specified above.
 var primary_key = '_id';

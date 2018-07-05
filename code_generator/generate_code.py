@@ -89,7 +89,7 @@ def generate_server(server_ip, port, dm_name, json_data):
     elem_names = [str(element["elementName"]) for element in elements]
     data = {"server_ip": server_ip,
             "port": port,
-            "dbname": dm_name,
+            "db_name": dm_name,
             "collection_names" : str(elem_names)}
     content = replace_words(server_template, data)
     server_code = open(output_path + "Server" + ".js", "w")
@@ -106,7 +106,8 @@ def generate_server(server_ip, port, dm_name, json_data):
     configure_db(dm_name)
     db_user, db_password = edm_utils.generate_user_credentials(dm_name)
     data = {"db_user": db_user, 
-            "db_password": db_password}
+            "db_password": db_password,
+            "db_name" : dm_name}
     with open(output_location, "w") as output_file:
         content = replace_words(db_connection_template, data)
         output_file.write(content)
