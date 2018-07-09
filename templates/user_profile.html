@@ -15,7 +15,6 @@
 		<basefont size="7">
 		<script>var history_data = {{ history_data|tojson|safe }};</script>
 	</head>
-	</head>
 	<body>
 		<div id="container">
 			{% with messages = get_flashed_messages() %}
@@ -52,7 +51,6 @@
 								<form action="/logout">				
 									<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
 								</form>
-
 							</div>
 						</div>
 						<br>
@@ -103,7 +101,7 @@
 														</button>
 													</form>
 													{%endraw%}
-													<form class="operation" action="{{ url_for('detail_instance') }}" method="GET">
+													<form class="operation" action="{{ url_for('serverstatus') }}" method="GET">
 													{%raw%}
 														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 														<input type="hidden" name="fileId" value="{{file.id}}">

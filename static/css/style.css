@@ -141,6 +141,7 @@ label{
 
 .container {
 	padding: 10px;
+
 }
 
 widget-area.blank {
@@ -250,3 +251,5 @@ widget-area.blank {
 .operation.btn:hover {
     background-color: grey;
 }
+
+
