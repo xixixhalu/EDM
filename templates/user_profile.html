@@ -18,6 +18,22 @@
 	</head>
 	<body>
 		<div id="container">
+			{% with messages = get_flashed_messages() %}
+			  {% if messages %}
+			    <div class="alert alert-warning" role="alert" style="float:left; width:100%;">
+			    {% for message in messages %}
+			      {{ message }}
+			    </div>
+			    {% endfor %}
+			    <script type="text/javascript">
+			    	window.setTimeout(function () {
+					    $(".alert-warning").fadeTo(500, 0).slideUp(500, function () {
+					        $(this).remove();
+					    });
+					}, 2000);
+			    </script>
+			  {% endif %}
+			{% endwith %}
 			<!--Shows the title of the page - Project header -->
 			<div class="jumbotron">
 				<div class="container text-center">
@@ -47,9 +63,11 @@
 								<div class="card" ng-repeat="history in histories track by $index">
 									<div class="card-header" id="heading{{$index}}">
 										<h5 class="mb-0">
+											
 											<button class="btn btn-link collapsed btn_dashboard" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
 											  Project - {{history.domainModelName}} : {{history.length}} instances
 											</button>
+
 										</h5>
 									</div>
 
@@ -75,12 +93,24 @@
 													<button class="operation btn" title="Update Domain Model">
 														<i class="fa fa-edit"></i>
 													</button>
-													<button class="operation btn" title="Delete the Instance">
+													{%endraw%}
+													<form class="operation" action="{{ url_for('delete_instance') }}" method="POST">
+													{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Delete the Instance">
 														<i class="fa fa-close"></i>
-													</button>
-													<button class="operation btn" title="Go to Details">
-														<i class="fa fa-angle-right"></i>
-													</button>
+														</button>
+													</form>
+													{%endraw%}
+													<form class="operation" action="{{ url_for('detail_instance') }}" method="GET">
+													{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Go to Details">
+															<i class="fa fa-angle-right"></i>
+														</button>
+													</form>
 													</td>
 												</tr>
 											</tbody>

@@ -25,9 +25,14 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
     //}).then(function(data) {
     //    $scope.contents= data.data;
 		//$scope.contents = model_display_data;
-        myArray = model_display_data;//angular.fromJson($scope.contents);
+    //angular.fromJson($scope.contents);
+        myArray = model_display_data;
         $scope.details = myArray;
         console.log($scope.details);
+
+        console.log("server url: " + server_url);
+        console.log("authentication key: " + authen_key);
+
         Object.keys(myArray).forEach(function(k){
             $scope.languages = Object.keys(myArray[k]);
             /*$scope.languages.forEach(function(lan){
