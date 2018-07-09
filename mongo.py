@@ -6,13 +6,35 @@ import calendar
 from iso8601 import parse_date
 from bson.objectid import ObjectId
 def db(start,end):
+
         Client = MongoClient()
         db = Client.bdr_db_restore
-        collection = db.baddriverreports
         start=str(start)[2:]+"0000000000000000"
         end=str(end)[2:]+"0000000000000000"
-        for data in collection.find({"_id":{"$gte":ObjectId(start),"$lte":ObjectId(end)}}):
-                print data
+
+        for collec in db.collection_names():
+                if collec=="fs.chunks":
+                        continue
+                collection = db[collec]
+                print collec
+                res=[]
+
+                for data in collection.find({"_id":{"$gte":ObjectId(start),"$lte":ObjectId(end)}}):
+                        items=process_data(data)
+#                       print items
+                        if items not in res:
+                                res.append(items)
+                print res
+
+
+def process_data(json):
+        item=[]
+#       print type(json)
+        for key in json.keys():
+                key=str(key).replace('u\'','\'')
+                key.decode("unicode-escape")
+                item.append(key)
+        return item
 
 def iso2unix(starttime,endtime):
         start=time.mktime(parse_date(starttime).timetuple())
