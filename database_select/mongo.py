@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import pytz
 import time
+import json
 from pytz import reference
 import calendar
 from iso8601 import parse_date
@@ -32,7 +33,7 @@ class DBselect:
 
 
         def process_data(self,json):
-	            item=[]
+                item=[]
                 for key in json.keys():
                         key=str(key).replace('u\'','\'')
                         key.decode("unicode-escape")
@@ -61,6 +62,6 @@ class DBselect:
                                 entity=self.db(start,end)
                         self.dbjson[str(i)]={"start":date[0],"end":date[1],"entities":entity}
                         i+=1
-                print self.dbjson
+                print json.dumps(self.dbjson, indent=4, sort_keys=True)
 test=DBselect()
 test.start()
