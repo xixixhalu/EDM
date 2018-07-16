@@ -419,6 +419,7 @@ def detail_instance():
     # Parse JSON and generate code
     model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
 
+
     # Pass required data to the template
     description_data = {
         "model_display_data": model_display_data
