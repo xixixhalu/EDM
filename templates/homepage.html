@@ -7,13 +7,13 @@
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/reactsize.css') }}">
+		<!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/reactsize.css') }}"> -->
 		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
 	</head>
 	<body>
-		<div id="container">
+		<div id="container" class="col-12">
 			<!--Shows the title of the project - Page Header-->
 			<div class="jumbotron">
 				<div class="container text-center">
@@ -24,10 +24,10 @@
 			<div id="content">
 				<!--Button for Login (Creates a modal for the login screen)-->
 				<div class="buttons" align="right">
-					<button type="button" class="btn btn-primary btn-md" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
+					<button type="button" class="btn btn-spanimary btn-md btn-primary btn-lg" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
 				</div>
 				<!--Page Content: Displays information about the Online EDM tool-->
-				<div class="container col-12" align="center" >
+				<div class="container" align="center" >
 					<h2>Convert your domain model to code in just one click</h2>
 					<br>
 					<p>Software Development is labor-intensive, time consuming, error-prone and expensive. With time constraints and limited resources, as-build systems often don't match designs and fail to meet requirements.</p>
@@ -62,7 +62,7 @@
 				</div>
 				<!--Structure of Signup Modal-->
 				<div id="signup" class="modal">
-					<form class="modal-content animate" action="{{ url_for('static',filename='img/avatar.png') }}" method="post">
+					<form class="modal-content animate" action="{{ url_for('register') }}" method="post">
 						<div class="container">
 							<div class="lcontainer">
 								<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">
