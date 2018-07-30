@@ -1,7 +1,12 @@
+import sys
+sys.path.append('../')
+import json
 from utilities.config_util import ConfigUtil
 from utilities import port_scanner, edm_utils
 from code_generator.template_utils import *
 from database_manager.setup import DBUtilities
+
+from utilities.file_op import fileOps
 
 
 def get_server_info():
@@ -127,6 +132,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     with open(output_location, "w") as output_file:
         output_file.write(authen_template)
 
+
 def generate_all(dm_name, output_dir, to_file=True):
     """
     generate a set of code files from JSON
@@ -166,3 +172,17 @@ def generate_all(dm_name, output_dir, to_file=True):
 
         return model_display_data, display_ip + ":" + str(port)
         # return model_display_data
+
+def write_description_to_file(dm_name, output_dir, meta_data):
+    file_location = output_dir + "/" + dm_name + "Modeldata" + ".json"
+    md = json.dumps(meta_data)
+    with fileOps.safe_open_w(file_location) as json_input:
+        json_input.write(md)
+    json_input.close()
+
+ 
+def read_description_from_file(dm_name, file_path):
+    file_location = file_path + "/" + dm_name + "Modeldata" + ".json"
+    with open(file_location, 'r') as json_input:
+        meta_data = json.load(json_input)
+    return meta_data

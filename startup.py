@@ -22,6 +22,7 @@ from bson.objectid import ObjectId
 import pytz
 from bson.json_util import dumps
 import uuid
+import json
 
 # User calss used in flask_login
 # When a User instance created, if will check if this
@@ -365,6 +366,8 @@ def result():
 
             authen_key = dbOps.getAuthenKey(mongo, session['username'])
 
+                     
+
             # Pass required data to the template
             description_data = {
                 "model_display_data": model_display_data,
@@ -372,13 +375,17 @@ def result():
                 "authen_key" : authen_key
             }
 
+            # write description_data into json file
+            generate_code.write_description_to_file(filename_str, output_dir, description_data)
+
             # Render the template
-            return render_template('reference.html', **description_data)
+            return redirect(url_for('index'))
             
         else:
             flash('File type is not allowed')
             return redirect(request.url)
     return redirect(url_for('upload_xml'))
+
 
 @app.route('/deleteinstance', methods=['GET', 'POST'])
 @login_required
@@ -406,6 +413,7 @@ def delete_instance():
         return redirect(url_for('index'))
     return redirect(url_for('index'))
 
+
 @app.route('/detailinstance', methods=['GET'])
 @login_required
 def detail_instance():
@@ -416,8 +424,11 @@ def detail_instance():
     json_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
     json_dir = json_dir + "/" + domain_model_name + "/" + str(file_id)
 
-    # Parse JSON and generate code
-    model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
+    # Get description_data from json file
+    meta_data = generate_code.read_description_from_file(domain_model_name, json_dir)
+
+    model_display_data = meta_data["model_display_data"]
+
 
     # Pass required data to the template
     description_data = {
@@ -438,10 +449,13 @@ def serverstatus():
     json_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
     json_dir = json_dir + "/" + domain_model_name + "/" + str(file_id)
 
-    # Parse JSON and generate code
-    model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
+    # Get description_data from json file
+    meta_data = generate_code.read_description_from_file(domain_model_name, json_dir)
+   
+    server_url = meta_data["server_url"]
 
-    authen_key = dbOps.getAuthenKey(mongo, session['username'])
+    authen_key = meta_data["authen_key"]
+    
 
     # Pass required data to the template
     description_data = {
@@ -449,6 +463,7 @@ def serverstatus():
         "authen_key": authen_key
     }
     return render_template('server_status.html', **description_data)
+
 
 @app.route('/description')
 @login_required
