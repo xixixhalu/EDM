@@ -430,6 +430,7 @@ def detail_instance():
     model_display_data = meta_data["model_display_data"]
 
 
+
     # Pass required data to the template
     description_data = {
         "model_display_data": model_display_data
