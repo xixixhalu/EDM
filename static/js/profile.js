@@ -31,3 +31,11 @@ app.controller('profileCtrl', ['$scope', '$http', function($scope, $http) {
 }]);
 
 
+// $(function(){
+//     #(window).resize(function() {
+//         var cliHeight = document.body.clientHeight;
+//         var divHeight = cliHeight - 5;
+//         $('#container').css("height", divHeight+ "px");
+
+//     });
+// });

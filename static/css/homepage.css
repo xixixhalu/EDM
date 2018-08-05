@@ -1,8 +1,3 @@
-html,body{
-	margin:0;
-	padding:0;
-	height:100%;
-}
 
 div#container{
 	position:relative;
@@ -12,21 +7,52 @@ div#container{
 	/*min-height:100%;*/
 }
 
-div#content{
-	position:relative;
-	height: 50%;
-	padding: 1em 1em;  /*change 10 to 2*/
-	margin-bottom: 0;
+/*For different size screens*/
+@media only screen and (max-width: 575px){
+	#container{height: 100%;width:100%; font-size: 1em;}
 }
 
+@media only screen and (min-width: 576px) and (max-width: 767px){
+	#container{height: 100%;width:100%; font-size: 1em;}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1199px){
+	#container{height: 100%;width:100%; font-size: 1.0em;}
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1499px){
+   #container{height: 100%; width:100%; font-size: 1.1em;}
+}
+
+@media only screen and (min-width: 1500px) and (max-width: 1919px){
+    #container{height: 100%;width:100%; font-size: 1.3em;}
+}
+
+@media only screen and (min-width: 1920px) and (max-width: 2799px){
+    #container {height: 100%;width:100%; font-size: 1.4em;}
+}
+
+@media only screen and (min-width: 2800px){
+	 #container {height: 100%;width:100%; font-size: 1.5em;}	
+}
+
+div#content{
+	/*position:relative;*/
+	/*height: 50%;*/
+	padding: 1em 1em;  /*change 10 to 2*/
+	margin-bottom: 0;
+
+}
+
+/*footer*/
 div#footer{
 	position:absolute;
 	width:100%;
 	bottom:0;
 	background-color: #e9ecef;
 	color: #000000;
-	padding: 0.8em;
-	
+	padding: 0.8em;	
+
 }
 
 .jumbotron{
@@ -41,6 +67,8 @@ div#footer{
 .jumbotron p {
 	font-size: 1.5em;
 }
+
+/* .row.content {height: 1000px} */
 
 pre{
 	word-break: keep-all;
@@ -133,44 +161,5 @@ label{
 	margin-top: 2%;
 	margin-bottom: 5%;
 
-}
-
-
-.sidenav {
-	background-color: #f1f1f1;
-	height: 100%;
-	padding: 10px;
-}
-
-pre{
-	word-break: keep-all;
-	white-space: pre-wrap;
-	counter-reset: line;
-}
-
-pre span:before {
-	counter-increment: line;
-	content: counter(line);
-	display: inline-block;
-	padding: 0.5em;
-	margin-right: 0.5em
-	color: #888
-}
-
-pre span {
-	display: block;
-	line-height: 0.5;
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-}
-
-.panel {
-	margin-top: 1.5em;
-}
-
-.navbar {
-	border-radius: 0;
-	margin-bottom: 10px;
 }
 
