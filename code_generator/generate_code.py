@@ -173,6 +173,12 @@ def generate_all(dm_name, output_dir, to_file=True):
         return model_display_data, display_ip + ":" + str(port)
         # return model_display_data
 
+def read_description_from_file(dm_name, file_path):
+    file_location = file_path + "/" + dm_name + "Modeldata" + ".json"
+    with open(file_location, 'r') as json_input:
+        meta_data = json.load(json_input)
+    return meta_data
+
 def write_description_to_file(dm_name, output_dir, meta_data):
     file_location = output_dir + "/" + dm_name + "Modeldata" + ".json"
     md = json.dumps(meta_data)
@@ -181,8 +187,3 @@ def write_description_to_file(dm_name, output_dir, meta_data):
     json_input.close()
 
  
-def read_description_from_file(dm_name, file_path):
-    file_location = file_path + "/" + dm_name + "Modeldata" + ".json"
-    with open(file_location, 'r') as json_input:
-        meta_data = json.load(json_input)
-    return meta_data

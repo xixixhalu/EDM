@@ -365,8 +365,7 @@ def result():
             model_display_data, server_url = generate_code.generate_all(filename_str, output_dir)
 
             authen_key = dbOps.getAuthenKey(mongo, session['username'])
-
-                     
+         
 
             # Pass required data to the template
             description_data = {
