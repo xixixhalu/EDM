@@ -385,7 +385,7 @@ def update_instance():
         	print file_dir
         	print domain_model_name
         	# Parse XML and generate JSON
-        	ana.DM_File_Analyze(file_dir, {'DM_Input_type': "Simple_XML"}, str(domain_model_name))
+        	ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
 
         return redirect(url_for('index'))
 
