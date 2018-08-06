@@ -20,6 +20,8 @@ from bson.objectid import ObjectId
 import pytz
 from bson.json_util import dumps
 import uuid
+import base64
+from bson import binary
 
 # User calss used in flask_login
 # When a User instance created, if will check if this
@@ -363,6 +365,9 @@ def update_instance():
             filename_str = filename.split(".")[0]
 
             all_content = file.read()
+            b64content = base64.standard_b64encode(all_content)
+        	# get bson object
+            bincontent = binary.Binary(b64content)
             #print all_content
 
             # save file into database
@@ -373,15 +378,15 @@ def update_instance():
             output_dir = output_dir + "/" + filename_str + "/" + str(oldfile_id)
             with fileOps.safe_open_w(output_dir + "/" + filename) as f:
                 f.write(all_content)
+                f.close()
 
         	username = session['username']
         
-        	dbOps.updateInstanceDb(mongo, username, domain_model_name, oldfile_id, all_content)
-        
+        	dbOps.updateInstanceDb(mongo, username, domain_model_name, oldfile_id, bincontent)
 
         	file_dir = os.path.join(config.get('Output', 'output_path')) + "/" + username + "/" + domain_model_name + "/" + str(oldfile_id)
         	
-        	print output_dir
+
         	print file_dir
         	print domain_model_name
         	# Parse XML and generate JSON
