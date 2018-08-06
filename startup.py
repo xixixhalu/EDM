@@ -42,7 +42,8 @@ class User(UserMixin):
             if findresult["validtill"] is not None:
                 tempvalidtill = findresult["validtill"]
                 # check if current time is more than valid-till time 
-                delta = tempvalidtill-dt.datetime.now(pytz.utc)
+                #delta = pytz.timezone("UTC").localize(tempvalidtill)-dt.datetime.now(pytz.utc)
+                delta = tempvalidtill - dt.datetime.now(pytz.utc)
                 if delta < dt.timedelta():
                     self.refreshToken(self.username, self.dbengine)
                 newfind = authentcol.find_one({"username": self.username})
@@ -419,18 +420,44 @@ def detail_instance():
     # Parse JSON and generate code
     model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
 
-    # display_ip, server_ip, port = get_server_info()
-    # server_url = display_ip + ":" + port
+
+    # Pass required data to the template
+    description_data = {
+        "model_display_data": model_display_data
+    }
+
+    return render_template('reference.html', **description_data)
+
+
+
+@app.route('/serverstatus', methods=['GET'])
+@login_required
+def serverstatus():
+   
+    file_id = request.args['fileId']
+    domain_model_name = request.args['domainModelName']
+
+    json_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
+    json_dir = json_dir + "/" + domain_model_name + "/" + str(file_id)
+
+    # Parse JSON and generate code
+    model_display_data, server_url = generate_code.generate_all(domain_model_name, json_dir, to_file=False)
+
     authen_key = dbOps.getAuthenKey(mongo, session['username'])
 
     # Pass required data to the template
     description_data = {
-        "model_display_data": model_display_data,
         "server_url": server_url,
         "authen_key": authen_key
     }
+    return render_template('server_status.html', **description_data)
 
-    return render_template('reference.html', **description_data)
+@app.route('/description')
+@login_required
+def description():
+    return render_template('description.html')
+    
+    
 
 @app.route('/generated_code/<path:path>')
 @login_required

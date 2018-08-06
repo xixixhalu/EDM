@@ -127,6 +127,7 @@ label{
 
 .container {
 	padding: 10px;
+
 }
 
 #widget-box {
@@ -172,5 +173,10 @@ pre span {
 .navbar {
 	border-radius: 0;
 	margin-bottom: 10px;
+}
+
+/* Darker background on mouse-over */
+.operation.btn:hover {
+    background-color: grey;
 }
 

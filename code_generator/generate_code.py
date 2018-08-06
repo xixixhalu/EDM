@@ -161,5 +161,8 @@ def generate_all(dm_name, output_dir, to_file=True):
         # generate server code files
         generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
 
+        #TODO
+        #write model_display_data and display_ip to file
+
         return model_display_data, display_ip + ":" + str(port)
-        #return model_display_data
+        # return model_display_data

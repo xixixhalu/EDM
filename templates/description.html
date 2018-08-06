@@ -22,13 +22,24 @@
 					<h1>Executable Domain Modeling</h1>
 					<p>Convert XML files to real code</p>
 				</div>
-			</div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12">
+                        <form action="{{ url_for('logout') }}">				
+							<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+						</form>
+					</div>
+				</div>
+			</div>			
 			<!--Nav bars -- help redirect to different pages-->
 			<nav class="navbar navbar-expand-sm bg-dark navbar-dark col-sm-12">
 				<!-- Redirect to homepage here -->
 				<ul class="navbar-nav nav-justified col-sm-12">
 					<li class="nav-brand">
-						<a class="nav-link" href="#"><span class="fa fa-home"></span></a>
+						<a class="nav-link" href="/"><span class="fa fa-home"></span></a>
+					</li>
+					<!--Redirect to server status page here!-->
+					<li class="nav-item">
+						<a class="nav-link" href="{{ url_for('serverstatus') }}">Server Status</a>
 					</li>
 					<!--Redirect to description page here!-->
 					<li class="nav-item">
@@ -37,10 +48,6 @@
 					<!--Redirect to API reference page here!-->
 					<li class="nav-item">
 						<a class="nav-link" href="#">API Reference</a>
-					</li>
-					<!--Redirect to server status page here!-->
-					<li class="nav-item">
-						<a class="nav-link" href="#">Server Status</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a>
