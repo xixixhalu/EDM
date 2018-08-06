@@ -1,0 +1,86 @@
+<!--This page is used by users to upload the xml file //Xuan Zhu-->
+<!DOCTYPE html>
+<html ng-app>
+	<head>
+		<meta charset="utf-8">
+		<title>API References - Executable Domain Modeling</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+		<basefont size="7">
+		<script>
+			var fileId = "{{ fileId }}";
+			var domainModelName = "{{ domainModelName }}";
+			console.log(fileId);
+			console.log(domainModelName);
+		</script>
+	</head>
+	<body>
+		<div id="container">
+			{% with messages = get_flashed_messages() %}
+			  {% if messages %}
+			    <div class="alert alert-warning" role="alert" style="float:left; width:100%;">
+			    {% for message in messages %}
+			      {{ message }}
+			    </div>
+			    {% endfor %}
+			    <script type="text/javascript">
+			    	window.setTimeout(function () {
+					    $(".alert-warning").fadeTo(500, 0).slideUp(500, function () {
+					        $(this).remove();
+					    });
+					}, 2000);
+			    </script>
+			  {% endif %}
+			{% endwith %}
+			<!--Use the bootstrap jumbotron element to show the header-->
+			<div class="jumbotron">
+				<div class="container text-center">
+					<h1>Executable Domain Modeling</h1>
+					<p>Convert XML files to real code</p>
+				</div>
+			</div>
+			<div class="buttons">
+				<!-- log out button--control the action of logging out -->
+				<form action="/logout">							
+					<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+				</form>
+				
+			</div>
+			<br>
+			<div id="content">
+				<!--Display the main content of the page here!-->
+				<div class="container">
+					<br>
+					<h4 align="center"><span class="fa fa-gear"></span>&nbsp Update the XML that corressponds to your class diagram</h4>
+					<br>
+					<!--A form for user to submit for uploading the xml file-->
+					<div ng-app="update" ng-controller="updateCtrl">
+						
+					
+					<form method="post" enctype="multipart/form-data" action="{{ url_for('update_instance')}}">
+						<input type="hidden" name="domainModelName" value="{{domainModelName}}">
+						<input type="hidden" name="fileId" value="{{fileId}}">
+						<div class="container" style="padding:8px; border:1px solid black; border-radius:8px; width:50%">
+							<span class="fa fa-search"></span><input type="file" id="file" name="file" style="margin-left:5px">
+						</div>
+						<div class="container" align="right" style="margin-top:15px;width:53%">
+							<button type="submit" class="btn btn-success btn-lg">Generate and Update!</button>
+						</div>
+					</form>
+
+					</div>
+				</div>
+			</div>
+			<!--Show the footer element-->
+			<div id="footer" align="center">
+				<p>&copy; Copyright Protected. All rights reserved</p>
+			</div>
+		</div>
+	</body>
+</html>

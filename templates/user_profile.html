@@ -89,10 +89,17 @@
 														<i class="fa fa-play"></i>
 														</button>
 													</td>
+
 													<td>
-													<button class="operation btn" title="Update Domain Model">
+													{%endraw%}
+													<form class="operation"  method="GET" action="{{ url_for('update_xml') }}">
+														{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Update Domain Model" >
 														<i class="fa fa-edit"></i>
-													</button>
+														</button>
+													</form>
 													{%endraw%}
 													<form class="operation" action="{{ url_for('delete_instance') }}" method="POST">
 													{%raw%}

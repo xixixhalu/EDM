@@ -16,12 +16,12 @@ from flask_pymongo import PyMongo
 import bcrypt
 import datetime as dt
 import uuid
-import base64
-from bson import binary
 from bson.objectid import ObjectId
 import pytz
 from bson.json_util import dumps
 import uuid
+import base64
+from bson import binary
 
 # User calss used in flask_login
 # When a User instance created, if will check if this
@@ -235,60 +235,22 @@ def register():
 def upload_xml():
     return render_template('xml_upload.html')
 
-# Parameters: 
-# username: str or unicode
-# dmname: str or unicode
-# filecontent : str, text content of the model file
-# pathid : str, uuid, direct to the corresponding output path
-# Returns: bool, True if successfully saved
-def saveFileToDB(username, dmname, filecontent):
-    if type(filecontent) is not str:
-        return False
-    # to save file as bson, we need base64 encode first 
-    b64content = base64.standard_b64encode(filecontent)
-    # get bson object
-    bincontent = binary.Binary(b64content)
-    fileid = mongo.db.filedb.insert({"file": bincontent})
+@app.route('/update' , methods=['GET'])
+@login_required
+def update_xml():
 
-    #if this user doesn't upload history in database, create one
-    userresult = mongo.db.history.find_one({"username": username})
-    if userresult == None:
-        mongo.db.history.insert({"username": username, "uploads": []})
+    file_id = request.args['fileId']
+    domain_model_name = request.args['domainModelName']
 
-    domainresult = mongo.db.history.find_one({
-        "username": username,
-        "uploads": {
-            "$elemMatch": {
-                "domainModelName": dmname
-            }
-        }
-    })
+    # Pass required data to the template
+    description_data = {
+        "domainModelName": domain_model_name,
+        "fileId": file_id
+    }
 
-    if domainresult == None:
-        mongo.db["history"].update({
-            "username": username
-        }, {
-            "$push": {
-                "uploads": {
-                    "domainModelName": dmname,
-                    "files": []
-                }
-            }
-        })
+    return render_template('xml_update.html',**description_data)
 
-    mongo.db["history"].update({
-        "username": username,
-        "uploads.domainModelName": dmname
-    }, {
-        "$push": {
-            "uploads.$.files": {
-                "file": fileid,
-                "date": dt.datetime.now(pytz.utc)
-            }
-        }
-    })
 
-    return fileid
 '''
 # add file to database without generate server code
 @app.route('/uploadtodb', methods=['POST'])
@@ -350,7 +312,7 @@ def result():
             all_content = file.read()
             
             # save file into database
-            file_id = saveFileToDB(current_user.username, filename_str, all_content)
+            file_id = dbOps.saveFileToDB(mongo, current_user.username, filename_str, all_content)
 
             # save file to path
             output_dir = output_dir + "/" + filename_str + "/" + str(file_id)
@@ -379,6 +341,65 @@ def result():
             flash('File type is not allowed')
             return redirect(request.url)
     return redirect(url_for('upload_xml'))
+
+
+#Update instance with a new UML
+@app.route('/updateinstance', methods=['GET','POST'])
+@login_required
+def update_instance():
+
+	if request.method == 'POST':
+		
+
+		oldfile_id = request.form['fileId']
+    	domain_model_name = request.form['domainModelName']
+		
+		
+        file = request.files['file']
+    	
+    	filename_str = ""
+        output_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filename_str = filename.split(".")[0]
+
+            all_content = file.read()
+            b64content = base64.standard_b64encode(all_content)
+        	# get bson object
+            bincontent = binary.Binary(b64content)
+            #print all_content
+
+            # save file into database
+            #newfile_id = dbOps.saveFileToDB(mongo, current_user.username, filename_str, all_content)
+            #print newfile_id
+
+            # save file to path
+            output_dir = output_dir + "/" + filename_str + "/" + str(oldfile_id)
+            with fileOps.safe_open_w(output_dir + "/" + filename) as f:
+                f.write(all_content)
+                f.close()
+
+        	username = session['username']
+        
+        	dbOps.updateInstanceDb(mongo, username, domain_model_name, oldfile_id, bincontent)
+
+        	file_dir = os.path.join(config.get('Output', 'output_path')) + "/" + username + "/" + domain_model_name + "/" + str(oldfile_id)
+        	
+
+        	print file_dir
+        	print domain_model_name
+        	# Parse XML and generate JSON
+        	ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
+
+        return redirect(url_for('index'))
+
+                       
+     
+    #return redirect(url_for('index'))  
+	return redirect(url_for('update_instance'))
+
+
 
 @app.route('/deleteinstance', methods=['GET', 'POST'])
 @login_required
