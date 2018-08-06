@@ -316,6 +316,7 @@ def result():
             output_dir = output_dir + "/" + filename_str + "/" + str(file_id)
             with fileOps.safe_open_w(output_dir + "/" + filename) as f:
                 f.write(all_content)
+            f.close()
                        
             # Parse XML and generate JSON
             ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
@@ -350,12 +351,12 @@ def update_instance():
 		
 
 		oldfile_id = request.form['fileId']
-    	domain_model_name = request.form['domainModelName']
+        domain_model_name = request.form['domainModelName']
 		
 		
         file = request.files['file']
     	
-    	filename_str = ""
+        filename_str = ""
         output_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
 
         if file and allowed_file(file.filename):
@@ -366,26 +367,17 @@ def update_instance():
             #print all_content
 
             # save file into database
-            #newfile_id = dbOps.saveFileToDB(mongo, current_user.username, filename_str, all_content)
-            #print newfile_id
+            username = session['username']
+            dbOps.updateInstanceDB(mongo, username, domain_model_name, oldfile_id, all_content)
 
             # save file to path
             output_dir = output_dir + "/" + filename_str + "/" + str(oldfile_id)
             with fileOps.safe_open_w(output_dir + "/" + filename) as f:
                 f.write(all_content)
+            f.close()
 
-        	username = session['username']
-        
-        	dbOps.updateInstanceDb(mongo, username, domain_model_name, oldfile_id, all_content)
-        
-
-        	file_dir = os.path.join(config.get('Output', 'output_path')) + "/" + username + "/" + domain_model_name + "/" + str(oldfile_id)
-        	
-        	print output_dir
-        	print file_dir
-        	print domain_model_name
         	# Parse XML and generate JSON
-        	ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
+            ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
 
         return redirect(url_for('index'))
 
