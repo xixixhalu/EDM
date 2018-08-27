@@ -11,37 +11,88 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
 		<basefont size="7">
+
 	</head>
 	<body>
+		<script type="text/javascript">
+
+			function GetQueryString(name) { 
+         		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+        		var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
+        		var context = ""; 
+    			if (r != null) 
+     			context = r[2]; 
+    			reg = null; 
+    			r = null; 
+   				return context == null || context == "" || context == "undefined" ? "" : context; 
+			 }
+
+            window.onload = function(){
+
+            	var mname = document.createElement('input');
+            	mname.setAttribute("type", "hidden");
+            	mname.setAttribute("name", "domainModelName");
+				mname.setAttribute("value", GetQueryString("domainModelName"));
+
+				var fid = document.createElement('input');
+            	fid.setAttribute("type", "hidden");
+            	fid.setAttribute("name", "fileId");
+				fid.setAttribute("value", GetQueryString("fileId"));
+
+				var new_div = document.createElement('div');
+				new_div.appendChild(mname);
+				new_div.appendChild(fid);
+
+				document.getElementsByName('serverstatus')[0].innerHTML += new_div.innerHTML;
+				document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
+				document.getElementsByName('detail_instance')[0].innerHTML += new_div.innerHTML;
+     		};
+		
+
+		</script>
 		<div id="container">
-			<!--Show the title of the project -- Page header-->
+			<!--Show the title of the project -- header // Xuan Zhu-->
 			<div class="jumbotron">
 				<div class="container text-center">
 					<h1>Executable Domain Modeling</h1>
 					<p>Convert XML files to real code</p>
 				</div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12">
+                        <form action="{{ url_for('logout') }}">				
+							<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+						</form>
+					</div>
+				</div>	
 			</div>
 			<!--Nav bars -- help redirect to different pages-->
-			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			<nav class="navbar navbar-expand-sm bg-dark navbar-dark col-sm-12">
 				<!-- Redirect to homepage here -->
 				<ul class="navbar-nav nav-justified col-sm-12">
 					<li class="nav-brand">
-						<a class="nav-link" href="#"><span class="fa fa-home"></span></a>
-					</li>
-					<!--Redirect to description page here!-->
-					<li class="nav-item">
-						<a class="nav-link" href="#">Description</a>
-					</li>
-					<!--Redirect to API reference page here!-->
-					<li class="nav-item">
-						<a class="nav-link" href="#">API Reference</a>
+						<a class="nav-link" href="/"><span class="fa fa-home"></span></a>
 					</li>
 					<!--Redirect to server status page here!-->
 					<li class="nav-item">
-						<a class="nav-link" href="#">Server Status</a>
+						<form action="{{ url_for('serverstatus') }}" name="serverstatus" method="GET">
+							<a class="nav-link" href="javascript: document.serverstatus.submit()">Server Status</a>
+						</form>
 					</li>
+					<!--Redirect to description page here!-->
+					<li class="nav-item">
+						<form action="{{ url_for('description') }}" name="description" method="GET">
+							<a class="nav-link" href="javascript: document.description.submit()">Server Status</a>
+						</form>
+					</li>
+					<!--Redirect to API reference page here!-->
+					<li>
+						<form action="{{ url_for('detail_instance') }}" name="detail_instance" method="GET">
+							<!-- <button class="nav-link">api</button> -->
+							<a class="nav-link" href="javascript: document.detail_instance.submit()">API Reference</a>
+						</form>
+					</li>
+
 					<li class="nav-item">
 						<a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a>
 					</li>
@@ -53,16 +104,25 @@
 					<h3>Server Status</h3>
 					<div class="container-fluid ">
 						<ul class="list-group">
-							<li class="list-group-item"> The status of the instance as seen on EC2 </li>
-							<li class="list-group-item"> Display the amount of data present</li>
+							<li class="list-group-item" id="urlli"></li>
+							<script>
+								document.getElementById("urlli").innerHTML="Server URL:: " + "{{ server_url }}";
+							</script>
+
+							<li class="list-group-item" id="keyli"></li>
+							<script>
+								document.getElementById("keyli").innerHTML="Access Key: " +"{{ authen_key }}";
+							</script>
 						</ul>
 					</div>
 				</div>
 			</div>
+		</div>
 			<!--show the copyright as footer-->
 			<div id="footer" align="center">
 				<p>&copy; Copyright Protected. All rights reserved</p>
 			</div>
 		</div>
 	</body>
+
 </html>

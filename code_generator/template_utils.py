@@ -41,10 +41,10 @@ def replace_words(template_content, replacements):
         content = content.replace(TEMPLATE_PREFIX + key, replacement)
     return content
 
-def template_output_path(dm_name, language=None, username="default"):
+def template_output_path(output_dir, dm_name, language=None):
     if language:
-        return "generated_code/%s/%s/%s/" % (username, dm_name, language)
-    return "generated_code/%s/%s/" % (username, dm_name)
+        return output_dir + "/" + language + "/"
+    return output_dir + "/" + dm_name + "/"
 
 
 def remove_indent(func_str):
@@ -214,12 +214,13 @@ class Template:
     General template class
 
     """
-    def __init__(self, language, template_type, dm_name=None, name=None, template_location=None, content=None):
+    def __init__(self, language, template_type, output_dir, dm_name=None, name=None, template_location=None, content=None):
         self.language = language
         self.type = template_type
         self.dm_name = dm_name
         self.name = name
         self.methods = None
+        self.output_dir = output_dir
 
         if content:
             self.content = self.raw_content = content
@@ -233,11 +234,11 @@ class Template:
 
     @property
     def output_path(self):
-        return template_output_path(self.dm_name, self.language)
+        return template_output_path(self.output_dir, self.dm_name, self.language)
 
     @property
     def output_location(self):
-        return self.output_path + self.name + LANGUAGE_SUFFIX[self.language]
+        return self.output_path + "/" + self.name + LANGUAGE_SUFFIX[self.language]
 
     def remove_func_marks(self):
         """
@@ -299,8 +300,8 @@ class ModelTemplate(Template):
 
     just implement the code display data for class model and handle "$method" mark
     """
-    def __init__(self, language, dm_name, model):
-        Template.__init__(self, language, "Model", dm_name, model.name)
+    def __init__(self, language, dm_name, model, output_dir="default"):
+        Template.__init__(self, language, "Model", output_dir, dm_name, model.name)
         self.model = model
         self.replace_methods()
         self.raw_content = self.content
@@ -311,7 +312,7 @@ class ModelTemplate(Template):
         find "$method" mark in template and replace with methods code according to model's info
         """
         method_names = self.model.methods
-        template = Template(self.language, "Method")
+        template = Template(self.language, "Method", self.output_dir)
         method_content = [template.render(False, True, replace_words={"method": method_name, "parameters": ""})
                           for method_name in method_names]
         method_content = "".join(method_content)
@@ -340,8 +341,8 @@ class AdapterTemplate(Template):
 
     not much different from basic template but just implement the code display data for Adapter
     """
-    def __init__(self, language, dm_name):
-        Template.__init__(self, language, "Adapter", dm_name, "Adapter")
+    def __init__(self, language, dm_name, output_dir="default"):
+        Template.__init__(self, language, "Adapter", output_dir, dm_name, "Adapter")
 
     def get_display_data(self):
         func_info_list = [method.get_method_info() for method in self.methods]
@@ -356,6 +357,7 @@ class AdapterTemplate(Template):
 
 
 # Legacy class
+'''
 class ServerTemplate(Template):
     """
     Template class for Server code file
@@ -369,3 +371,4 @@ class ServerTemplate(Template):
     @property
     def output_path(self):
         return template_output_path(self.dm_name)
+'''

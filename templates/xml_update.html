@@ -13,6 +13,12 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
 		<basefont size="7">
+		<script>
+			var fileId = "{{ fileId }}";
+			var domainModelName = "{{ domainModelName }}";
+			console.log(fileId);
+			console.log(domainModelName);
+		</script>
 	</head>
 	<body>
 		<div id="container">
@@ -51,17 +57,24 @@
 				<!--Display the main content of the page here!-->
 				<div class="container">
 					<br>
-					<h4 align="center"><span class="fa fa-gear"></span>&nbsp Upload an XML that corressponds to your class diagram</h4>
+					<h4 align="center"><span class="fa fa-gear"></span>&nbsp Update the XML that corressponds to your class diagram</h4>
 					<br>
 					<!--A form for user to submit for uploading the xml file-->
-					<form method="post" enctype="multipart/form-data" action="{{ url_for('result')}}">
+					<div ng-app="update" ng-controller="updateCtrl">
+						
+					
+					<form method="post" enctype="multipart/form-data" action="{{ url_for('update_instance')}}">
+						<input type="hidden" name="domainModelName" value="{{domainModelName}}">
+						<input type="hidden" name="fileId" value="{{fileId}}">
 						<div class="container" style="padding:8px; border:1px solid black; border-radius:8px; width:50%">
 							<span class="fa fa-search"></span><input type="file" id="file" name="file" style="margin-left:5px">
 						</div>
 						<div class="container" align="right" style="margin-top:15px;width:53%">
-							<button type="submit" class="btn btn-success btn-lg">Generate Code!</button>
+							<button type="submit" class="btn btn-success btn-lg">Generate and Update!</button>
 						</div>
 					</form>
+
+					</div>
 				</div>
 			</div>
 			<!--Show the footer element-->

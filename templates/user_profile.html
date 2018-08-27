@@ -6,7 +6,8 @@
 		<title>API References - Executable Domain Modeling</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user_profile.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
 		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -18,6 +19,22 @@
 	</head>
 	<body>
 		<div id="container">
+			{% with messages = get_flashed_messages() %}
+			  {% if messages %}
+			    <div class="alert alert-warning" role="alert" style="float:left; width:100%;">
+			    {% for message in messages %}
+			      {{ message }}
+			    </div>
+			    {% endfor %}
+			    <script type="text/javascript">
+			    	window.setTimeout(function () {
+					    $(".alert-warning").fadeTo(500, 0).slideUp(500, function () {
+					        $(this).remove();
+					    });
+					}, 2000);
+			    </script>
+			  {% endif %}
+			{% endwith %}
 			<!--Shows the title of the page - Project header -->
 			<div class="jumbotron">
 				<div class="container text-center">
@@ -25,10 +42,10 @@
 					<p>Convert XML files to real code</p>
 				</div>
 			</div>
-			<div id="content">
+			<div id="content" >
 				<!-- Main content of the page: A table representing all the existing instances -->
-				<div class="container-fluid">
-					<div class="content">
+				<div class="container-fluid" style="height: 100%;">
+					<div class="content" >
 						<div class="row">
 							<div class="col-md-12 col-sm-12">
                                 Welcome {{ session['username'] }}!
@@ -41,15 +58,18 @@
 						</div>
 						<br>
 						{%raw%}
-						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;height:250px;">
+						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;>  
+
 							<!-- Refer to https://getbootstrap.com/docs/4.0/components/collapse/ -->
 							<div id="accordion">
 								<div class="card" ng-repeat="history in histories track by $index">
 									<div class="card-header" id="heading{{$index}}">
 										<h5 class="mb-0">
+											
 											<button class="btn btn-link collapsed btn_dashboard" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
 											  Project - {{history.domainModelName}} : {{history.length}} instances
 											</button>
+
 										</h5>
 									</div>
 
@@ -71,16 +91,35 @@
 														<i class="fa fa-play"></i>
 														</button>
 													</td>
+
 													<td>
-													<button class="operation btn" title="Update Domain Model">
+													{%endraw%}
+													<form class="operation"  method="GET" action="{{ url_for('update_xml') }}">
+														{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Update Domain Model" >
 														<i class="fa fa-edit"></i>
-													</button>
-													<button class="operation btn" title="Delete the Instance">
+														</button>
+													</form>
+													{%endraw%}
+													<form class="operation" action="{{ url_for('delete_instance') }}" method="POST">
+													{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Delete the Instance">
 														<i class="fa fa-close"></i>
-													</button>
-													<button class="operation btn" title="Go to Details">
-														<i class="fa fa-angle-right"></i>
-													</button>
+														</button>
+													</form>
+													{%endraw%}
+													<form class="operation" action="{{ url_for('detail_instance') }}" method="GET">
+													{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Go to Details">
+															<i class="fa fa-angle-right"></i>
+														</button>
+													</form>
 													</td>
 												</tr>
 											</tbody>
@@ -119,7 +158,7 @@
 						</div> -->
 						<br>
 						<!-- This extra code is to display the instances as widgets instead of a table
-						<div class="row" id="widget-box">
+						<div class="row" id="widget-boxnew_button">
 							<div class="col-md-4">
 								<div class="widget-area no-padding blank">
 									<div class="user_profile">
@@ -144,7 +183,7 @@
 							</div>
 						</div>
 						-->
-						<div class="row">
+						<div class="row" id="newinstance">
 						<!--Button to generate a new instance-->
 							<div class="col-md-4 offset-md-4" id="new_button">
 								<button class="btn btn-lg btn-primary btn-block" onclick="window.location.href='{{ url_for('upload_xml') }}'">New Instance</button>
@@ -152,10 +191,10 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<!--Show the copyright as a footer-->
-			<div id="footer" align="center">
-				<p>&copy; Copyright Protected. All rights reserved</p>
+				<!--Show the copyright as a footer-->
+				<div id="footer" align="center">
+					<p>&copy; Copyright Protected. All rights reserved</p>
+				</div>
 			</div>
 		</div>
 	</body>

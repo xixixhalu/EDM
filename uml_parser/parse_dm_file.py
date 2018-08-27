@@ -8,9 +8,6 @@ from uml_parser.domain_model import DomainModel
 from uml_parser import datatypes as dt
 import xml.etree.ElementTree as ET
 
-output_filename = ""
-
-
 class Analyzer:
 
     def xmiPrefixAppender(self, key, xmiPrefix):
@@ -20,34 +17,31 @@ class Analyzer:
         if not os.path.exists(PROJECT_DIR):
             raise e.SimpleException("Project Home Directory not created, run project initialize first.")
 
-        global output_filename
-        output_filename = filename
         DM_File_type = config['DM_Input_type']
         if DM_File_type == "Simple_XML":      
-            retObj = self.SimpleXMLUtil(PROJECT_DIR + "/" + filename+".xml", filename)
+            retObj = self.SimpleXMLUtil(PROJECT_DIR, filename)
             if retObj is None:
                 raise e.SimpleException("xml file not provided in the directory, check if file with extension .xml is uploaded")
             return retObj
 
 
-    def SimpleXMLUtil(self,dmoFile, _dmoName):
-        global output_filename
+    def SimpleXMLUtil(self,PROJECT_DIR, _dmoName):
         # NITIN : TODO : check how to handle namepspaces dynamically later
         namespaces = {"xmi_namespace": "http://schema.omg.org/spec/XMI/2.1"}
 
-        myDMO = ET.parse(dmoFile)
+        myDMO = ET.parse(PROJECT_DIR + "/" + _dmoName +".xml")
         root = myDMO.getroot()
 
         documentation=root.find('xmi_namespace:Documentation', namespaces)
         exporter=documentation.get('exporter')
         
         # ZHIYUN: call corresponding parser for xml file
-        if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,_dmoName)
-        elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,_dmoName) 
+        if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName)
+        elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName) 
         else: raise e.SimpleException("parser for your xml exporter is not provided")
 
 
-    def EA_XMLUtil(self,root,namespaces,_dmoName):
+    def EA_XMLUtil(self,root,namespaces,PROJECT_DIR,_dmoName):
         # NITIN : TODO : Change parsing after correcting assumptions about the XML structure
         definition = root.find('xmi_namespace:Extension', namespaces)   
         elements = definition.find("elements")
@@ -127,12 +121,8 @@ class Analyzer:
                             endUpperValue=upperValues[relationId][1]
                         dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag), startUpperValue, endUpperValue)
 
-        file_path = "generated_code/default/" + _dmoName + "/"
-        if not os.path.exists(file_path):
-            os.makedirs(file_path)
-        edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
-        json_file = open(file_path + output_filename + ".json", "w")
-
+        #edm_utils.copyDirLink('code_templates/node_modules', PROJECT_DIR + "/" +'node_modules')
+        json_file = open(PROJECT_DIR + "/" + _dmoName + ".json", "w")
 
         json_file.write(dmo.toJson())
         json_file.close()
@@ -142,7 +132,7 @@ class Analyzer:
 
 
 
-    def VP_XMLUtil(self,root,namespaces,_dmoName):
+    def VP_XMLUtil(self,root,namespaces,PROJECT_DIR,_dmoName):
         elements = root.findall("packagedElement")
         dmo = DomainModel(_dmoName)
 
@@ -224,12 +214,9 @@ class Analyzer:
 
 
   
-        file_path = "generated_code/default/" + _dmoName + "/"
-        if not os.path.exists(file_path):
-            os.makedirs(file_path)
-        edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
-        json_file = open(file_path + output_filename + ".json", "w")
-        
+        #edm_utils.copyDirLink('code_templates/node_modules', PROJECT_DIR + "/" +'node_modules')
+        json_file = open(PROJECT_DIR + "/" + _dmoName + ".json", "w")
+
         json_file.write(dmo.toJson())
         json_file.close()
 

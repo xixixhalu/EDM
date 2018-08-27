@@ -27,7 +27,15 @@ app.controller('profileCtrl', ['$scope', '$http', function($scope, $http) {
 
         $scope.histories.push(h);
     });
-
+    
 }]);
 
 
+// $(function(){
+//     #(window).resize(function() {
+//         var cliHeight = document.body.clientHeight;
+//         var divHeight = cliHeight - 5;
+//         $('#container').css("height", divHeight+ "px");
+
+//     });
+// });
