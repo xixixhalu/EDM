@@ -27,7 +27,7 @@ app.controller('profileCtrl', ['$scope', '$http', function($scope, $http) {
 
         $scope.histories.push(h);
     });
-
+    
 }]);
 
 
