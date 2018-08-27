@@ -27,12 +27,6 @@
     			r = null; 
    				return context == null || context == "" || context == "undefined" ? "" : context; 
 			 }
-
-			 function alertid(){
-			 	var a = GetQueryString("fileId");
-			 	var b = GetQueryString("domainModelName");
-			 	alert(b);
-			 }
             
             window.onload = function(){
 	        var a = document.getElementById("Mname");
@@ -41,10 +35,8 @@
 			var b = document.getElementById("Fid");
 	        b.value = GetQueryString("fileId"); 
 
-
     		};
 		
-
 		</script>
 		<div id="container">
 			<!--Show the title of the project -- header // Xuan Zhu-->
@@ -99,14 +91,14 @@
 					<h3>Server Status</h3>
 					<div class="container-fluid ">
 						<ul class="list-group">
-							<li class="list-group-item" id="urlli"> server_url: </li>
+							<li class="list-group-item" id="urlli"></li>
 							<script>
-								document.getElementById("urlli").innerHTML="Server_url: " + "{{ server_url }}";
+								document.getElementById("urlli").innerHTML="Server URL: " + "{{ server_url }}";
 							</script>
 
-							<li class="list-group-item" id="keyli"> Key: </li>
+							<li class="list-group-item" id="keyli"></li>
 							<script>
-								document.getElementById("keyli").innerHTML="Key: " +"{{ authen_key }}";
+								document.getElementById("keyli").innerHTML="Access Key: " +"{{ authen_key }}";
 							</script>
 						</ul>
 					</div>

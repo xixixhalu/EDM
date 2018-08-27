@@ -20,6 +20,28 @@
 		</script>
 	</head>
 	<body>
+		<script type="text/javascript">
+			function GetQueryString(name) { 
+         		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
+        		var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
+        		var context = ""; 
+    			if (r != null) 
+     			context = r[2]; 
+    			reg = null; 
+    			r = null; 
+   				return context == null || context == "" || context == "undefined" ? "" : context; 
+			 }
+            
+            window.onload = function(){
+	        var a = document.getElementById("Mname");
+	        a.value = GetQueryString("domainModelName"); 
+
+			var b = document.getElementById("Fid");
+	        b.value = GetQueryString("fileId"); 
+
+    		};
+		
+		</script>
 		<div id="container">
 			{%raw%}
 			<!--use the bootstrap jumbotron element to display the title of our project -->
@@ -27,13 +49,13 @@
 				<div class="container text-center">
 					<h1>Executable Domain Modeling</h1>
 					<p>Convert XML files to real code</p>
-					<div class="row">
-						<div class="col-md-12 col-sm-12">
-	                        <form action="{{ url_for('logout') }}">				
-								<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
-							</form>
-						</div>
-					</div>	
+				</div>
+				<div class="row">
+					<div class="col-md-12 col-sm-12">
+						<form action="/logout">
+							<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
+						</form>
+					</div>
 				</div>
 			</div>
 			<!--show the nav bars-->
@@ -41,15 +63,23 @@
 				<!-- Redirect to homepage here -->
 				<ul class="navbar-nav nav-justified col-sm-12">
 					<li class="nav-brand">
-						<a class="nav-link" href="/"><span class="fa fa-home"></span></a>	
+						<a class="nav-link" href="/"><span class="fa fa-home"></span></a>
 					</li>
-					<!--Redirect to server status page here!-->
+					<!--Redirect to server status page here!-->			
 					<li class="nav-item">
-						<a class="nav-link" href="/serverstatus">Server Status</a>
+					{%endraw%}
+						<form action="{{ url_for('serverstatus') }}" name="serverstatus" method="GET">
+					{%raw%}	
+							<!-- <button class="nav-link">api</button> -->
+							<a class="nav-link" href="javascript: document.serverstatus.submit()">Server Status</a>
+							<input type="hidden" name="domainModelName" id="Mname" value=""/>
+							<input type="hidden" name="fileId" id="Fid" value=""/>
+				
+						</form>
 					</li>
 					<!--Redirect to description page here!-->
 					<li class="nav-item">
-						<a class="nav-link" href="{{ url_for('description') }}">Description</a>
+						<a class="nav-link" href="#">Description</a>
 					</li>
 					<!--Redirect to API reference page here!-->
 					<li class="nav-item">
