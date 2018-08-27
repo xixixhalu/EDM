@@ -30,8 +30,6 @@ app.controller('myCtrl', ['$scope', '$http', function($scope, $http) {
         $scope.details = myArray;
         console.log($scope.details);
 
-        console.log("server url: " + server_url);
-        console.log("authentication key: " + authen_key);
 
         Object.keys(myArray).forEach(function(k){
             $scope.languages = Object.keys(myArray[k]);
