@@ -599,4 +599,4 @@ if __name__ == '__main__':
     host = config.get('Application', 'host')
     port = config.getInt('Application', 'port')
     app.secret_key = 'mysecret'
-    app.run(host=host, port=port)
+    app.run(host='0.0.0.0', port=port)
