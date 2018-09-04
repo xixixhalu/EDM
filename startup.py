@@ -45,7 +45,7 @@ class User(UserMixin):
                 tempvalidtill = findresult["validtill"]
                 # check if current time is more than valid-till time 
                 #delta = pytz.timezone("UTC").localize(tempvalidtill)-dt.datetime.now(pytz.utc)
-                delta = tempvalidtill - dt.datetime.now(pytz.utc)
+                delta = tempvalidtill - dt.datetime.now(pytz.utc).replace(tzinfo=None)
                 if delta < dt.timedelta():
                     self.refreshToken(self.username, self.dbengine)
                 newfind = authentcol.find_one({"username": self.username})

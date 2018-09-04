@@ -1,3 +1,8 @@
 Flask
 subprocess.run
-pymongo==2.6.3
+pymongo==3.7
+configparser
+flask-pymongo
+pytz
+flask-login
+bcrypt
