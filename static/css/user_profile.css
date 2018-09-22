@@ -1,4 +1,13 @@
 
+/* Container */
+.container-fluid {
+	padding: 0;
+}
+
+.sub-navline {
+	border-bottom: 3px solid #e9ecef;
+}
+
 div#container{
 	position:absolute;
 	width: 100%;
@@ -11,7 +20,7 @@ div#content{
 	/*position:relative;*/
 	min-height: 90%;
 
-	padding: 1em 1em; 
+	padding: 1em 1em;
 	margin-bottom: 0;
 
 }
@@ -94,10 +103,6 @@ widget-area.blank {
 
 }
 
-#new_button {
-	margin-bottom: 2%;
-}
-
 #log_out {
 	/*margin-top: 0.4%;*/
 	padding-right: 5px;
@@ -130,12 +135,17 @@ widget-area.blank {
     background-color: grey;
 }
 
-div#footer{
-	/*position:absolute;*/
-	width:100%;
-	bottom:0;
-	background-color: #e9ecef;
-	color: #000000;
-	padding: 0.8em;	
+/* Footer */
 
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	max-width: 100vw;
+	height: 60px;
+	background-color: #e9ecef;
+}
+
+.footer > .container {
+	padding-top: 20px;
 }
