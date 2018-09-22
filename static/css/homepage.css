@@ -1,64 +1,36 @@
 
-div#container{
-	position:relative;
-	margin:0 auto;
-/*	height:auto !important;*/
-	height:100%;
-	/*min-height:100%;*/
-}
-
-/*For different size screens*/
-@media only screen and (max-width: 575px){
-	#container{height: 100%;width:100%; font-size: 1em;}
-}
+/* For different size screens */
 
 @media only screen and (min-width: 576px) and (max-width: 767px){
-	#container{height: 100%;width:100%; font-size: 1em;}
+	body {height: 100%;width:100%; font-size: 1em;}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1199px){
-	#container{height: 100%;width:100%; font-size: 1.0em;}
+	body {height: 100%;width:100%; font-size: 1.0em;}
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1499px){
-   #container{height: 100%; width:100%; font-size: 1.1em;}
+   body {height: 100%; width:100%; font-size: 1.1em;}
 }
 
 @media only screen and (min-width: 1500px) and (max-width: 1919px){
-    #container{height: 100%;width:100%; font-size: 1.3em;}
+   body {height: 100%;width:100%; font-size: 1.3em;}
 }
 
 @media only screen and (min-width: 1920px) and (max-width: 2799px){
-    #container {height: 100%;width:100%; font-size: 1.4em;}
+   body {height: 100%;width:100%; font-size: 1.4em;}
 }
 
 @media only screen and (min-width: 2800px){
-	 #container {height: 100%;width:100%; font-size: 1.5em;}	
+	 body {height: 100%;width:100%; font-size: 1.5em;}
 }
 
-div#content{
-	/*position:relative;*/
-	/*height: 50%;*/
-	padding: 1em 1em;  /*change 10 to 2*/
-	margin-bottom: 0;
-
+/* Container */
+.container-fluid {
+	padding: 0;
 }
 
-/*footer*/
-div#footer{
-	position:absolute;
-	width:100%;
-	bottom:0;
-	background-color: #e9ecef;
-	color: #000000;
-	padding: 0.8em;	
-
-}
-
-.jumbotron{
-	padding: 2px;
-	margin-bottom: 5px;
-}
+/* Jumbotron title text */
 
 .jumbotron h1 {
 	font-size: 3em;
@@ -68,30 +40,22 @@ div#footer{
 	font-size: 1.5em;
 }
 
-/* .row.content {height: 1000px} */
+/* Footer */
 
-pre{
-	word-break: keep-all;
-	white-space: pre-wrap;
-	counter-reset: line;
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	max-width: 100vw;
+	height: 60px;
+	background-color: #e9ecef;
 }
 
-pre span:before {
-	counter-increment: line;
-	content: counter(line);
-	display: inline-block;
-	padding: 0.5em;
-	margin-right: 0.5em
-	color: #888
+.footer > .container {
+	padding-top: 20px;
 }
 
-pre span {
-	display: block;
-	line-height: 0.5;
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
-	tab-size: 4;
-}
+/* Login & Signup modal */
 
 input[type=text], input[type=password] {
 	width: 100%;
@@ -101,15 +65,11 @@ input[type=text], input[type=password] {
 	border: 1px solid #ccc;
 	box-sizing: border-box;
 }
-	
+
 .fullbutton {
 	width:100%;
 	cursor: pointer;
 	padding:10px;
-}
-
-.buttons {
-	padding-right: 5px
 }
 
 .animate {
@@ -121,20 +81,20 @@ input[type=text], input[type=password] {
 	background-color: #fefefe;
 	margin: 2% auto 15% auto;
 	border: 1px solid #888;
-	width: 30%; 
+	width: 30%;
 }
 
 .modal {
-	display: none; 
-	position: fixed; 
-	z-index: 1; 
+	display: none;
+	position: fixed;
+	z-index: 1;
 	left: 0;
 	top: 0;
-	width: 100%; 
-	height: 100%; 
-	overflow: auto; 
-	background-color: rgb(0,0,0); 
-	background-color: rgba(0,0,0,0.4); 
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0,0,0);
+	background-color: rgba(0,0,0,0.4);
 	padding-top: 60px;
 }
 
@@ -149,17 +109,6 @@ img.avatar {
 	border-radius: 50%;
 }
 
-label{
+label {
 	padding-top:10px;
 }
-
-.container {
-	padding: 10px;
-}
-
-#widget-box {
-	margin-top: 2%;
-	margin-bottom: 5%;
-
-}
-
