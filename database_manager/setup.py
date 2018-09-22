@@ -1,5 +1,6 @@
 import os
 from pymongo import MongoClient
+from flask_pymongo import PyMongo
 import json
 from utilities import edm_utils, exceptions as e
 
@@ -87,3 +88,34 @@ class DBUtilities:
 			print "call setup() on the DBUtilities and pass config to it"
 
 		self.client.close()
+
+	# @staticmethod
+	# def getDBInstance(dbname):
+	# 	if mongo == Null:
+	# 		mongo = pymongo(app)
+	# 		mongo[dbname]
+	# 	return mongo
+
+
+
+class MongoSingleton:
+	_instance = None
+	def __init__(self):
+		if MongoSingleton._instance == None:
+			MongoSingleton._instance = self
+
+	@staticmethod 
+	def getInstance():
+		if MongoSingleton._instance == None:
+			MongoSingleton()
+		return MongoSingleton._instance
+
+	def initializeMongo(self, app):
+		self.mongo = PyMongo(app)
+
+
+mgInstance = MongoSingleton()
+
+			
+
+		

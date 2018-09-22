@@ -9,3 +9,5 @@
 /generated_code/
 /.vscode
 
+.DS_Store
+code_templates/.DS_Store generated_code/.DS_Store static/.DS_Store to_delete/.DS_Store

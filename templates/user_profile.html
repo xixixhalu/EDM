@@ -51,14 +51,14 @@
                                 Welcome {{ session['username'] }}!
 								<!--Button to logout from the current user session -->
 								<form action="/logout">				
-									<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+									<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
 								</form>
 
 							</div>
 						</div>
 						<br>
 						{%raw%}
-						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;>  
+						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;">  
 
 							<!-- Refer to https://getbootstrap.com/docs/4.0/components/collapse/ -->
 							<div id="accordion">
@@ -94,7 +94,7 @@
 
 													<td>
 													{%endraw%}
-													<form class="operation"  method="GET" action="{{ url_for('update_xml') }}">
+													<form class="operation"  method="GET" action="{{ url_for('main_bp.update_xml') }}">
 														{%raw%}
 														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 														<input type="hidden" name="fileId" value="{{file.id}}">
@@ -103,7 +103,7 @@
 														</button>
 													</form>
 													{%endraw%}
-													<form class="operation" action="{{ url_for('delete_instance') }}" method="POST">
+													<form class="operation" action="{{ url_for('main_bp.delete_instance') }}" method="POST">
 													{%raw%}
 														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 														<input type="hidden" name="fileId" value="{{file.id}}">
@@ -112,7 +112,7 @@
 														</button>
 													</form>
 													{%endraw%}
-													<form class="operation" action="{{ url_for('detail_instance') }}" method="GET">
+													<form class="operation" action="{{ url_for('main_bp.detail_instance') }}" method="GET">
 													{%raw%}
 														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 														<input type="hidden" name="fileId" value="{{file.id}}">
@@ -186,7 +186,7 @@
 						<div class="row" id="newinstance">
 						<!--Button to generate a new instance-->
 							<div class="col-md-4 offset-md-4" id="new_button">
-								<button class="btn btn-lg btn-primary btn-block" onclick="window.location.href='{{ url_for('upload_xml') }}'">New Instance</button>
+								<button class="btn btn-lg btn-primary btn-block" onclick="window.location.href='{{ url_for('main_bp.upload_xml') }}'">New Instance</button>
 							</div>
 						</div>
 					</div>

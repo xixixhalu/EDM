@@ -60,8 +60,8 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12 col-sm-12">
-                        <form action="{{ url_for('logout') }}">				
-							<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+                        <form action="{{ url_for('main_bp.logout') }}">
+							<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
 						</form>
 					</div>
 				</div>
@@ -75,19 +75,19 @@
 					</li>
 					<!--Redirect to server status page here!-->
 					<li class="nav-item">
-						<form action="{{ url_for('serverstatus') }}" name="serverstatus" method="GET">
+						<form action="{{ url_for('main_bp.serverstatus') }}" name="serverstatus" method="GET">
 							<a class="nav-link" href="javascript: document.serverstatus.submit()">Server Status</a>
 						</form>
 					</li>
 					<!--Redirect to description page here!-->
 					<li class="nav-item">
-						<form action="{{ url_for('description') }}" name="description" method="GET">
-							<a class="nav-link" href="javascript: document.description.submit()">Server Status</a>
+						<form action="{{ url_for('main_bp.description') }}" name="description" method="GET">
+							<a class="nav-link" href="javascript: document.description.submit()">Description</a>
 						</form>
 					</li>
 					<!--Redirect to API reference page here!-->
 					<li>
-						<form action="{{ url_for('detail_instance') }}" name="detail_instance" method="GET">
+						<form action="{{ url_for('main_bp.detail_instance') }}" name="detail_instance" method="GET">
 							<!-- <button class="nav-link">api</button> -->
 							<a class="nav-link" href="javascript: document.detail_instance.submit()">API Reference</a>
 						</form>
