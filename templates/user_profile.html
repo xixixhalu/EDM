@@ -94,14 +94,14 @@
 													<tr ng-repeat="file in history.files">
 														<td>{{file.id}}</td>
 														<td>{{file.date}}</td>
-														<td>Terminated <button {%endraw%}
+														<td>Terminated
+														{%endraw%}
 														<form class="operation"  method="POST" action="{{ url_for('run_instance') }}">
 														{%raw%}
 															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 															<input type="hidden" name="fileId" value="{{file.id}}">
 															<button class="operation btn" title="Launch the Server">
 															<i class="fa fa-play"></i>
-															</button>
 														</form>
 														</td>
 														<td>
@@ -120,7 +120,7 @@
 															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 															<input type="hidden" name="fileId" value="{{file.id}}">
 															<button class="operation btn" title="Delete the Instance">
-															<i class="fa fa-close"></i>
+															<i class="fa fa-times"></i>
 															</button>
 														</form>
 														{%endraw%}
