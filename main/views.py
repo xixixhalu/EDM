@@ -217,7 +217,7 @@ def result():
         else:
             flash('File type is not allowed')
             return redirect(request.url)
-    return redirect(url_for('main_bp.upload_xml'))
+    return redirect(request.url)
 
 #Run the specified instance
 @main_bp.route('/runinstance', methods=['POST', 'GET'])
@@ -287,7 +287,22 @@ def update_instance():
 
             # Parse XML and generate JSON
             ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
-            # ana.DM_File_Analyze(file_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
+            
+            # Parse JSON and generate code
+            model_display_data, server_url = generate_code.generate_all(filename_str, output_dir)
+
+            authen_key = dbOps.getAuthenKey(mgInstance.mongo, session['username'])
+         
+
+            # Pass required data to the template
+            description_data = {
+                "model_display_data": model_display_data,
+                "server_url": server_url,
+                "authen_key" : authen_key
+            }
+
+            # write description_data into json file
+            generate_code.write_description_to_file(filename_str, output_dir, description_data)
 
         return redirect(url_for('main_bp.index'))
   

@@ -83,13 +83,17 @@ class Analyzer:
                             
                         # NITIN : TODO : extract other features like upper and lower bounds, scope,
 
-                # NITIN : TODO : Check if the element has any operations defined and aadd them, implement operations on domain model
-
-
+                # Bo: Check if the element has any operations defined and aadd them, implement operations on domain model
+                elemOperations = element.find('operations')
+                if elemOperations is not None:
+                    for elemOperation in elemOperations:
+                        elemOperationName = elemOperation.get('name')
+                        dmo.defineOperation(elemName, elemOperationName)
+                        # Bo: TODO: check the return value and parameters
 
 
         # ZHIYUN: iterate all upper value of relation                
-	connectors=definition.find('connectors').findall('connector')
+        connectors=definition.find('connectors').findall('connector')
         upperValues={}
         for connector in connectors:
             relationId=connector.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
