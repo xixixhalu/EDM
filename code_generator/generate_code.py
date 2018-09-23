@@ -103,6 +103,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     server_code = open(output_path + "Server" + ".js", "w")
     server_code.write(content)
     server_code.close()
+    # os.chmod(output_path + "Server" + ".js", 0o764)
 
     for elem_name in elem_names :
         output_location = output_path + elem_name + ".js"

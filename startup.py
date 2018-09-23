@@ -24,6 +24,8 @@ import json
 import base64
 from bson import binary
 
+import subprocess as sp
+import time
 
 # User calss used in flask_login
 # When a User instance created, if will check if this
@@ -593,6 +595,27 @@ def verifykey(username, usertoken, dbengine):
 
     return False
 
+@app.route('/runinstance', methods=['POST', 'GET'])
+@login_required
+def run_instance():
+    if request.method == 'POST':
+        base_path = os.path.join(config.get('Output', 'output_path'))
+        user_path = "/" + session['username']
+        instance_path = "/" + request.form['domainModelName'] + "/" + request.form['fileId']
+        server_path = "/" + "Server" + "/" + "Server.js"
+
+        final_path = base_path + user_path + instance_path + server_path
+
+        child_process = sp.Popen(["node", final_path])
+        # Temporary solution..
+        time.sleep(0.5)
+
+        if child_process.poll() == None:
+            flash('Successful to run the specified instance')
+        else:
+            flash('Failed to run the specified instance')
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
 
