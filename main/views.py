@@ -389,7 +389,14 @@ def serverstatus():
 @login_required
 def description():
     return render_template('description.html')
-    
+
+@main_bp.route('/diagram')
+@login_required
+def get_diagram():
+    file_id = request.args['fileId']
+    domain_model_name = request.args['domainModelName']
+    path = 'generated_code' + '/' + session['username'] + '/' + domain_model_name + '/' + file_id
+    return send_from_directory(path, 'diagram.svg')
 
 @main_bp.route('/generated_code/<path:path>')
 @login_required

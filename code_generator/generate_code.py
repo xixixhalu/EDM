@@ -7,6 +7,9 @@ from code_generator.template_utils import *
 from database_manager.setup import DBUtilities
 from utilities.file_op import fileOps
 
+from uml_parser.JSONParser import JSONParser
+from uml_parser.UMLViewer import *
+
 def get_server_info():
     # display_ip = "34.223.218.62" # Local env 127.0.0.0 Prev 18.216.141.169
     # server_ip = "0.0.0.0" # Local env - 127.0.0.0
@@ -143,6 +146,31 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     with fileOps.safe_open_w(output_location) as output_file:
         output_file.write(authen_template)
 
+def generate_diagram(json_data, dmname, output_path):
+    jp = JSONParser(json_data, dmname)
+    viewer = UMLViewer()
+
+    for entity_id, entity_name in jp.entities().items():
+        viewer.add_entity(entity_name)
+
+        for attribute in jp.findEntityAttributes(entity_name):
+            viewer.add_attribute(entity_name, attribute['name'], attribute['details']['type'])
+
+        for behavior in jp.findEntityBehaviors(entity_name):
+            viewer.add_behavior(entity_name, behavior['name'])
+
+    for entity_name, associations in jp.associations().items():
+        for association in associations:
+            start_entity = jp.findEntityNameById(association['start'])
+            end_entity = jp.findEntityNameById(association['end'])
+            asso = UMLAssociation(start_entity, end_entity, association['relationType'])
+            if 'multiplicity' in association.keys():
+                asso.set_multiplicity(association['multiplicity'])
+            viewer.add_association(asso)
+
+    viewer.generate_diagram(output_path)
+
+
 def generate_all(dm_name, output_dir, to_file=True):
     """
     generate a set of code files from JSON
@@ -176,6 +204,9 @@ def generate_all(dm_name, output_dir, to_file=True):
 
         # generate server code files
         generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
+
+        # generate UML diagram
+        generate_diagram(json_data, dm_name, output_dir)
 
         #TODO
         #write model_display_data and display_ip to file
