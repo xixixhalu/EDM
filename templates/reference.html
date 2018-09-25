@@ -1,83 +1,25 @@
-<!--This page is the reference page  //Xuan Zhu-->
+<!-- Reference page -->
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>API References - Executable Domain Modeling</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/reference.js') }}"></script>
 		<basefont size="7">
-		<script>
-			
-			var model_display_data = {{ model_display_data|tojson|safe }};
-
-			function GetQueryString(name) { 
-         		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
-        		var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
-        		var context = ""; 
-    			if (r != null) 
-     			context = r[2]; 
-    			reg = null; 
-    			r = null; 
-   				return context == null || context == "" || context == "undefined" ? "" : context; 
-			}
-            
-            window.onload = function(){
-
-            	var mname = document.createElement('input');
-            	mname.setAttribute("type", "hidden");
-            	mname.setAttribute("name", "domainModelName");
-				mname.setAttribute("value", GetQueryString("domainModelName"));
-
-				var fid = document.createElement('input');
-            	fid.setAttribute("type", "hidden");
-            	fid.setAttribute("name", "fileId");
-				fid.setAttribute("value", GetQueryString("fileId"));
-
-				var new_div = document.createElement('div');
-				new_div.appendChild(mname);
-				new_div.appendChild(fid);
-
-				document.getElementsByName('serverstatus')[0].innerHTML += new_div.innerHTML;
-				document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
-				document.getElementsByName('detail_instance')[0].innerHTML += new_div.innerHTML;
-     		};
-		
-		</script>
 	</head>
 	<body>
-		<div id="container">
-			{%raw%}
-			<!--use the bootstrap jumbotron element to display the title of our project -->
-			<div class="jumbotron">
-				<div class="container text-center">
-					<h1>Executable Domain Modeling</h1>
-					<p>Convert XML files to real code</p>
-					<div class="row">
-						<div class="col-md-12 col-sm-12">
-	                        <form action="{{ url_for('logout') }}">				
-								<button class="btn btn-primary pull-right" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
-							</form>
-						</div>
-					</div>	
-				</div>
-			</div>
-			<!--show the nav bars-->
-			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-				<!-- Redirect to homepage here -->
-				<ul class="navbar-nav nav-justified col-sm-12">
-					<li class="nav-brand">
-						<a class="nav-link" href="/"><span class="fa fa-home"></span></a>	
-					</li>
+		<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+			<!-- Redirect to homepage -->
+			<a class="navbar-brand" href="/"><span class="fa fa-home"></span></a>
+			<!-- Navigation bar tabs -->
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
 					<!--Redirect to server status page here!-->
 					<li class="nav-item">
-						{%endraw%}
 						<form action="{{ url_for('serverstatus') }}" name="serverstatus" method="GET">
 							<a class="nav-link" href="javascript: document.serverstatus.submit()">Server Status</a>
 						</form>
@@ -85,84 +27,97 @@
 					<!--Redirect to description page here!-->
 					<li class="nav-item">
 						<form action="{{ url_for('description') }}" name="description" method="GET">
-							<a class="nav-link" href="javascript: document.description.submit()">Server Status</a>
+							<a class="nav-link" href="javascript: document.description.submit()">Description</a>
 						</form>
 					</li>
 					<!--Redirect to API reference page here!-->
 					<li class="nav-item">
 						<form action="{{ url_for('detail_instance') }}" name="detail_instance" method="GET">
-						{%raw%}
 							<a class="nav-link" href="javascript: document.detail_instance.submit()">API Reference</a>
 						</form>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a>
-					</li>
+					<!--Redirect to User account profile page here!-->
+					<li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a></li>
 				</ul>
-			</nav>
-			<div id="content">
-				<!--show the main content on the reference page-->
-				<div class="container-fluid" ng-app="myApp" ng-controller="myCtrl">
-					<div class="row content">
-						<div class="col-sm-2 sidenav">
-							<!--Dynamically generate the class navbars using angularJS-->
-							<ul class="nav nav-pills flex-column" role="tablist">
-								<li ng-repeat="classInfo in classes"
-									class="nav-item">
-									<a class="nav-link" data-toggle="pill" href='#{{classInfo}}' ng-click="changeParentTab(classInfo)">
-										{{classInfo}}
-									</a>
-								</li>
-							</ul>
-						</div>
-						<div class="col-sm-10">
-							<!--Dynamically generate the corresponding tab content for each class-->
-							<div class="tab-content">
-								<div ng-repeat = "class in classes"
-									 class="tab-pane active"  ng-show="view_tab === classes[$index]">
-									<div>
-										<ul class="nav nav-pills nav-fill" role="tablist">
-											<li ng-repeat="language in languages"
-												class="nav-item">
-												<!--Each class has multiple languages, dynamically generate
-												the language nav bars-->
-												<a class="nav-link" data-toggle="tab" href='#{{class}}_{{language}}' ng-click="changeChildTab(class, language)">
-													{{language}}
-												</a>
-											</li>
-										</ul>
-										<!--Display the main content for each language-->
-										<div class="tab-content" >
-											<div ng-repeat="language in languages" ng-show="view === isView(class, language)" class="tab-pane active" >
-												<!--Attribute List-->
-												<br>
-												<p ng-repeat="attribute in details[class]['attribute_list'] track by $index">
-													{{attribute.name}}: {{attribute.type}}
-												</p>
-												<div ng-repeat = "detail in details[class][language]['func_info_list']">
+					<form class="form-inline mt-2 mt-md-0" action="{{ url_for('logout') }}">
+						<button class="btn btn-outline-success my-2 my-sm-0" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+					</form>
+			</div>
+		</nav>
+		<main role="main">
+			<!--Shows the title of the page - Project header -->
+			<div class="jumbotron text-center mt-3">
+				<div class="container">
+					<h1>Executable Domain Modeling</h1>
+					<p>Convert XML files to real code</p>
+				</div>
+			</div>
+			<div id="container">
+				{%raw%}
+				<div id="content">
+					<!--show the main content on the reference page-->
+					<div class="container-fluid" ng-app="myApp" ng-controller="myCtrl" ng-cloak>
+						<div class="row content">
+							<div class="col-sm-2 sidenav">
+								<!--Dynamically generate the class navbars using angularJS-->
+								<ul class="nav nav-pills flex-column" role="tablist">
+									<li ng-repeat="classInfo in classes"
+										class="nav-item">
+										<a class="nav-link" data-toggle="pill" href='#{{classInfo}}' ng-click="changeParentTab(classInfo)">
+											{{classInfo}}
+										</a>
+									</li>
+								</ul>
+							</div>
+							<div class="col-sm-10">
+								<!--Dynamically generate the corresponding tab content for each class-->
+								<div class="tab-content">
+									<div ng-repeat = "class in classes"
+										 class="tab-pane active"  ng-show="view_tab === classes[$index]">
+										<div>
+											<ul class="nav nav-pills nav-fill" role="tablist">
+												<li ng-repeat="language in languages"
+													class="nav-item">
+													<!--Each class has multiple languages, dynamically generate
+													the language nav bars-->
+													<a class="nav-link" data-toggle="tab" href='#{{class}}_{{language}}' ng-click="changeChildTab(class, language)">
+														{{language}}
+													</a>
+												</li>
+											</ul>
+											<!--Display the main content for each language-->
+											<div class="tab-content" >
+												<div ng-repeat="language in languages" ng-show="view === isView(class, language)" class="tab-pane active" >
+													<!--Attribute List-->
 													<br>
-													<!--Use the bootstrap card element to display the code for the corresponding class
-													and the corresponding language-->
-													<div class="card card-default">
-														<div class="card-header">{{detail['name']}}</div>
-														<div class="card" style="padding-left:20px">Examples of JSON Structure:<br>
-														<ul>
-															<div ng-repeat = "ex in detail['examples']">
-															<li>{{ex}}</li>
+													<p ng-repeat="attribute in details[class]['attribute_list'] track by $index">
+														{{attribute.name}}: {{attribute.type}}
+													</p>
+													<div ng-repeat = "detail in details[class][language]['func_info_list']">
+														<br>
+														<!--Use the bootstrap card element to display the code for the corresponding class
+														and the corresponding language-->
+														<div class="card card-default">
+															<div class="card-header">{{detail['name']}}</div>
+															<div class="card" style="padding-left:20px">Examples of JSON Structure:<br>
+															<ul>
+																<div ng-repeat = "ex in detail['examples']">
+																<li>{{ex}}</li>
+																</div>
+															</ul>
 															</div>
-														</ul>
+															<div class="card-body">
+																<pre ng-attr-id="{{class}}_{{language}}_{{$index}}"><span ng-repeat="view in generateView(detail['body']) track by $index">{{view}}</span></pre>
+															</div>
+															<div class="card-footer">
+																<!--The copy code button is used to copy the code to clipboard-->
+																<button type="button" class="copy-button btn btn-primary pull-right"
+																		ng-click="CopyToClipboard(class, language, $index)">Copy Code
+																</button>
+															</div>
 														</div>
-														<div class="card-body">
-															<pre ng-attr-id="{{class}}_{{language}}_{{$index}}"><span ng-repeat="view in generateView(detail['body']) track by $index">{{view}}</span></pre>
-														</div>
-														<div class="card-footer">
-															<!--The copy code button is used to copy the code to clipboard-->
-															<button type="button" class="copy-button btn btn-primary pull-right"
-																	ng-click="CopyToClipboard(class, language, $index)">Copy Code
-															</button>
-														</div>
+														<br>
 													</div>
-													<br>
 												</div>
 											</div>
 										</div>
@@ -172,11 +127,50 @@
 						</div>
 					</div>
 				</div>
+				{%endraw%}
 			</div>
-			<div id="footer" align="center">
-				<p>&copy; Copyright Protected. All rights reserved</p>
+		</main>
+		<footer class="footer">
+			<div class="container text-center">
+				<span class="text-muted">&copy;Copyright Protected. All rights reserved</span>
 			</div>
-			{%endraw%}
-		</div>
+		</footer>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/reference.js') }}"></script>
+		<script>
+			var model_display_data = {{ model_display_data|tojson|safe }};
+			function GetQueryString(name) {
+         	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        	var r = window.location.search.substr(1).match(reg); //Get the query string started from '?' in url and filt it with regexp
+        	var context = "";
+    			if (r != null)
+     			context = r[2];
+    			reg = null;
+    			r = null;
+   				return context == null || context == "" || context == "undefined" ? "" : context;
+			}
+      window.onload = function(){
+          var mname = document.createElement('input');
+          mname.setAttribute("type", "hidden");
+          mname.setAttribute("name", "domainModelName");
+					mname.setAttribute("value", GetQueryString("domainModelName"));
+
+					var fid = document.createElement('input');
+          fid.setAttribute("type", "hidden");
+          fid.setAttribute("name", "fileId");
+					fid.setAttribute("value", GetQueryString("fileId"));
+
+					var new_div = document.createElement('div');
+					new_div.appendChild(mname);
+					new_div.appendChild(fid);
+
+					document.getElementsByName('serverstatus')[0].innerHTML += new_div.innerHTML;
+					document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
+					document.getElementsByName('detail_instance')[0].innerHTML += new_div.innerHTML;
+     		};
+		</script>
 	</body>
 </html>
