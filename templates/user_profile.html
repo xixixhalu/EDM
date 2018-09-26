@@ -94,7 +94,7 @@
 													</td>
 													<td>
 														{%endraw%}
-														<form class="operation"  method="GET" action="{{ url_for('update_xml') }}">
+														<form class="operation"  method="GET" action="{{ url_for('main_bp.update_xml') }}">
 															{%raw%}
 															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 															<input type="hidden" name="fileId" value="{{file.id}}">
@@ -103,16 +103,16 @@
 															</button>
 														</form>
 														{%endraw%}
-														<form class="operation" action="{{ url_for('delete_instance') }}" method="POST">
+														<form class="operation" action="{{ url_for('main_bp.delete_instance') }}" method="POST">
 														{%raw%}
 															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 															<input type="hidden" name="fileId" value="{{file.id}}">
 															<button class="operation btn" title="Delete the Instance">
-															<i class="fa fa-close"></i>
+															<i class="fa fa-times"></i>
 															</button>
 														</form>
 														{%endraw%}
-														<form class="operation" action="{{ url_for('detail_instance') }}" method="GET">
+														<form class="operation" action="{{ url_for('main_bp.detail_instance') }}" method="GET">
 														{%raw%}
 															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 															<input type="hidden" name="fileId" value="{{file.id}}">
