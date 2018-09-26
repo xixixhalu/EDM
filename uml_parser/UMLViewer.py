@@ -49,7 +49,6 @@ class UMLAssociation:
             "many_to_many": ' "*"' + result + '"*" ',
         }
         if not multiplicity in multiplicity_switcher:
-            print multiplicity
             result = ' "1"' + result + '"1" '
         else:
             result = multiplicity_switcher[multiplicity]
