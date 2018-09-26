@@ -8,26 +8,6 @@
 	border-bottom: 3px solid #e9ecef;
 }
 
-div#container{
-	position:absolute;
-	width: 100%;
-	height:100%;
-	left: 0;
-	top: 0;
-}
-
-div#content{
-	/*position:relative;*/
-	min-height: 90%;
-
-	padding: 1em 1em;
-	margin-bottom: 0;
-
-}
-.content {
-	height: 540px;
-}
-
 #newinstance {
 	margin-bottom: 0;
 	height: 10%;
@@ -135,17 +115,23 @@ widget-area.blank {
     background-color: grey;
 }
 
-/* Footer */
+/* Removed style */
 
-.footer {
-	position: absolute;
-	bottom: 0;
+/* div#container{
+	position:absolute;
 	width: 100%;
-	max-width: 100vw;
-	height: 60px;
-	background-color: #e9ecef;
-}
+	height:100%;
+	left: 0;
+	top: 0;
+} */
 
-.footer > .container {
-	padding-top: 20px;
-}
+/* div#content{
+	position:relative;
+	min-height: 90%;
+	padding: 1em 1em;
+	margin-bottom: 0;
+} */
+
+/* .content {
+	height: 540px;
+} */
