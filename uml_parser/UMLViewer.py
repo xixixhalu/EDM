@@ -48,7 +48,12 @@ class UMLAssociation:
             "many_to_one": ' "*"' + result + '"1" ',
             "many_to_many": ' "*"' + result + '"*" ',
         }
-        return multiplicity_switcher[multiplicity]
+        if not multiplicity in multiplicity_switcher:
+            print multiplicity
+            result = ' "1"' + result + '"1" '
+        else:
+            result = multiplicity_switcher[multiplicity]
+        return result
 
 
     def output(self):
