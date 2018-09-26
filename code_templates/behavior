@@ -1,0 +1,11 @@
+// Behavior EndPoints
+
+var express = require('express');
+var router = express();
+var bodyParser = require('body-parser');
+
+router.post('/$behavior', function (req, res) {
+    res.send('Response from $behavior');
+});
+
+module.exports = router;

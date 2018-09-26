@@ -85,6 +85,17 @@ class DomainModel:
 		self.ElementDirectory[_start].relationsFromThisElement.append(relation)
 		self.ElementDirectory[_end].relationsToThisElement.append(relation)
 
+	# Bo : Define simple operation on a declared element
+	# _ReturnValue and _ParameterValue have not been extracted. So leave them as default values.
+	def defineOperation(self , _ElementName, _OperationName, _ReturnValue=[] , _ParameterValue=[]): 
+ 		_ElementName=_ElementName.lower().replace(" ","_")
+		try:
+			assert self.isElementDeclared(_ElementName)
+		except:
+			raise e.SimpleException("No such element declared, check for declaration of element :" + _ElementName)
+		
+		id = self.ElementReference[_ElementName]
+		self.ElementDirectory[id].addOperation(_OperationName, _ReturnValue, _ParameterValue)
 
 	# NITIN : NOTE : Make an element an extension of another element, basically imports all the base element's attributes and functions
 	def extendElement(self, _ElementName, _ExtensionType):
@@ -125,8 +136,8 @@ class DomainModel:
 			self.SimpleAttributes = {}
 			# NITIN : NOTE : maps attribute name to a tupl (ElementName, ComplexType Object)
 			self.ComplexAttributes = {}
-			# NITIN : TODO : add fucntionality to add custom functions on Domain Models
-			self.Functions = {}
+			# Bo : add custom functions on Domain Models
+			self.Operations = []
 			# NITIN : NOTE : add relationships
 			self.relationsToThisElement = []
 			self.relationsFromThisElement = [] 
@@ -138,6 +149,14 @@ class DomainModel:
 		def addComplexAttribute(self, _AttributeName , _AttributeElementName , _AttributeType):
 			if not isinstance(_AttributeType, dt.ComplexType) : raise e.SimpleException("Trying to add a non ComplexType attribute in the function addComplexAttribute .")
 			self.ComplexAttributes[_AttributeName] = (_AttributeElementName, _AttributeType)
+
+		# Bo: add operation to element
+		def addOperation(self, _OperationName, _ReturnValue, _ParameterValue):
+			operation = {}
+			operation["name"] = _OperationName
+			operation["return"] = _ReturnValue
+			operation["parameters"] = _ParameterValue
+			self.Operations.append(operation)
 
 		def extendElement(self, _ExtensionType):
 			self.isExtension = True
@@ -168,7 +187,7 @@ class DomainModel:
 			return_obj["Attributes"] = {}
 			return_obj["Attributes"]["Simple"] = []
 			return_obj["Attributes"]["Complex"] = []
-			return_obj["Operations"] = []
+			return_obj["Behaviors"] = []
 			return_obj["Relations"] = {}
 			return_obj["Relations"]["From"] = []
 			return_obj["Relations"]["To"] = []
@@ -192,7 +211,13 @@ class DomainModel:
 			for relation in self.relationsToThisElement:
 				return_obj["Relations"]["To"].append(relation.toJson("to"))
 
-			# NITIN : TODO : write implementation to add the operation in this element to json
+			# Bo: add the operation in this element to json
+			for behavior in self.Operations:
+				behaviorObj = {}
+				behaviorObj["name"] = behavior["name"]
+				behaviorObj["return"] = behavior["return"]
+				behaviorObj["parameters"] = behavior["parameters"]
+				return_obj["Behaviors"].append(behaviorObj)
 
 			return return_obj
 

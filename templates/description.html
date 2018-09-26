@@ -47,6 +47,9 @@
 				document.getElementsByName('serverstatus')[0].innerHTML += new_div.innerHTML;
 				document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
 				document.getElementsByName('detail_instance')[0].innerHTML += new_div.innerHTML;
+
+				diagram_src = window.location.href.split(window.location.pathname).join('/diagram');
+				document.getElementById('diagram').setAttribute("src", diagram_src);
      		};
 		
 
@@ -101,6 +104,7 @@
 				<!--The main content on the page: A brief description about our project here-->
 				<div class="container-fluid" style="margin-top:20px">
 					<h3>Description &nbsp<span class="fa fa-archive"></span></h3>
+					<img id="diagram">
 					<div class="container-fluid ">
 						<ul class="list-group">
 							<li class="list-group-item"> Description of the database created </li>

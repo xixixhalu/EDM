@@ -14,6 +14,8 @@ import base64
 from bson import binary
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+import subprocess as sp
+import time
 
 from database_manager.setup import mgInstance
 from uml_parser.parse_dm_file import Analyzer as p
@@ -215,8 +217,30 @@ def result():
         else:
             flash('File type is not allowed')
             return redirect(request.url)
-    return redirect(url_for('main_bp.upload_xml'))
+    return redirect(request.url)
 
+#Run the specified instance
+@main_bp.route('/runinstance', methods=['POST', 'GET'])
+@login_required
+def run_instance():
+    if request.method == 'POST':
+        base_path = os.path.join(config.get('Output', 'output_path'))
+        user_path = "/" + session['username']
+        instance_path = "/" + request.form['domainModelName'] + "/" + request.form['fileId']
+        server_path = "/" + "Server" + "/" + "Server.js"
+
+        final_path = base_path + user_path + instance_path + server_path
+
+        child_process = sp.Popen(["node", final_path])
+        # Temporary solution..
+        time.sleep(0.5)
+
+        if child_process.poll() == None:
+            flash('Successful to run the specified instance')
+        else:
+            flash('Failed to run the specified instance')
+        return redirect(url_for('main_bp.index'))
+    return redirect(url_for('main_bp.index'))
 
 #Update instance with a new UML
 @main_bp.route('/updateinstance', methods=['GET','POST'])
@@ -263,7 +287,22 @@ def update_instance():
 
             # Parse XML and generate JSON
             ana.DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
-            # ana.DM_File_Analyze(file_dir, {'DM_Input_type': "Simple_XML"}, filename_str)
+            
+            # Parse JSON and generate code
+            model_display_data, server_url = generate_code.generate_all(filename_str, output_dir)
+
+            authen_key = dbOps.getAuthenKey(mgInstance.mongo, session['username'])
+         
+
+            # Pass required data to the template
+            description_data = {
+                "model_display_data": model_display_data,
+                "server_url": server_url,
+                "authen_key" : authen_key
+            }
+
+            # write description_data into json file
+            generate_code.write_description_to_file(filename_str, output_dir, description_data)
 
         return redirect(url_for('main_bp.index'))
   
@@ -350,7 +389,14 @@ def serverstatus():
 @login_required
 def description():
     return render_template('description.html')
-    
+
+@main_bp.route('/diagram')
+@login_required
+def get_diagram():
+    file_id = request.args['fileId']
+    domain_model_name = request.args['domainModelName']
+    path = 'generated_code' + '/' + session['username'] + '/' + domain_model_name + '/' + file_id
+    return send_from_directory(path, 'diagram.svg')
 
 @main_bp.route('/generated_code/<path:path>')
 @login_required

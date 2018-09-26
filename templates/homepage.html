@@ -1,33 +1,31 @@
 <!--The homepage is the initial page for the tool. The page displays some information about the tool. Also provides options to log into an existing account of sign up with the system-->
 <!DOCTYPE html>
-<html ng-app>
+<html lang="en" ng-app>
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>Executable Domain Modeling</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/homepage.css') }}">
+		<!-- Style sheet -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
-		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/homepage.css') }}">
 	</head>
-	<body>
-		<div id="container" > 
-			<!--Shows the title of the project - Page Header-->
-			<div class="jumbotron">
-				<div class="container text-center">
-					<h1>Executable Domain Modeling</h1>      
-					<p>Convert XML files to real code</p>
-				</div>
-			</div>
-			<div id="content">
-				<!--Button for Login (Creates a modal for the login screen)-->
-				<div class="buttons" align="right">
-					<button type="button" class="btn btn-spanimary btn-md btn-primary btn-lg" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
-				</div>
-				<!--Page Content: Displays information about the Online EDM tool-->
-				<div class="container" align="center" >
+	<body class="no-gutters">
+		<!-- <header></header> -->
+		<main role="main" class="container-fluid">
+			 <!--Shows the title of the project - Page Header-->
+			 <div class="jumbotron text-center">
+				 <h1>Executable Domain Modeling</h1>
+				 <p>Convert XML files to real code</p>
+			 </div>
+			 <!--Button for Login (Creates a modal for the login screen)-->
+			 <div class="row mx-auto justify-content-end">
+				 <button type="button" class="btn btn-spanimary btn-md btn-primary btn-lg" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
+			 </div>
+			 <!-- Centralize project description and Button for Signup (Creates a modal for the signup screen) -->
+			 <div class="row mx-auto">
+				 <div class="col-md-12 text-center">
 					<h2>Convert your domain model to code in just one click</h2>
 					<br>
 					<p>Software Development is labor-intensive, time consuming, error-prone and expensive. With time constraints and limited resources, as-build systems often don't match designs and fail to meet requirements.</p>
@@ -36,80 +34,76 @@
 					<br/>
 					<br/>
 					<p class="font-weight-bold">Sign up today for a free trial of our tool</p>
-					<!--Button for Signup (sign up screen also appears as a modal-->
 					<button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('signup').style.display='block'">Sign Up</button>
 				</div>
-				<!--Structure of Login Modal-->
-				<div id="login" class="modal">
-					<form class="modal-content animate" action="{{ url_for('main_bp.login') }}" method="post">
-						<div class="container">
-							<div class="lcontainer">
-								<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">   
+				 <!--Structure of Login Modal-->
+				 <div id="login" class="modal">
+						<form class="modal-content animate" action="{{ url_for('main_bp.login') }}" method="post">
+							<div class="container">
+								<div class="lcontainer">
+									<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">
+								</div>
+								<label for="uname"><b>Username</b></label>
+								<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
+								<label for="psw"><b>Password</b></label>
+								<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
+								<label>
+									<input type="checkbox" name="remember"> Remember me
+								</label>
+								<button type="submit" class="btn btn-success btn-md fullbutton">Login</button>
 							</div>
-							<label for="uname"><b>Username</b></label>
-							<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
-							<label for="psw"><b>Password</b></label>
-							<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
-							<label>
-								<input type="checkbox" name="remember"> Remember me
-							</label>
-							<button type="submit" class="btn btn-success btn-md fullbutton">Login</button>
-						</div>
-						<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
-							<button type="button" onclick="document.getElementById('login').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
-						</div>
-					</form>
-				</div>
-				<!--Structure of Signup Modal-->
-				<div id="signup" class="modal">
-					<form class="modal-content animate" action="{{ url_for('main_bp.register') }}" method="post">
-						<div class="container">
-							<div class="lcontainer">
-								<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">
+							<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
+								<button type="button" onclick="document.getElementById('login').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
 							</div>
-							<label for="email"><b>Email</b></label>
-							<input type="text" placeholder="Enter Email" name="email" class="form-control" required>
-							<label for="uname"><b>Username</b></label>
-							<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
-							<label for="psw"><b>Password</b></label>
-							<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
-							<br><br>
-							<button type="submit" class="btn btn-success btn-md fullbutton">Sign Up</button>
-						</div>
-						<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
-							<button type="button" onclick="document.getElementById('signup').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
-						</div>
-					</form>
-				</div>
+						</form>
+					</div>
+				 <!--Structure of Signup Modal-->
+				 <div id="signup" class="modal">
+						<form class="modal-content animate" action="{{ url_for('main_bp.register') }}" method="post">
+							<div class="container">
+								<div class="lcontainer">
+									<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">
+								</div>
+								<label for="email"><b>Email</b></label>
+								<input type="text" placeholder="Enter Email" name="email" class="form-control" required>
+								<label for="uname"><b>Username</b></label>
+								<input type="text" placeholder="Enter Username" name="uname" class="form-control" required>
+								<label for="psw"><b>Password</b></label>
+								<input type="password" placeholder="Enter Password" name="psw" class="form-control" required>
+								<br><br>
+								<button type="submit" class="btn btn-success btn-md fullbutton">Sign Up</button>
+							</div>
+							<div class="container" style="background-color:#f1f1f1; padding:16px;" align="center">
+								<button type="button" onclick="document.getElementById('signup').style.display='none'" class="btn btn-danger btn-md">Cancel</button>
+							</div>
+						</form>
+					</div>
+			 </div>
+	  </main>
+		<!--Shows copyright as page footer-->
+		<footer class="footer">
+			<div class="container text-center">
+				<span class="text-muted">&copy;Copyright Protected. All rights reserved</span>
 			</div>
-			<!--Shows copyright as page footer-->
-			<div id="footer" align="center">
-				<p>&copy; Copyright Protected. All rights reserved</p> 
-			</div>
-		</div>
+		</footer>
 		<!--Script to close the modal if clicked outside the target area-->
-
 		<script>
-			// Get the modal
-			var modal = document.getElementById('login');
+			var login_modal = document.getElementById('login');
+			var signup_modal = document.getElementById('signup');
 
-			// When the user clicks anywhere outside of the modal, close it
 			window.onclick = function(event) {
-				if (event.target == modal) {
-					modal.style.display = "none";
+				if (event.target == login_modal) {
+					// When the user clicks anywhere outside of the modal, close it
+					login_modal.style.display = "none";
+				} else if (event.target == signup_modal) {
+					// When the user clicks anywhere outside of the modal, close it
+					signup_modal.style.display = "none";
 				}
 			}
 		</script>
-		<script>
-			// Get the modal
-			var modal2 = document.getElementById('signup');
-
-			// When the user clicks anywhere outside of the modal, close it
-			window.onclick = function(event) {
-				if (event.target == modal2) {
-					modal2.style.display = "none";
-				}
-			}
-		</script>
+		<!-- Bootstrap dependencies -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 	</body>
 </html>

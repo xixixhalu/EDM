@@ -21,6 +21,21 @@ class fileOps:
         return open(path, 'w')
 
     @staticmethod
+    def safe_open_r(path):
+        ''' Open "path" for reading
+        '''
+        if os.path.isfile(path):
+            return open(path, 'r')
+        else:
+            return None
+        
+
+    @staticmethod
     def safe_delete_dir(path):
         if os.path.isdir(path):
             shutil.rmtree(path, ignore_errors=True)
+
+    @staticmethod
+    def safe_delete_file(path):
+        if os.path.isfile(path):
+            os.remove(path)

@@ -3,21 +3,18 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>API References - Executable Domain Modeling</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user_profile.css') }}">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
-		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/profile.js') }}"></script>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/user_profile.css') }}">
 		<basefont size="7">
 		<script>var history_data = {{ history_data|tojson|safe }};</script>
 	</head>
 	</head>
 	<body>
+		<!-- <header></header> -->
 		<div id="container">
 			{% with messages = get_flashed_messages() %}
 			  {% if messages %}
@@ -35,37 +32,45 @@
 			    </script>
 			  {% endif %}
 			{% endwith %}
+		</div>
+		<main role="main" class="container-fluid">
 			<!--Shows the title of the page - Project header -->
-			<div class="jumbotron">
-				<div class="container text-center">
-					<h1>Executable Domain Modeling</h1>
-					<p>Convert XML files to real code</p>
-				</div>
+			<div class="jumbotron text-center">
+				<h1>Executable Domain Modeling</h1>
+				<p>Convert XML files to real code</p>
 			</div>
-			<div id="content" >
-				<!-- Main content of the page: A table representing all the existing instances -->
-				<div class="container-fluid" style="height: 100%;">
-					<div class="content" >
-						<div class="row">
-							<div class="col-md-12 col-sm-12">
-                                Welcome {{ session['username'] }}!
-								<!--Button to logout from the current user session -->
-								<form action="/logout">				
-									<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
-								</form>
-
+			<div class="container-fluid">
+				<div class="row mx-auto sub-navline">
+					<div class="col-md-6 col-sm-4 col-xs-4">
+						<div class="input-group">
+							<div class="input-group-prepend" id="new_button">
+								<button class="btn btn-primary" onclick="window.location.href='{{ url_for('main_bp.upload_xml') }}'">New Instance</button>
 							</div>
 						</div>
-						<br>
+					</div>
+					<div class="col-md-6 col-sm-8 col-xs-8">
+						<div class="input-group">
+							<div class="ml-auto"><p class="pt-2">Welcome {{ session['username'] }}!</p></div>
+							<div class="input-group-append ml-3">
+								<form action="/logout">
+									<button class="btn btn-primary" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="content">
+				<div class="container-fluid" style="height: 100%;">
+					<div class="content" >
 						{%raw%}
-						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;">  
-
+						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;">
 							<!-- Refer to https://getbootstrap.com/docs/4.0/components/collapse/ -->
 							<div id="accordion">
 								<div class="card" ng-repeat="history in histories track by $index">
 									<div class="card-header" id="heading{{$index}}">
 										<h5 class="mb-0">
-											
+
 											<button class="btn btn-link collapsed btn_dashboard" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
 											  Project - {{history.domainModelName}} : {{history.length}} instances
 											</button>
@@ -87,11 +92,16 @@
 												<tr ng-repeat="file in history.files">
 													<td>{{file.id}}</td>
 													<td>{{file.date}}</td>
-													<td>Terminated <button class="operation btn" title="Launch the Server">
+													<td>Terminated
+													{%endraw%}
+													<form class="operation"  method="POST" action="{{ url_for('main_bp.run_instance') }}">
+													{%raw%}
+														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+														<input type="hidden" name="fileId" value="{{file.id}}">
+														<button class="operation btn" title="Launch the Server">
 														<i class="fa fa-play"></i>
-														</button>
+													</form>
 													</td>
-
 													<td>
 													{%endraw%}
 													<form class="operation"  method="GET" action="{{ url_for('main_bp.update_xml') }}">
@@ -108,7 +118,7 @@
 														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
 														<input type="hidden" name="fileId" value="{{file.id}}">
 														<button class="operation btn" title="Delete the Instance">
-														<i class="fa fa-close"></i>
+														<i class="fa fa-times"></i>
 														</button>
 													</form>
 													{%endraw%}
@@ -125,77 +135,31 @@
 											</tbody>
 										</table>
 									</div>
+												
 								</div>
 							</div>
 			            </div>
-			            {%endraw%}
-						<!-- This extra code is to display the instances as a list in a table -->
-						<!-- <div style="overflow-x:auto;overflow-y:auto;height:250px;">
-							<table class="table table-hover table-responsive-sm">
-								<thead class="thead-dark">
-									<tr>
-										<th scope="col">ID</th>
-										<th scope="col">Domain</th>
-										<th scope="col">Status</th>
-										<th scope="col">Details</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>ABC123</td>
-										<td>DadDriver</td>
-										<td>Running</td>
-										<td><a href="#">Link to Instance</a></td>
-									</tr>
-									<tr>
-										<td>XYZ321</td>
-										<td>Management</td>
-										<td>Terminated</td>
-										<td><a href="#">Link to Instance</a></td>
-									</tr>
-								</tbody>
-							</table>
-						</div> -->
-						<br>
-						<!-- This extra code is to display the instances as widgets instead of a table
-						<div class="row" id="widget-boxnew_button">
-							<div class="col-md-4">
-								<div class="widget-area no-padding blank">
-									<div class="user_profile">
-										<span id="instance_info" style="color: white">16 instances</span>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="widget-area no-padding blank">
-									<div class="user_profile">
-										<span id="class_info">25 classes</span>
-									</div>
-								</div>
-							</div>
-
-							<div class="col-md-4">
-								<div class="widget-area no-padding blank">
-									<div class="user_profile">
-										<span id="function_info">78 functions</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						-->
-						<div class="row" id="newinstance">
-						<!--Button to generate a new instance-->
-							<div class="col-md-4 offset-md-4" id="new_button">
+			            
+						<!--<div class="row" id="newinstance">
+							 <div class="col-md-4 offset-md-4" id="new_button">
 								<button class="btn btn-lg btn-primary btn-block" onclick="window.location.href='{{ url_for('main_bp.upload_xml') }}'">New Instance</button>
-							</div>
-						</div>
+							</div> 
+						</div> -->
+						{%endraw%}
 					</div>
 				</div>
-				<!--Show the copyright as a footer-->
-				<div id="footer" align="center">
-					<p>&copy; Copyright Protected. All rights reserved</p>
-				</div>
 			</div>
-		</div>
+		</main>
+		<!--Show the copyright as a footer-->
+		<footer class="footer">
+			<div class="container text-center">
+				<span class="text-muted">&copy;Copyright Protected. All rights reserved</span>
+			</div>
+		</footer>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="{{ url_for('static',filename='js/profile.js') }}"></script>
 	</body>
 </html>

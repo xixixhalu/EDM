@@ -23,6 +23,8 @@ import uuid
 import json
 import base64
 from bson import binary
+import subprocess as sp
+import time
 
 from config import config
 from authentication.User import User
@@ -177,7 +179,6 @@ if __name__ == '__main__':
     port = config.getInt('Application', 'port')
     app.secret_key = 'mysecret'
     app.run(host=host, port=port)
-
 
 # # flask_login will use this method to get User class
 # # by given username
@@ -650,6 +651,28 @@ if __name__ == '__main__':
 #     if findresult == None:
 #         return False
 
+# @app.route('/runinstance', methods=['POST', 'GET'])
+# @login_required
+# def run_instance():
+#     if request.method == 'POST':
+#         base_path = os.path.join(config.get('Output', 'output_path'))
+#         user_path = "/" + session['username']
+#         instance_path = "/" + request.form['domainModelName'] + "/" + request.form['fileId']
+#         server_path = "/" + "Server" + "/" + "Server.js"
+
+#         final_path = base_path + user_path + instance_path + server_path
+
+#         child_process = sp.Popen(["node", final_path])
+#         # Temporary solution..
+#         time.sleep(0.5)
+
+#         if child_process.poll() == None:
+#             flash('Successful to run the specified instance')
+#         else:
+#             flash('Failed to run the specified instance')
+#         return redirect(url_for('index'))
+#     return redirect(url_for('index'))
+
 #     # check if current token of this user is expired
 #     validtill = findresult["validtill"]
 #     delta = dt.datetime.now(pytz.utc) - pytz.timezone("UTC").localize(validtill)
@@ -669,5 +692,6 @@ if __name__ == '__main__':
 #     port = config.getInt('Application', 'port')
 #     app.secret_key = 'mysecret'
 #     app.run(host=host, port=port)
+
 
 

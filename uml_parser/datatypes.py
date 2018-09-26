@@ -67,30 +67,34 @@ class SimpleRelation(BaseRelation):
 
 	
 class ComplexRelation(BaseRelation):
-	def __init__(self, _id, _startId,_endId,_RationalType,_startUpperValue,_endUpperValue):
-		BaseRelation.__init__(self, _id, _startId,_endId,_RationalType);
+    def __init__(self, _id, _startId,_endId,_RationalType,_startUpperValue,_endUpperValue):
+        BaseRelation.__init__(self, _id, _startId,_endId,_RationalType);
 		# ZHIYUN: upper value of start and end class of relation
-                self.startUpperValue=_startUpperValue
-                self.endUpperValue=_endUpperValue
-	def toJson(self,_target):
-		retObj = {}
-		retObj["relationType"] = self.type
-		retObj["start"] = self.startId
-		retObj["end"] = self.endId
-
-                # ZHIYUN: transaltion upper value to relation type 
-                if(self.startUpperValue=='*'and self.endUpperValue=='*'): retObj["association"]="many_to_many"
-                elif(self.startUpperValue=='1'and self.endUpperValue=='1'): retObj["association"]="one_to_one"
-                elif(self.startUpperValue=='1' and self.endUpperValue=='*'): 
-                    if(_target=='from'): retObj["association"]="one_to_many"
-                    else: retObj["association"]="many_to_one"
-                elif(self.startUpperValue=='*' and self.endUpperValue=='1'): 
-                    if(_target=='from'): retObj["association"]="many_to_one"
-                    else: retObj["association"]="one_to_many"
-                else: retObj["association"]="unknown"
-                
-		return retObj
-
+        self.startUpperValue=_startUpperValue
+        self.endUpperValue=_endUpperValue
+    def toJson(self,_target):
+        retObj = {}
+        retObj["relationType"] = self.type
+        retObj["start"] = self.startId
+        retObj["end"] = self.endId
+        # ZHIYUN: transaltion upper value to relation type 
+        if(self.startUpperValue=='*'and self.endUpperValue=='*'):
+            retObj["multiplicity"]="many_to_many"
+        elif(self.startUpperValue=='1'and self.endUpperValue=='1'):
+            retObj["multiplicity"]="one_to_one"
+        elif(self.startUpperValue=='1' and self.endUpperValue=='*'):
+            if(_target=='from'):
+                retObj["multiplicity"]="one_to_many"
+            else:
+                retObj["multiplicity"]="many_to_one"
+        elif(self.startUpperValue=='*' and self.endUpperValue=='1'):
+            if(_target=='from'):
+                retObj["multiplicity"]="many_to_one"
+            else:
+                retObj["multiplicity"]="one_to_many"
+        else:
+            retObj["multiplicity"]="unknown"
+        return retObj
 
 class Generalization(SimpleRelation):
 	def __init__(self, _id,_startId,_endId, _RationalType):

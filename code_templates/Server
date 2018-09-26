@@ -18,6 +18,7 @@ var collection_names = $collection_names;
 var mongodb = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 var client = mongodb.MongoClient;
 var ObjectId = mongodb.ObjectId;
 
@@ -57,6 +58,12 @@ for (var i = 0; i < collection_names.length; i++)
     var class_model = require('./' + class_name + '.js');
     app.use('/' + dbname + '/' + class_name, class_model);
 }
+
+// end point: http://host:port/dbname/behavior
+fs.readdirSync("./Behaviors").forEach(file => {
+    var behavior = require('./Behaviors/' + file);
+    app.use("/" + dbname, behavior);
+})
 
 //Server is running in port 9001; REST API should call ex. localhost:9001/readoneData etc...
 var server = app.listen(server_port, server_ip, function () {
