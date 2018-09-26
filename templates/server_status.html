@@ -21,19 +21,19 @@
 				<ul class="navbar-nav mr-auto">
 					<!--Redirect to server status page here!-->
 					<li class="nav-item">
-						<form action="{{ url_for('serverstatus') }}" name="serverstatus" method="GET">
+						<form action="{{ url_for('main_bp.serverstatus') }}" name="serverstatus" method="GET">
 							<a class="nav-link" href="javascript: document.serverstatus.submit()">Server Status</a>
 						</form>
 					</li>
 					<!--Redirect to description page here!-->
 					<li class="nav-item">
-						<form action="{{ url_for('description') }}" name="description" method="GET">
+						<form action="{{ url_for('main_bp.description') }}" name="description" method="GET">
 							<a class="nav-link" href="javascript: document.description.submit()">Description</a>
 						</form>
 					</li>
 					<!--Redirect to API reference page here!-->
 					<li class="nav-item">
-						<form action="{{ url_for('detail_instance') }}" name="detail_instance" method="GET">
+						<form action="{{ url_for('main_bp.detail_instance') }}" name="detail_instance" method="GET">
 							<a class="nav-link" href="javascript: document.detail_instance.submit()">API Reference</a>
 						</form>
 					</li>

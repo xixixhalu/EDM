@@ -38,7 +38,7 @@
 				</div>
 				 <!--Structure of Login Modal-->
 				 <div id="login" class="modal">
-						<form class="modal-content animate" action="{{ url_for('login') }}" method="post">
+						<form class="modal-content animate" action="{{ url_for('main_bp.login') }}" method="post">
 							<div class="container">
 								<div class="lcontainer">
 									<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">
@@ -59,7 +59,7 @@
 					</div>
 				 <!--Structure of Signup Modal-->
 				 <div id="signup" class="modal">
-						<form class="modal-content animate" action="{{ url_for('register') }}" method="post">
+						<form class="modal-content animate" action="{{ url_for('main_bp.register') }}" method="post">
 							<div class="container">
 								<div class="lcontainer">
 									<img src="{{ url_for('static',filename='img/avatar.png') }}" class="avatar">

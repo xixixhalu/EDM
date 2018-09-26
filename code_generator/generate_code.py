@@ -7,6 +7,9 @@ from code_generator.template_utils import *
 from database_manager.setup import DBUtilities
 from utilities.file_op import fileOps
 
+from uml_parser.JSONParser import JSONParser
+from uml_parser.UMLViewer import *
+
 def get_server_info():
     # display_ip = "34.223.218.62" # Local env 127.0.0.0 Prev 18.216.141.169
     # server_ip = "0.0.0.0" # Local env - 127.0.0.0
@@ -47,7 +50,6 @@ def generate_model(language, template_model, output_dir, to_file):
     code_display_data = template.get_display_data()
     return code_display_data
 
-
 def generate_adapter(language, server_ip, port, dm_name, output_dir, to_file):
     """
     Creates the adapter code file with a specific language
@@ -85,6 +87,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     db_connection_template = open("code_templates/"+ "db_connection_template", "r").read()
     db_ops_template = open("code_templates/"+ "db_ops_template", "r").read()
     authen_template = open("code_templates/"+ "authen_template", "r").read()
+    behavior_template = open("code_templates/"+ "behavior", "r").read()
 
     output_path = output_path + "/Server/"
     if not os.path.isdir(output_path):
@@ -100,14 +103,27 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
             "db_name": dm_name,
             "collection_names" : str(elem_names)}
     content = replace_words(server_template, data)
-    server_code = open(output_path + "Server" + ".js", "w")
+    server_code = fileOps.safe_open_w(output_path + "Server" + ".js")
     server_code.write(content)
     server_code.close()
+    # os.chmod(output_path + "Server" + ".js", 0o764)
 
-    for elem_name in elem_names :
+    for elem_name in elem_names:
         output_location = output_path + elem_name + ".js"
-        with open(output_location, "w") as output_file:
+        with fileOps.safe_open_w(output_location) as output_file:
             output_file.write(class_template)
+
+    # generate behaviors
+    behaviors = [element["Behaviors"] for element in elements]
+    for element in elements :
+        for behavior in element["Behaviors"]:
+            output_location = output_path + "Behaviors/" + str(behavior['name']) + ".js"
+            data = { "entity" : str(element["elementName"]),
+                     "behavior": str(behavior['name'])
+                    }
+            content = replace_words(behavior_template, data)
+            with fileOps.safe_open_w(output_location) as output_file:
+                output_file.write(content)
 
     # generate server db connection file
     output_location = output_path + "db_connection" + ".js"
@@ -116,19 +132,44 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     data = {"db_user": db_user, 
             "db_password": db_password,
             "db_name" : dm_name}
-    with open(output_location, "w") as output_file:
+    with fileOps.safe_open_w(output_location) as output_file:
         content = replace_words(db_connection_template, data)
         output_file.write(content)
 
     # generate server db dbOps file
     output_location = output_path + "dbOps" + ".js"
-    with open(output_location, "w") as output_file:
+    with fileOps.safe_open_w(output_location) as output_file:
         output_file.write(db_ops_template)
 
     # generate server authentication file
     output_location = output_path + "authen" + ".js"
-    with open(output_location, "w") as output_file:
+    with fileOps.safe_open_w(output_location) as output_file:
         output_file.write(authen_template)
+
+def generate_diagram(json_data, dmname, output_path):
+    jp = JSONParser(json_data, dmname)
+    viewer = UMLViewer()
+
+    for entity_id, entity_name in jp.entities().items():
+        viewer.add_entity(entity_name)
+
+        for attribute in jp.findEntityAttributes(entity_name):
+            viewer.add_attribute(entity_name, attribute['name'], attribute['details']['type'])
+
+        for behavior in jp.findEntityBehaviors(entity_name):
+            viewer.add_behavior(entity_name, behavior['name'])
+
+    for entity_name, associations in jp.associations().items():
+        for association in associations:
+            start_entity = jp.findEntityNameById(association['start'])
+            end_entity = jp.findEntityNameById(association['end'])
+            asso = UMLAssociation(start_entity, end_entity, association['relationType'])
+            if 'multiplicity' in association.keys():
+                asso.set_multiplicity(association['multiplicity'])
+            viewer.add_association(asso)
+
+    viewer.generate_diagram(output_path)
+
 
 def generate_all(dm_name, output_dir, to_file=True):
     """
@@ -163,6 +204,9 @@ def generate_all(dm_name, output_dir, to_file=True):
 
         # generate server code files
         generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
+
+        # generate UML diagram
+        generate_diagram(json_data, dm_name, output_dir)
 
         #TODO
         #write model_display_data and display_ip to file

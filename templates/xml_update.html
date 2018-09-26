@@ -63,7 +63,7 @@
 					<div ng-app="update" ng-controller="updateCtrl">
 						
 					
-					<form method="post" enctype="multipart/form-data" action="{{ url_for('update_instance')}}">
+					<form method="post" enctype="multipart/form-data" action="{{ url_for('main_bp.update_instance')}}">
 						<input type="hidden" name="domainModelName" value="{{domainModelName}}">
 						<input type="hidden" name="fileId" value="{{fileId}}">
 						<div class="container" style="padding:8px; border:1px solid black; border-radius:8px; width:50%">

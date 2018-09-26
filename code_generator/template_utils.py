@@ -115,7 +115,7 @@ class TemplateModel(dict):
                               for attribute in element_attrs]
 
             # NOTE haven't test "Operations" part
-            method_names = element["Operations"]
+            method_names = element["Behaviors"]
             data = {"dm_name": dm_name,
                     "name": elem_name,
                     "attributes": attribute_list,
@@ -219,7 +219,7 @@ class Template:
         self.type = template_type
         self.dm_name = dm_name
         self.name = name
-        self.methods = None
+        # self.methods = None
         self.output_dir = output_dir
 
         if content:
@@ -311,10 +311,11 @@ class ModelTemplate(Template):
         """
         find "$method" mark in template and replace with methods code according to model's info
         """
-        method_names = self.model.methods
+        methods = self.model.methods
         template = Template(self.language, "Method", self.output_dir)
-        method_content = [template.render(False, True, replace_words={"method": method_name, "parameters": ""})
-                          for method_name in method_names]
+
+        method_content = [template.render(False, True, replace_words={"method": method['name'], "parameters": ""})
+                          for method in methods]
         method_content = "".join(method_content)
         self.replace_words({"methods": method_content})
 
