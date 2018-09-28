@@ -230,6 +230,7 @@ def run_instance():
         server_path = "/" + "Server" + "/" + "Server.js"
 
         final_path = base_path + user_path + instance_path + server_path
+        print final_path
 
         child_process = sp.Popen(["node", final_path])
         # Temporary solution..

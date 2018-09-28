@@ -60,10 +60,13 @@ for (var i = 0; i < collection_names.length; i++)
 }
 
 // end point: http://host:port/dbname/behavior
-fs.readdirSync("./Behaviors").forEach(file => {
-    var behavior = require('./Behaviors/' + file);
-    app.use("/" + dbname, behavior);
-})
+var behavior_path = __dirname + "/Behaviors";
+if (fs.existsSync(behavior_path)) {
+    fs.readdirSync(behavior_path).forEach(file => {
+        var behavior = require('./Behaviors/' + file);
+        app.use("/" + dbname, behavior);
+    })
+}
 
 //Server is running in port 9001; REST API should call ex. localhost:9001/readoneData etc...
 var server = app.listen(server_port, server_ip, function () {
