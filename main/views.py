@@ -227,12 +227,11 @@ def run_instance():
         base_path = os.path.join(config.get('Output', 'output_path'))
         user_path = "/" + session['username']
         instance_path = "/" + request.form['domainModelName'] + "/" + request.form['fileId']
-        server_path = "/" + "Server" + "/" + "Server.js"
+        server_path = "/" + "Server" + "/" #+ "Server.js"
 
         final_path = base_path + user_path + instance_path + server_path
-        print final_path
 
-        child_process = sp.Popen(["node", final_path])
+        child_process = sp.Popen(["npm", "run", "launch"], cwd=final_path)
         # Temporary solution..
         time.sleep(0.5)
 

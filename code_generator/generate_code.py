@@ -81,13 +81,21 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     :param dm_name: the domain model name
     :json_data: the domain model json structure
     """
+    server_file = open("code_templates/" + "Server", "r")
+    class_file = open("code_templates/"+ "class_template", "r")
+    db_connection_file = open("code_templates/"+ "db_connection_template", "r")
+    db_ops_file = open("code_templates/"+ "db_ops_template", "r")
+    authen_file = open("code_templates/"+ "authen_template", "r")
+    behavior_file = open("code_templates/"+ "behavior", "r")
+    package_json_file = open("code_templates/"+ "package.json", "r")
 
-    server_template = open("code_templates/" + "Server", "r").read()
-    class_template = open("code_templates/"+ "class_template", "r").read()
-    db_connection_template = open("code_templates/"+ "db_connection_template", "r").read()
-    db_ops_template = open("code_templates/"+ "db_ops_template", "r").read()
-    authen_template = open("code_templates/"+ "authen_template", "r").read()
-    behavior_template = open("code_templates/"+ "behavior", "r").read()
+    server_template = server_file.read()
+    class_template = class_file.read()
+    db_connection_template = db_connection_file.read()
+    db_ops_template = db_ops_file.read()
+    authen_template = authen_file.read()
+    behavior_template = behavior_file.read()
+    package_json_template = package_json_file.read()
 
     output_path = output_path + "/Server/"
     if not os.path.isdir(output_path):
@@ -106,7 +114,10 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     server_code = fileOps.safe_open_w(output_path + "Server" + ".js")
     server_code.write(content)
     server_code.close()
-    # os.chmod(output_path + "Server" + ".js", 0o764)
+    
+    package_json = fileOps.safe_open_w(output_path + "package" + ".json")
+    package_json.write(package_json_template)
+    package_json.close()
 
     for elem_name in elem_names:
         output_location = output_path + elem_name + ".js"
@@ -145,6 +156,14 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     output_location = output_path + "authen" + ".js"
     with fileOps.safe_open_w(output_location) as output_file:
         output_file.write(authen_template)
+
+
+    server_file.close()
+    class_file.close()
+    db_connection_file.close()
+    db_ops_file.close()
+    authen_file.close()
+    behavior_file.close()
 
 def generate_diagram(json_data, dmname, output_path):
     jp = JSONParser(json_data, dmname)
