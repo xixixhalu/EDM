@@ -12,7 +12,6 @@
 		<basefont size="7">
 		<script>var history_data = {{ history_data|tojson|safe }};</script>
 	</head>
-	</head>
 	<body>
 		<!-- <header></header> -->
 		<div id="container">
@@ -39,6 +38,7 @@
 				<h1>Executable Domain Modeling</h1>
 				<p>Convert XML files to real code</p>
 			</div>
+			<!-- Show all the functionalities including create new instance, logout -->
 			<div class="container-fluid">
 				<div class="row mx-auto sub-navline">
 					<div class="col-md-6 col-sm-4 col-xs-4">
@@ -50,7 +50,7 @@
 					</div>
 					<div class="col-md-6 col-sm-8 col-xs-8">
 						<div class="input-group">
-							<div class="ml-auto"><p class="pt-2">Welcome {{ session['username'] }}!</p></div>
+							<div class="ml-auto"><p class="pt-2">Welcome  <strong>{{ session['username'] }}!</strong></p></div>
 							<div class="input-group-append ml-3">
 								<form action="/logout">
 									<button class="btn btn-primary" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
@@ -60,40 +60,35 @@
 					</div>
 				</div>
 			</div>
-			<div id="content">
-				<div class="container-fluid" style="height: 100%;">
-					<div class="content" >
-						{%raw%}
-						<div ng-app="profile" ng-controller="profileCtrl" style="overflow-x:auto;overflow-y:auto;">
-							<!-- Refer to https://getbootstrap.com/docs/4.0/components/collapse/ -->
+			<!-- Instances list -->
+			<div class="container">
+					<br>
+					{%raw%}
+						<div ng-app="profile" ng-controller="profileCtrl" ng-cloak style="overflow-x:auto;overflow-y:auto;">
 							<div id="accordion">
 								<div class="card" ng-repeat="history in histories track by $index">
 									<div class="card-header" id="heading{{$index}}">
 										<h5 class="mb-0">
-
-											<button class="btn btn-link collapsed btn_dashboard" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
-											  Project - {{history.domainModelName}} : {{history.length}} instances
-											</button>
-
+												<button class="btn btn-link collapsed btn_dashboard" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
+												  Project - {{history.domainModelName}} : {{history.length}} instances
+												</button>
 										</h5>
 									</div>
-
 									<div id="collapse{{$index}}" class="collapse" aria-labelledby="heading{{$index}}" data-parent="#accordion">
 										<table class="table table-hover table-responsive-sm">
 											<thead class="thead-dark">
-												<tr>
-													<th scope="col">ID</th>
-													<th scope="col">Date</th>
-													<th scope="col">Status</th>
-													<th scope="col">Operation</th>
-												</tr>
-											</thead>
+													<tr>
+														<th scope="col">ID</th>
+														<th scope="col">Date</th>
+														<th scope="col">Status</th>
+														<th scope="col">Operation</th>
+													</tr>
+												</thead>
 											<tbody>
 												<tr ng-repeat="file in history.files">
 													<td>{{file.id}}</td>
 													<td>{{file.date}}</td>
-													<td>Terminated
-													{%endraw%}
+													<td>Terminated {%endraw%}
 													<form class="operation"  method="POST" action="{{ url_for('main_bp.run_instance') }}">
 													{%raw%}
 														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
@@ -103,52 +98,43 @@
 													</form>
 													</td>
 													<td>
-													{%endraw%}
-													<form class="operation"  method="GET" action="{{ url_for('main_bp.update_xml') }}">
+														{%endraw%}
+														<form class="operation"  method="GET" action="{{ url_for('main_bp.update_xml') }}">
+															{%raw%}
+															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+															<input type="hidden" name="fileId" value="{{file.id}}">
+															<button class="operation btn" title="Update Domain Model" >
+															<i class="fa fa-edit"></i>
+															</button>
+														</form>
+														{%endraw%}
+														<form class="operation" action="{{ url_for('main_bp.delete_instance') }}" method="POST">
 														{%raw%}
-														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
-														<input type="hidden" name="fileId" value="{{file.id}}">
-														<button class="operation btn" title="Update Domain Model" >
-														<i class="fa fa-edit"></i>
-														</button>
-													</form>
-													{%endraw%}
-													<form class="operation" action="{{ url_for('main_bp.delete_instance') }}" method="POST">
-													{%raw%}
-														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
-														<input type="hidden" name="fileId" value="{{file.id}}">
-														<button class="operation btn" title="Delete the Instance">
-														<i class="fa fa-times"></i>
-														</button>
-													</form>
-													{%endraw%}
-													<form class="operation" action="{{ url_for('main_bp.detail_instance') }}" method="GET">
-													{%raw%}
-														<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
-														<input type="hidden" name="fileId" value="{{file.id}}">
-														<button class="operation btn" title="Go to Details">
-															<i class="fa fa-angle-right"></i>
-														</button>
-													</form>
+															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+															<input type="hidden" name="fileId" value="{{file.id}}">
+															<button class="operation btn" title="Delete the Instance">
+															<i class="fa fa-times"></i>
+															</button>
+														</form>
+														{%endraw%}
+														<form class="operation" action="{{ url_for('main_bp.detail_instance') }}" method="GET">
+														{%raw%}
+															<input type="hidden" name="domainModelName" value="{{history.domainModelName}}">
+															<input type="hidden" name="fileId" value="{{file.id}}">
+															<button class="operation btn" title="Go to Details">
+																<i class="fa fa-angle-right"></i>
+															</button>
+														</form>
 													</td>
 												</tr>
 											</tbody>
 										</table>
 									</div>
-												
 								</div>
 							</div>
-			            </div>
-			            
-						<!--<div class="row" id="newinstance">
-							 <div class="col-md-4 offset-md-4" id="new_button">
-								<button class="btn btn-lg btn-primary btn-block" onclick="window.location.href='{{ url_for('main_bp.upload_xml') }}'">New Instance</button>
-							</div> 
-						</div> -->
-						{%endraw%}
-					</div>
+				    </div>
+				  {%endraw%}
 				</div>
-			</div>
 		</main>
 		<!--Show the copyright as a footer-->
 		<footer class="footer">

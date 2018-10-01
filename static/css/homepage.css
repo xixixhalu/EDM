@@ -40,21 +40,6 @@
 	font-size: 1.5em;
 }
 
-/* Footer */
-
-.footer {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	max-width: 100vw;
-	height: 60px;
-	background-color: #e9ecef;
-}
-
-.footer > .container {
-	padding-top: 20px;
-}
-
 /* Login & Signup modal */
 
 input[type=text], input[type=password] {

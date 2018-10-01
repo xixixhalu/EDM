@@ -85,12 +85,12 @@ class UMLViewer:
             self.add_entity(entity_name)
         self.__entity_map[entity_name].add_behavior(behavior_name)
 
-    def add_association(self, entity_one, entity_two, attribute_type='association', multiplicity='one_to_one'):
-        association = UMLAssociation(entity_one, entity_two, attribute_type, multiplicity)
-        self.__association_set.add(association)
+    # Bo: deprecated
+    # def add_association(self, entity_one, entity_two, attribute_type='association', multiplicity='one_to_one'):
+    #     association = UMLAssociation(entity_one, entity_two, attribute_type, multiplicity)
+    #     self.__association_set.add(association)
 
     def add_association(self, association):
-        print isinstance(association, UMLAssociation)
         if isinstance(association, UMLAssociation):
             self.__association_set.add(association)
             

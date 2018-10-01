@@ -3,79 +3,22 @@
 <html ng-app>
 	<head>
 		<meta charset="utf-8">
-		<title>API References - Executable Domain Modeling</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Server Status - Executable Domain Modeling</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
 		<basefont size="7">
 	</head>
 	<body>
-		<script type="text/javascript">
-
-			function GetQueryString(name) { 
-         		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); 
-        		var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
-        		var context = ""; 
-    			if (r != null) 
-     			context = r[2]; 
-    			reg = null; 
-    			r = null; 
-   				return context == null || context == "" || context == "undefined" ? "" : context; 
-			 }
-
-            window.onload = function(){
-
-            	var mname = document.createElement('input');
-            	mname.setAttribute("type", "hidden");
-            	mname.setAttribute("name", "domainModelName");
-				mname.setAttribute("value", GetQueryString("domainModelName"));
-
-				var fid = document.createElement('input');
-            	fid.setAttribute("type", "hidden");
-            	fid.setAttribute("name", "fileId");
-				fid.setAttribute("value", GetQueryString("fileId"));
-
-				var new_div = document.createElement('div');
-				new_div.appendChild(mname);
-				new_div.appendChild(fid);
-
-				document.getElementsByName('serverstatus')[0].innerHTML += new_div.innerHTML;
-				document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
-				document.getElementsByName('detail_instance')[0].innerHTML += new_div.innerHTML;
-
-				diagram_src = window.location.href.split(window.location.pathname).join('/diagram');
-				document.getElementById('diagram').setAttribute("src", diagram_src);
-     		};
-		
-
-		</script>
-		<div id="container">
-			<!--Show the title of the project -- header // Xuan Zhu-->
-			<div class="jumbotron">
-				<div class="container text-center">
-					<h1>Executable Domain Modeling</h1>
-					<p>Convert XML files to real code</p>
-				</div>
-				<div class="row">
-					<div class="col-md-12 col-sm-12">
-                        <form action="{{ url_for('main_bp.logout') }}">
-							<button class="btn btn-primary pull-right" id="log_out"><span class="fa fa-user"></span>&nbsp Logout</button>
-						</form>
-					</div>
-				</div>
-			</div>			
-			<!--Nav bars -- help redirect to different pages-->
-			<nav class="navbar navbar-expand-sm bg-dark navbar-dark col-sm-12">
-				<!-- Redirect to homepage here -->
-				<ul class="navbar-nav nav-justified col-sm-12">
-					<li class="nav-brand">
-						<a class="nav-link" href="/"><span class="fa fa-home"></span></a>
-					</li>
+		<!--Nav bars - help redirect to different pages-->
+		<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+			<!-- Redirect to homepage -->
+			<a class="navbar-brand" href="/"><span class="fa fa-home"></span></a>
+			<!-- Navigation bar tabs -->
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
 					<!--Redirect to server status page here!-->
 					<li class="nav-item">
 						<form action="{{ url_for('main_bp.serverstatus') }}" name="serverstatus" method="GET">
@@ -89,35 +32,88 @@
 						</form>
 					</li>
 					<!--Redirect to API reference page here!-->
-					<li>
+					<li class="nav-item">
 						<form action="{{ url_for('main_bp.detail_instance') }}" name="detail_instance" method="GET">
-							<!-- <button class="nav-link">api</button> -->
 							<a class="nav-link" href="javascript: document.detail_instance.submit()">API Reference</a>
 						</form>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a>
-					</li>
+					<!--Redirect to User account profile page here!-->
+					<li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a></li>
 				</ul>
-			</nav>
-			<div id="content">
-				<!--The main content on the page: A brief description about our project here-->
-				<div class="container-fluid" style="margin-top:20px">
-					<h3>Description &nbsp<span class="fa fa-archive"></span></h3>
-					<img id="diagram">
-					<div class="container-fluid ">
-						<ul class="list-group">
-							<li class="list-group-item"> Description of the database created </li>
-							<li class="list-group-item"> Table names and field description in case of RDBMS/ Collection names in case of NoSQL database</li>
-							<li class="list-group-item"> Details of where the DB server is hosted </li>
-						</ul>
+					<form class="form-inline mt-2 mt-md-0" action="{{ url_for('main_bp.logout') }}">
+						<button class="btn btn-outline-success my-2 my-sm-0" id="log_out" ><span class="fa fa-user"></span>&nbsp Logout</button>
+					</form>
+			</div>
+		</nav>
+		<main role="main">
+			<!--Shows the title of the page - Project header -->
+			<div class="jumbotron text-center mt-3">
+				<div class="container">
+					<h1>Executable Domain Modeling</h1>
+					<p>Convert XML files to real code</p>
+				</div>
+			</div>
+			<div id="container">
+				<div id="content">
+					<!--The main content on the page: A brief description about our project here-->
+					<div class="container-fluid" style="margin-top:20px">
+						<h3>Description &nbsp<span class="fa fa-archive"></span></h3>
+						<img id="diagram">
+						<div class="container-fluid ">
+							<ul class="list-group">
+								<li class="list-group-item"> Description of the database created </li>
+								<li class="list-group-item"> Table names and field description in case of RDBMS/ Collection names in case of NoSQL database</li>
+								<li class="list-group-item"> Details of where the DB server is hosted </li>
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
-			<!--show the copyright as footer-->
-			<div id="footer" align="center">
-				<p>&copy; Copyright Protected. All rights reserved</p>
+		</main>
+		<!--show the copyright as footer-->
+		<footer class="footer">
+			<div class="container text-center">
+				<span class="text-muted">&copy;Copyright Protected. All rights reserved</span>
 			</div>
-		</div>
+		</footer>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+			function GetQueryString(name) {
+         	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        	var r = window.location.search.substr(1).match(reg); //获取url中"?"符后的字符串并正则匹配
+        	var context = "";
+    			if (r != null)
+     			context = r[2];
+    			reg = null;
+    			r = null;
+   				return context == null || context == "" || context == "undefined" ? "" : context;
+			 }
+
+      window.onload = function(){
+          var mname = document.createElement('input');
+          mname.setAttribute("type", "hidden");
+          mname.setAttribute("name", "domainModelName");
+					mname.setAttribute("value", GetQueryString("domainModelName"));
+
+					var fid = document.createElement('input');
+          fid.setAttribute("type", "hidden");
+          fid.setAttribute("name", "fileId");
+					fid.setAttribute("value", GetQueryString("fileId"));
+
+					var new_div = document.createElement('div');
+					new_div.appendChild(mname);
+					new_div.appendChild(fid);
+
+					document.getElementsByName('serverstatus')[0].innerHTML += new_div.innerHTML;
+					document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
+					document.getElementsByName('detail_instance')[0].innerHTML += new_div.innerHTML;
+
+					diagram_src = window.location.href.split(window.location.pathname).join('/diagram');
+					document.getElementById('diagram').setAttribute("src", diagram_src);
+     	};
+		</script>
 	</body>
 </html>
