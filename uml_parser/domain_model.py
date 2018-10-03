@@ -68,18 +68,19 @@ class DomainModel:
 		elif _RelationType == "Aggregation":
 			relation = dt.Aggregation(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
                         
-                        #ZHIYUN: add end to start class as an attribute for aggregation relation
-                        elemName = str(self.ElementDirectory[_start].ElementName)
-                        elemAttributeTypeSetter = dt.SimpleType("string")
-                        elemAttributeName=str(self.ElementDirectory[_end].ElementName)+"_id"
-                        self.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
+			#ZHIYUN: add end to start class as an attribute for aggregation relation
+			elemName = str(self.ElementDirectory[_start].ElementName)
+			elemAttributeTypeSetter = dt.SimpleType("objectId")
+			elemAttributeName=str(self.ElementDirectory[_end].ElementName)+"_id"
+			self.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
 		elif _RelationType == "Generalization":
 			relation = dt.Generalization(_id,_start, _end, _RelationType)
                 elif _RelationType == "Composition":
                         relation = dt.Composition(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
 		else:
-			raise e.SimpleException("Type of relation not defined : " + RelationType)
-
+			#raise e.SimpleException("Type of relation not defined : " + _RelationType)
+			print "Type of relation not defined : " + _RelationType
+			relation = dt.Association(_id,_start, _end,"Association",_startUpperVaule,_endUpperValue)
 
 		self.Relations.add(_id)
 		self.ElementDirectory[_start].relationsFromThisElement.append(relation)

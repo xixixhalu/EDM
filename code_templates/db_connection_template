@@ -19,7 +19,7 @@ var Wrapper = function() {
 
 Wrapper.prototype.init = function() {
     var wrapper = this;
-    mongodb.MongoClient.connect(url, function (err, database) {
+    mongodb.MongoClient.connect(url, { poolSize : 50 }, function (err, database) {
         if (err) {
             console.log(err);
             process.exit(1);

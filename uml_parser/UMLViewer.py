@@ -49,7 +49,7 @@ class UMLAssociation:
             "many_to_many": ' "*"' + result + '"*" ',
         }
         if not multiplicity in multiplicity_switcher:
-            result = ' "1"' + result + '"1" '
+            result = result #' "1"' + result + '"1" '
         else:
             result = multiplicity_switcher[multiplicity]
         return result
