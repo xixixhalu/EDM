@@ -36,7 +36,7 @@ $collection_name.check_$collection_name_collection = function() {
                 if (!err)
                     console.log("$collection_name schema checked");
                 else
-                    console.log(err);
+                    console.error(err);
             });
     } else {
         console.log("$collection_name has no schema");
@@ -48,9 +48,16 @@ router.post('/', function (req, res) {
     try {
         if (typeof(req.body) !== 'undefined' && Object.keys(req.body).length != 0) {
             
-            var data = req.body;
             var collection = "$collection_name";
-
+            if (Array.isArray(req.body)) {
+                var data = [];
+                for (var i = 0; i < req.body.length; i++) {
+                    data.push(typeConverter.convert(req.body[i], $collection_name.attribute_schema));
+                }
+            } else {
+                var data = typeConverter.convert(req.body, $collection_name.attribute_schema);
+            }
+            
             //DB create
             dbOps.create(collection, data, function(err, result) {
                 if (err) {
@@ -111,18 +118,13 @@ router.get('/', function (req, res) {
         }
 
         var collection = "$collection_name";
+        var data = req.query;
         var _id = req.query._id ? req.query._id : null;
-        delete req.query["_id"];
-        var query = {};
-        Object.keys(req.query).forEach(key => {
-            if ($collection_name.attribute_schema.hasOwnProperty(key)) {
-                query[key] = typeConverter.readConvert(req.query[key], 
-                        $collection_name.attribute_schema[key].bsonType);
-            }
-        })
+        delete data["_id"];
+        data = typeConverter.convert(data, $collection_name.attribute_schema);
 
         //DB Many
-        dbOps.readAll(collection, _id, query, function(err, result) {
+        dbOps.readAll(collection, _id, data, function(err, result) {
             if (err) {
                 res.status(400).send(err.errmsg);
             } else {
@@ -171,6 +173,7 @@ router.delete('/', function (req, res) {
             var collection = "$collection_name";
             var _id = data._id ? data._id : null;
             delete data["_id"];
+            data = typeConverter.convert(data, $collection_name.attribute_schema);
 
             //DB delete
             dbOps.delete(collection, _id, data, function(err, result) {
@@ -205,6 +208,7 @@ router.put('/:uid', function (req, res) {
             var _id = req.params.uid;
             var collection = "$collection_name";
             delete data["_id"];
+            data = typeConverter.convert(data, $collection_name.attribute_schema);
 
             //DB Replace
             dbOps.put(collection, _id, data, function(err, result) {
@@ -212,7 +216,6 @@ router.put('/:uid', function (req, res) {
                     res.status(400).send(err.errmsg);
                 }
                 else {
-                    console.log(result);
                     var response = {
                         result : result.result
                     };
@@ -240,6 +243,7 @@ router.patch('/:uid', function (req, res) {
             var _id = req.params.uid;
             var collection = "$collection_name";
             delete data["_id"];
+            data = typeConverter.convert(data, $collection_name.attribute_schema);
 
             //DB Modify
             dbOps.patch(collection, _id, data, function(err, result) {

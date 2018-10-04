@@ -1,7 +1,8 @@
-var mongodb = require('mongodb');
+var ObjectId = require('mongodb').ObjectID;
 
 var typeConverter = {};
 
+// Type for MongoDB
 typeConverter.type = {
 	"double" : 1,			// Double
 	"string" : 2,			// String	
@@ -27,7 +28,7 @@ typeConverter.type = {
 };
 
 // Temporary paser. Should be specified more detail in real environment 
-typeConverter.readConvert = function(value, type) {
+typeConverter.typeConvert = function(value, type) {
 	switch(type) {
 	    case "double":
 	    case "decimal":
@@ -52,6 +53,18 @@ typeConverter.readConvert = function(value, type) {
     }	
 
 }
+
+// Type for MongoDB
+typeConverter.convert = function(data, attribute_schema) {
+	var rst = {};
+	Object.keys(data).forEach(key => {
+        if (attribute_schema.hasOwnProperty(key)) {
+            rst[key] = typeConverter.typeConvert(data[key], attribute_schema[key].bsonType);
+        }
+    });
+    return rst;
+}
+
 
 
 module.exports = typeConverter;
