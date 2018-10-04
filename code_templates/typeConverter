@@ -1,5 +1,4 @@
-
-
+var mongodb = require('mongodb');
 
 var typeConverter = {};
 
@@ -10,7 +9,7 @@ typeConverter.type = {
 	"array" : 4,			// Array
 	//"binData" : 5,			// Binary data
 	//"undefined" : 6,		// Undefined	Deprecated.
-	//"objectId" : 7,			// ObjectId 
+	"objectId" : 7,			// ObjectId 
 	"bool" : 8,				// Boolean	 
 	"date" : 9,				// Date 
 	//"null" : 10,			// Null
@@ -46,6 +45,8 @@ typeConverter.readConvert = function(value, type) {
 	    case "int":
 	    case "long":
 			return parseInt(value);
+		case "objectId":
+			return new ObjectId(value);
 	    default:
 			return String(value);
     }	
