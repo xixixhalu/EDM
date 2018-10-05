@@ -12,32 +12,51 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/homepage.css') }}">
 	</head>
 	<body class="no-gutters">
-		<!-- <header></header> -->
+		<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
+			<!-- Navigation bar tabs -->
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav mr-auto">
+				</ul>
+				<!--Button for Login (Creates a modal for the login screen)-->
+				<button type="button" class="btn btn-outline-success my-2 my-sm-0" onclick="document.getElementById('login').style.display='block'"><span class="fas fa-sign-in-alt"></span>&nbsp Login</button>
+			</div>
+		</nav>
 		<main role="main" class="container-fluid">
 			 <!--Shows the title of the project - Page Header-->
 			 <div class="jumbotron text-center">
-				 <h1>Executable Domain Modeling</h1>
-				 <p>Convert XML files to real code</p>
-			 </div>
-			 <!--Button for Login (Creates a modal for the login screen)-->
-			 <div class="row mx-auto justify-content-end">
-				 <button type="button" class="btn btn-spanimary btn-md btn-primary btn-lg" onclick="document.getElementById('login').style.display='block'"><span class="fa fa-user"></span>&nbsp Login</button>
+				 <div class="container">
+					 <h1>Executable Domain Modeling</h1>
+  				 <p>Convert XML files to real code</p>
+				 </div>
 			 </div>
 			 <!-- Centralize project description and Button for Signup (Creates a modal for the signup screen) -->
-			 <div class="row mx-auto">
-				 <div class="col-md-12 text-center">
+			 <div class="row mx-auto mt-5">
+			 	<div class="col-md-12 text-center">
 					<h2>Convert your domain model to code in just one click</h2>
 					<br>
-					<p>Software Development is labor-intensive, time consuming, error-prone and expensive. With time constraints and limited resources, as-build systems often don't match designs and fail to meet requirements.</p>
-					<p>Our efforts are focused on enabling rapid and continuous delivery while leveraging parallelism in development via automatic code generation, specifically making domain models instantly executable. </p>
-					<p>As a tool support to the solution, we describe a code generator to enable parallel development of services. It uses UML class diagram to model the problem domain, then rapidly realize the domain model as a set of NoSQL database collections, automate the generation of common database access.</p>
-					<br/>
-					<br/>
-					<p class="font-weight-bold">Sign up today for a free trial of our tool</p>
-					<button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('signup').style.display='block'">Sign Up</button>
 				</div>
-				 <!--Structure of Login Modal-->
-				 <div id="login" class="modal">
+			 </div>
+			 <div class="row mx-5">
+				 <div class="col-md-4">
+					 <p>Software Development is labor-intensive, time consuming, error-prone and expensive. With time constraints and limited resources, as-build systems often don't match designs and fail to meet requirements.</p>
+				 </div>
+				 <div class="col-md-4">
+					 <p>Our efforts are focused on enabling rapid and continuous delivery while leveraging parallelism in development via automatic code generation, specifically making domain models instantly executable. </p>
+				 </div>
+				 <div class="col-md-4">
+					 <p>As a tool support to the solution, we describe a code generator to enable parallel development of services. It uses UML class diagram to model the problem domain, then rapidly realize the domain model as a set of NoSQL database collections, automate the generation of common database access.</p>
+					 <br/>
+ 					 <br/>
+				 </div>
+			 </div>
+			 <div class="row mx-auto">
+				 <div class="col-md-12 text-center">
+				 	<h4 class="font-weight-bold">Sign up today for a free trial of our tool</h4>
+					<button type="button" class="btn btn-outline-success custom-signup mt-2" onclick="document.getElementById('signup').style.display='block'">Sign Up</button>
+				 </div>
+			 </div>
+			 <!--Structure of Login Modal-->
+			 <div id="login" class="modal">
 						<form class="modal-content animate" action="{{ url_for('main_bp.login') }}" method="post">
 							<div class="container">
 								<div class="lcontainer">
@@ -57,8 +76,8 @@
 							</div>
 						</form>
 					</div>
-				 <!--Structure of Signup Modal-->
-				 <div id="signup" class="modal">
+			 <!--Structure of Signup Modal-->
+			 <div id="signup" class="modal">
 						<form class="modal-content animate" action="{{ url_for('main_bp.register') }}" method="post">
 							<div class="container">
 								<div class="lcontainer">
@@ -78,7 +97,7 @@
 							</div>
 						</form>
 					</div>
-			 </div>
+			</div>
 	  </main>
 		<!--Shows copyright as page footer-->
 		<footer class="footer">

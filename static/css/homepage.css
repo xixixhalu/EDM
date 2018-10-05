@@ -1,73 +1,11 @@
+/* Home page sign up button customization */
 
-/* For different size screens */
-
-@media only screen and (min-width: 576px) and (max-width: 767px){
-	body {height: 100%;width:100%; font-size: 1em;}
+.custom-signup {
+	width: 120px;
+	height: 60px;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1199px){
-	body {height: 100%;width:100%; font-size: 1.0em;}
-}
-
-@media only screen and (min-width: 1200px) and (max-width: 1499px){
-   body {height: 100%; width:100%; font-size: 1.1em;}
-}
-
-@media only screen and (min-width: 1500px) and (max-width: 1919px){
-   body {height: 100%;width:100%; font-size: 1.3em;}
-}
-
-@media only screen and (min-width: 1920px) and (max-width: 2799px){
-   body {height: 100%;width:100%; font-size: 1.4em;}
-}
-
-@media only screen and (min-width: 2800px){
-	 body {height: 100%;width:100%; font-size: 1.5em;}
-}
-
-/* Container */
-.container-fluid {
-	padding: 0;
-}
-
-/* Jumbotron title text */
-
-.jumbotron h1 {
-	font-size: 3em;
-}
-
-.jumbotron p {
-	font-size: 1.5em;
-}
-
-/* Login & Signup modal */
-
-input[type=text], input[type=password] {
-	width: 100%;
-	padding: 12px 20px;
-	margin-bottom: 8px;
-	display: inline-block;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-}
-
-.fullbutton {
-	width:100%;
-	cursor: pointer;
-	padding:10px;
-}
-
-.animate {
-	-webkit-animation: animatezoom 0.6s;
-	animation: animatezoom 0.6s
-}
-
-.modal-content {
-	background-color: #fefefe;
-	margin: 2% auto 15% auto;
-	border: 1px solid #888;
-	width: 30%;
-}
+/* User login and signup pop window */
 
 .modal {
 	display: none;
@@ -83,12 +21,40 @@ input[type=text], input[type=password] {
 	padding-top: 60px;
 }
 
+.modal-content {
+	background-color: #fefefe;
+	margin: 2% auto 15% auto;
+	border: 1px solid #888;
+	width: 30%;
+}
+
+/* Container used by login and signup pop window */
 .lcontainer {
 	text-align: center;
 	margin: 24px 0 12px 0;
 	position: relative;
 }
 
+/* Textfield for username and password */
+
+input[type=text], input[type=password] {
+	width: 100%;
+	padding: 12px 20px;
+	margin-bottom: 8px;
+	display: inline-block;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
+
+/* Login and signup button within pop windows */
+
+.fullbutton {
+	width:100%;
+	cursor: pointer;
+	padding:10px;
+}
+
+/* User default profile image and labels in login and signup pop window */
 img.avatar {
 	width: 20%;
 	border-radius: 50%;
@@ -96,4 +62,11 @@ img.avatar {
 
 label {
 	padding-top:10px;
+}
+
+/* Modal show up animate*/
+
+.animate {
+	-webkit-animation: animatezoom 0.6s;
+	animation: animatezoom 0.6s
 }
