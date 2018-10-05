@@ -13,7 +13,8 @@ $FUNC create
 { just test
 lalala
 }
-// "data" : the Object to be created, specifies the value of each attirbute in $name
+// "data" : the Object or the Array of Objects to be created 
+//          specifies the value of each attirbute in $name
 $model.create = function(data, success, error) {
     // Wrap data
 
