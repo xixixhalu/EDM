@@ -8,6 +8,8 @@ from uml_parser.domain_model import DomainModel
 from uml_parser import datatypes as dt
 import xml.etree.ElementTree as ET
 
+import re
+
 class Analyzer:
 
     def xmiPrefixAppender(self, key, xmiPrefix):
@@ -56,7 +58,8 @@ class Analyzer:
             # ZHIYUN : extract element if it's a definition of a class
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 elemId = element.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
-                elemName = element.get('name').strip()
+                # Bo: replace some special charactors
+                elemName = re.sub('[\W]', '_', element.get('name').strip())
                 dmo.declareElement( elemName , elemId)
                 elem[elemId]=elemName
       
@@ -64,12 +67,16 @@ class Analyzer:
         # ZHIYUN: adding attributes to element
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
-                elemName = element.get('name').strip()
+                # Bo: replace some special charactors
+                elemName = elemName = re.sub('[\W]', '_', element.get('name').strip())
                 elemAttributes = element.find('attributes')
                 if elemAttributes is not None:
                     for elemAttribute in elemAttributes:
-                        elemAttributeName = elemAttribute.get('name')
+                        elemAttributeName = re.sub('[\W]', '_', elemAttribute.get('name'))
                         elemAttributeType = elemAttribute.find('properties').get('type')
+                        # Bo: Teporarily solve unknown type
+                        if elemAttributeType == None or elemAttributeType == 'unknown':
+                             elemAttributeType = "string"
 
                         # ZHIYUN: add complex attributes
                         if elemAttributeType in elem.values():

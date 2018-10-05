@@ -64,7 +64,8 @@ def generate_adapter(language, server_ip, port, dm_name, output_dir, to_file):
     template = AdapterTemplate(language, dm_name, output_dir)
 
     data = {"server_ip": server_ip,
-            "port": port}
+            "port": port,
+            "dm_name" : dm_name}
     template.render(tofile=to_file, reset=False, replace_words=data)
 
     code_display_data = template.get_display_data()
@@ -83,19 +84,23 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     """
     server_file = open("code_templates/" + "Server", "r")
     class_file = open("code_templates/"+ "class_template", "r")
+    db_schema_file = open("code_templates/"+ "db_schema_template", "r")
     db_connection_file = open("code_templates/"+ "db_connection_template", "r")
     db_ops_file = open("code_templates/"+ "db_ops_template", "r")
     authen_file = open("code_templates/"+ "authen_template", "r")
     behavior_file = open("code_templates/"+ "behavior", "r")
     package_json_file = open("code_templates/"+ "package.json", "r")
+    type_converter_file = open("code_templates/"+ "typeConverter", "r")
 
     server_template = server_file.read()
     class_template = class_file.read()
+    db_schema_template = db_schema_file.read()
     db_connection_template = db_connection_file.read()
     db_ops_template = db_ops_file.read()
     authen_template = authen_file.read()
     behavior_template = behavior_file.read()
     package_json_template = package_json_file.read()
+    type_converter_template = type_converter_file.read()
 
     output_path = output_path + "/Server/"
     if not os.path.isdir(output_path):
@@ -119,10 +124,31 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     package_json.write(package_json_template)
     package_json.close()
 
-    for elem_name in elem_names:
-        output_location = output_path + elem_name + ".js"
+    # generate entities
+    jp = JSONParser(json_data, dm_name)
+    
+    for entity_id, entity_name in jp.entities().items():
+        attribute_names = set()
+        attribute_schema = []
+        for attribute in jp.findEntityAttributes(entity_name):
+            attribute_names.add(attribute['name'].encode('utf-8'))
+
+            data = {
+                "attribute": attribute['name'],
+                "type": attribute['details']['type']
+            }
+            content = replace_words(db_schema_template, data)
+            attribute_schema.append(content)
+
+        data = {
+            "collection_name" : entity_name,
+            "attribute_names" : str(list(attribute_names)),
+            "attribute_schema" : ',\n'.join(attribute_schema)
+        }
+        content = replace_words(class_template, data)
+        output_location = output_path + entity_name + ".js"
         with fileOps.safe_open_w(output_location) as output_file:
-            output_file.write(class_template)
+            output_file.write(content)
 
     # generate behaviors
     behaviors = [element["Behaviors"] for element in elements]
@@ -157,16 +183,22 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     with fileOps.safe_open_w(output_location) as output_file:
         output_file.write(authen_template)
 
+    # generate type converter file
+    output_location = output_path + "typeConverter" + ".js"
+    with fileOps.safe_open_w(output_location) as output_file:
+        output_file.write(type_converter_template)
 
     server_file.close()
+    class_file.close()
     class_file.close()
     db_connection_file.close()
     db_ops_file.close()
     authen_file.close()
     behavior_file.close()
+    type_converter_file.close()
 
-def generate_diagram(json_data, dmname, output_path):
-    jp = JSONParser(json_data, dmname)
+def generate_diagram(json_data, dm_name, output_path):
+    jp = JSONParser(json_data, dm_name)
     viewer = UMLViewer()
 
     for entity_id, entity_name in jp.entities().items():

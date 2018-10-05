@@ -6,190 +6,267 @@ var primary_key = '_id';
 
 var dbOps = require("./dbOps.js");
 var authen = require("./authen.js");
-// CRUD: Create
-router.post('/create', function (req, res) {
-    if (typeof(req.body.collection) !== 'undefined' &&
-        typeof(req.body.data) !== 'undefined') {
-        authen.verify(req, function(result, error) {
-            if (error == 0)
-            {
-                var data = JSON.parse(req.body.data);
-                var collection = req.body.collection;
+var typeConverter = require("./typeConverter.js");
 
-                //DB create
-                dbOps.create(collection, data, function(result) {
-                    if (!result) 
-                    {
-                        res.send(null);
-                    }
-                    else 
-                    {
-                        res.send(result);
-                    }
-                });
-                
-            }else if (error == 1)
-            {
-                res.sendStatus(500);
-            }else{
-                res.send("Invalid Authentication");
+var $collection_name = {};
+
+// Attributes list
+$collection_name.attributes = $attribute_names;
+// DB schema
+$collection_name.attribute_schema = {
+$attribute_schema
+};
+
+$collection_name.$collection_name_schema = 
+{
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: $collection_name.attributes,
+            properties: $collection_name.attribute_schema
+        }
+    },
+    validationLevel: "moderate"
+};
+
+$collection_name.check_$collection_name_collection = function() {
+    if ($collection_name.attributes.length != 0) {
+        dbOps.check_collection("$collection_name", $collection_name.$collection_name_schema, 
+            function(err, collection) {
+                if (!err)
+                    console.log("$collection_name schema checked");
+                else
+                    console.error(err);
+            });
+    } else {
+        console.log("$collection_name has no schema");
+    }
+}
+
+// CRUD: Create one and Create Many
+router.post('/', function (req, res) {
+    try {
+        if (typeof(req.body) !== 'undefined' && Object.keys(req.body).length != 0) {
+            
+            var collection = "$collection_name";
+            if (Array.isArray(req.body)) {
+                var data = [];
+                for (var i = 0; i < req.body.length; i++) {
+                    data.push(typeConverter.convert(req.body[i], $collection_name.attribute_schema));
+                }
+            } else {
+                var data = typeConverter.convert(req.body, $collection_name.attribute_schema);
             }
-        });
+            
+            //DB create
+            dbOps.create(collection, data, function(err, result) {
+                if (err) {
+                    // Conflic between specified attributes and db schema
+                    res.status(400).send(err.errmsg);
+                } else {   
+                    var response = {
+                        result : result.result,
+                        ops : result.ops,
+                        insertedCount : result.insertedCount,
+                        insertedIds : result.insertedId ? [result.insertedId] : result.insertedIds
+                    };
+                    res.status(201).send(response);
+                }
+            });
+        } else {
+            res.status(400).send("Bad Request");
+        }
+    } catch(err) {
+        res.status(500).send("Internal Error");
     }
 });
 
-//CRUD: ReadOne
-//TODO: make sure the data is returned in JSON format
-router.post('/readOne', function (req, res) {
-    if (typeof(req.body.collection) === 'undefined') {
-        res.send({});
-        return;
-    }
-
-    authen.verify(req, function(result, error) {
-        if (error == 0)
-        {
-            var collection = req.body.collection;
-            if(req.body.hasOwnProperty('data')){
-                var data = JSON.parse(req.body.data);
-            }
-            if(req.body.hasOwnProperty('_id')){
-                var _id = req.body._id;
-            }
+//CRUD: ReadOne from objectId
+router.get('/:uid', function (req, res) {
+    try {
+        if (typeof(req.params.uid) !== 'undefined' && 
+            req.params.uid.length == 24) {
+        
+            var collection = "$collection_name";
+            var _id = req.params.uid;
 
             //DB readOne
-            dbOps.readOne(collection, _id, data, function(result) {
-                if (!result) 
-                {
-                    res.send(null);
+            dbOps.readOne(collection, _id, function(err, result) {
+                if (err) {
+                    res.status(400).send(err.errmsg);
+                } else {
+                    res.status(200).send(result);
                 }
-                else 
-                {
-                    res.send(result);
-                }
-            });        
-        }else if (error == 1)
-        {
-            res.sendStatus(500);
-        }else{
-            res.send("Invalid Authentication");
+            });
+        } else {
+            res.status(404).send("Not Found");
         }
-    });
-
+    } catch(err) {
+        res.status(500).send("Internal Error");
+    }       
 });
 
-//CRUD: ReadAll
-//TODO: make sure the data is returned in JSON format
-router.post('/readAll', function (req, res) {
-    if (typeof(req.body.collection) === 'undefined') {
-        res.send([]);
-        return;
-    }
-    authen.verify(req, function(result, error) {
-        if (error == 0)
-        {
-            var collection = req.body.collection;
-            if(req.body.hasOwnProperty('data')){
-                var data = JSON.parse(req.body.data);
-            }
 
-            //DB readAll
-            dbOps.readAll(collection, data, function(result) {
-                if (!result) 
-                {
-                    res.send(null);
-                }
-                else 
-                {
-                    res.send(result);
-                }
-            });      
+//CRUD: ReadMany from attributes
+router.get('/', function (req, res) {
+    try {
+        if (typeof(req.query._id) !== 'undefined' &&
+            req.query._id.length != 24) {
 
-        }else if (error == 1)
-        {
-            res.sendStatus(500);
-        }else{
-            res.send("Invalid Authentication");
+            res.status(404).send("Not Found");
+            return;
         }
-    });
 
+        var collection = "$collection_name";
+        var data = req.query;
+        var _id = req.query._id ? req.query._id : null;
+        delete data["_id"];
+        data = typeConverter.convert(data, $collection_name.attribute_schema);
+
+        //DB Many
+        dbOps.readAll(collection, _id, data, function(err, result) {
+            if (err) {
+                res.status(400).send(err.errmsg);
+            } else {
+                res.status(200).send(result);
+            }
+        });
+    } catch(err) {
+        res.status(500).send("Internal Error");
+    }       
+});
+
+//CRUD: Delete by id
+router.delete('/:uid', function (req, res) {
+    try {
+        if (typeof(req.params.uid) !== 'undefined' && 
+            req.params.uid.length == 24) {
+        
+            var collection = "$collection_name";
+            var _id = req.params.uid;
+
+            dbOps.delete(collection, _id, null, function(err, result) {
+                if (err) {
+                    res.status(400).send(err.errmsg);
+                } else {
+                    var response = {
+                        result : result.result,
+                        deletedCount : result.deletedCount
+                    };
+                    res.status(200).send(response);
+                }
+            });
+        } else {
+            res.status(404).send("Not Found");
+        }
+    } catch(err) {
+        res.status(500).send("Internal Error");
+    }       
 });
 
 //CRUD: Delete
-router.delete('/delete', function (req, res) {
-    if (typeof(req.body.collection) === 'undefined') {
-        res.send();
-        return;
-    }
-    authen.verify(req, function(result, error) {
-        if (error == 0)
-        {
-            var collection = req.body.collection;
-            if(req.body.hasOwnProperty('data')){
-                var data = JSON.parse(req.body.data);
-            }
-            if(req.body.hasOwnProperty('_id')){
-                var _id = req.body._id;
-            }
+router.delete('/', function (req, res) {
+    try {
+        if (typeof(req.body) !== 'undefined' && Object.keys(req.body).length != 0) {
+            
+            var data = req.body;
+            var collection = "$collection_name";
+            var _id = data._id ? data._id : null;
+            delete data["_id"];
+            data = typeConverter.convert(data, $collection_name.attribute_schema);
 
             //DB delete
-            dbOps.delete(collection, _id, data, function(result) {
-                if (!result) 
-                {
-                    res.send(null);
+            dbOps.delete(collection, _id, data, function(err, result) {
+                if (err) {
+                    res.status(400).send(err.errmsg);
                 }
-                else 
-                {
-                    res.send(result);
+                else {
+                    var response = {
+                        result : result.result,
+                        deletedCount : result.deletedCount
+                    };
+                    res.status(200).send(response);
                 }
             });
-
-        }else if (error == 1)
-        {
-            res.sendStatus(500);
-        }else{
-            res.send("Invalid Authentication");
+        } else {
+            res.status(405).send("Method Not Allowed");
         }
-    });
+
+    } catch(err) {
+        res.status(500).send("Internal Error");
+    } 
 
 });
 
-//CRUD: Update
-router.put('/update', function (req, res) {
-    if (typeof(req.body.collection) === 'undefined' ||
-        typeof(req.body.newData) === 'undefined') {
-        res.send();
-        return;
-    }
-    authen.verify(req, function(result, error) {
-        if (error == 0)
-        {
-            var collection = req.body.collection;
-            var newData = JSON.parse(req.body.newData);
+//CRUD: PUT Update/Replace
+router.put('/:uid', function (req, res) {
+    try {
+        if (typeof(req.params.uid) !== 'undefined' && req.params.uid.length == 24 && 
+            Object.keys(req.body).length != 0) {
 
-            if(req.body.hasOwnProperty('oldData')){
-                var oldData = JSON.parse(req.body.oldData);
-            }
+            var data = req.body;
+            var _id = req.params.uid;
+            var collection = "$collection_name";
+            delete data["_id"];
+            data = typeConverter.convert(data, $collection_name.attribute_schema);
 
-            if(req.body.hasOwnProperty('_id')){
-                var _id = req.body._id;
-            }
-
-            //DB update
-            dbOps.update(collection, _id, newData, oldData, function(result) {
-                    res.send(result);
+            //DB Replace
+            dbOps.put(collection, _id, data, function(err, result) {
+                if (err) {
+                    res.status(400).send(err.errmsg);
+                }
+                else {
+                    var response = {
+                        result : result.result
+                    };
+                    res.status(200).send(response);
+                }
             });
 
-
-        }else if (error == 1)
-        {
-            res.sendStatus(500);
-        }else{
-            res.send("Invalid Authentication");
+        } else {
+            res.status(404).send("Not Found");
+            return;
         }
-    });
 
+    } catch(err) {
+        res.status(500).send("Internal Error");
+    } 
+});
+
+//CRUD: PATCH Update/Modify 
+router.patch('/:uid', function (req, res) {
+    try {
+        if (typeof(req.params.uid) !== 'undefined' && req.params.uid.length == 24 && 
+            Object.keys(req.body).length != 0) {
+
+            var data = req.body;
+            var _id = req.params.uid;
+            var collection = "$collection_name";
+            delete data["_id"];
+            data = typeConverter.convert(data, $collection_name.attribute_schema);
+
+            //DB Modify
+            dbOps.patch(collection, _id, data, function(err, result) {
+                if (err) {
+                    res.status(400).send(err.errmsg);
+                }
+                else {
+                    var response = {
+                        result : result.result
+                    };
+                    res.status(200).send(response);
+                }
+            });
+
+        } else {
+            res.status(404).send("Not Found");
+            return;
+        }
+
+    } catch(err) {
+        res.status(500).send("Internal Error");
+    } 
 });
 
 module.exports = router;
-
+module.exports.check_collection = $collection_name.check_$collection_name_collection;

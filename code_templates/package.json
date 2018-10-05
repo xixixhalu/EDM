@@ -1,0 +1,25 @@
+{
+  "name": "sample_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Server.js",
+  "dependencies": {
+    "express": "^4.13.4",
+    "body-parser": "^1.15.1",
+    "mongodb": "^2.1.18",
+    "swagger-ui-dist": "^3.19.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node Server.js", 
+    "launch": "npm install && npm run start",
+    "forever_start" : "forever start -l `pwd`/_log -o `pwd`/stdout_log -e `pwd`/stderr_log -a Server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": " "
+  },
+  "author": "",
+  "license": "ISC"
+}

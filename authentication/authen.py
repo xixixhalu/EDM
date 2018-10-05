@@ -46,7 +46,8 @@ def verifykey(username, usertoken, dbengine):
 
     # check if current token of this user is expired
     validtill = findresult["validtill"]
-    delta = dt.datetime.now(pytz.utc) - validtill
+    delta = dt.datetime.now(pytz.utc) - pytz.timezone("UTC").localize(validtill)
+    #delta = dt.datetime.now(pytz.utc) - validtill
     if delta >= dt.timedelta():
         User.refreshToken(username, dbengine)
         findresult = authentcol.find_one({"username": username})
