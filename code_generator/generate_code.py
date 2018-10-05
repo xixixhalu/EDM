@@ -64,7 +64,8 @@ def generate_adapter(language, server_ip, port, dm_name, output_dir, to_file):
     template = AdapterTemplate(language, dm_name, output_dir)
 
     data = {"server_ip": server_ip,
-            "port": port}
+            "port": port,
+            "dm_name" : dm_name}
     template.render(tofile=to_file, reset=False, replace_words=data)
 
     code_display_data = template.get_display_data()
