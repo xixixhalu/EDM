@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node Server.js", 
     "launch": "npm install && npm run start",
-    "forever_start" : "forever start -l `pwd`/_log -o `pwd`/stdout_log -e `pwd`/stderr_log -a Server.js"
+    "forever_start" : "forever start -l `pwd`/log -o `pwd`/stdout_log -e `pwd`/stderr_log -a Server.js"
   },
   "repository": {
     "type": "git",

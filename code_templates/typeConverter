@@ -60,6 +60,8 @@ typeConverter.convert = function(data, attribute_schema) {
 	Object.keys(data).forEach(key => {
         if (attribute_schema.hasOwnProperty(key)) {
             rst[key] = typeConverter.typeConvert(data[key], attribute_schema[key].bsonType);
+        } else {
+        	rst[key] = data[key];
         }
     });
     return rst;

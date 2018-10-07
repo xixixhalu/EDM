@@ -39,7 +39,7 @@ DBAdapter.create = function(collection, data, successCB, errorCB) {
 DBAdapter.get = function(collection, param, successCB, errorCB) {
     if (is_defined(collection) && is_defined(param)) {
         var data = "/" + param;
-        ajaxCall(collection, "GET", data, {}, successCB, errorCB);
+        ajaxCall(collection, "GET", data, null, successCB, errorCB);
     } else {
         // Error handling
         errorCB("Error: " + "Invalid Parameters");
@@ -57,7 +57,7 @@ DBAdapter.read = function(collection, param, successCB, errorCB) {
         }).join('&');
         data = "?" + data;
 
-        ajaxCall(collection, "GET", data, {}, successCB, errorCB);
+        ajaxCall(collection, "GET", data, null, successCB, errorCB);
     } else {
         // Error handling
         errorCB("Error: " + "Invalid Parameters");
@@ -113,7 +113,7 @@ function ajaxCall(collection, method, param, body, successCB, errorCB) {
         "headers": {
             "content-type": "application/json; charset=utf-8"
         },
-        "data": JSON.stringify(body),
+        "data": body ? JSON.stringify(body) : "",
         "success": function(result){
             successCB(result);
         },
