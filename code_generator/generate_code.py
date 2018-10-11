@@ -1,6 +1,7 @@
 import sys
 sys.path.append('../')
 import json
+from config import config
 from utilities.config_util import ConfigUtil
 from utilities import port_scanner, edm_utils
 from code_generator.template_utils import *
@@ -84,10 +85,12 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     """
     server_file = open("code_templates/" + "Server", "r")
     class_file = open("code_templates/"+ "class_template", "r")
-    db_schema_file = open("code_templates/mongodb/"+ "db_schema_template", "r")
-    db_connection_file = open("code_templates/mongodb/"+ "db_connection_template", "r")
-    db_ops_file = open("code_templates/mongodb/"+ "db_ops_template", "r")
-    db_schema_validation_file = open("code_templates/mongodb/"+ "db_schema_validation_template", "r")
+
+    db_template_path = config.get('Output', 'instance_db_template') + "/"
+    db_schema_file = open(db_template_path+ "db_schema_template", "r")
+    db_connection_file = open(db_template_path+ "db_connection_template", "r")
+    db_ops_file = open(db_template_path+ "db_ops_template", "r")
+    db_schema_validation_file = open(db_template_path+ "db_schema_validation_template", "r")
     authen_file = open("code_templates/"+ "authen_template", "r")
     behavior_file = open("code_templates/"+ "behavior", "r")
     package_json_file = open("code_templates/"+ "package.json", "r")
@@ -153,7 +156,6 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
             "attribute_schema" : ',\n'.join(attribute_schema),
             "validator" : validator
         }
-        print(validator)
         content = replace_words(class_template, data)
         output_location = output_path + entity_name + ".js"
         with fileOps.safe_open_w(output_location) as output_file:
