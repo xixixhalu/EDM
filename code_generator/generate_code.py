@@ -1,6 +1,7 @@
 import sys
 sys.path.append('../')
 import json
+from config import config
 from utilities.config_util import ConfigUtil
 from utilities import port_scanner, edm_utils
 from code_generator.template_utils import *
@@ -84,9 +85,12 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     """
     server_file = open("code_templates/" + "Server", "r")
     class_file = open("code_templates/"+ "class_template", "r")
-    db_schema_file = open("code_templates/"+ "db_schema_template", "r")
-    db_connection_file = open("code_templates/"+ "db_connection_template", "r")
-    db_ops_file = open("code_templates/"+ "db_ops_template", "r")
+
+    db_template_path = config.get('Output', 'instance_db_template') + "/"
+    db_schema_file = open(db_template_path+ "db_schema_template", "r")
+    db_connection_file = open(db_template_path+ "db_connection_template", "r")
+    db_ops_file = open(db_template_path+ "db_ops_template", "r")
+    db_schema_validation_file = open(db_template_path+ "db_schema_validation_template", "r")
     authen_file = open("code_templates/"+ "authen_template", "r")
     behavior_file = open("code_templates/"+ "behavior", "r")
     package_json_file = open("code_templates/"+ "package.json", "r")
@@ -97,6 +101,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     db_schema_template = db_schema_file.read()
     db_connection_template = db_connection_file.read()
     db_ops_template = db_ops_file.read()
+    db_schema_validation_template = db_schema_validation_file.read()
     authen_template = authen_file.read()
     behavior_template = behavior_file.read()
     package_json_template = package_json_file.read()
@@ -141,9 +146,15 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
             attribute_schema.append(content)
 
         data = {
+            "collection_name" : entity_name
+        }
+        validator = replace_words(db_schema_validation_template, data)
+
+        data = {
             "collection_name" : entity_name,
             "attribute_names" : str(list(attribute_names)),
-            "attribute_schema" : ',\n'.join(attribute_schema)
+            "attribute_schema" : ',\n'.join(attribute_schema),
+            "validator" : validator
         }
         content = replace_words(class_template, data)
         output_location = output_path + entity_name + ".js"
@@ -193,6 +204,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     class_file.close()
     db_connection_file.close()
     db_ops_file.close()
+    db_schema_validation_file.close()
     authen_file.close()
     behavior_file.close()
     type_converter_file.close()
