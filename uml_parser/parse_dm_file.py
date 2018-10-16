@@ -35,12 +35,16 @@ class Analyzer:
         root = myDMO.getroot()
 
         documentation=root.find('xmi_namespace:Documentation', namespaces)
-        exporter=documentation.get('exporter')
-        
-        # ZHIYUN: call corresponding parser for xml file
-        if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName)
-        elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName) 
-        else: raise e.SimpleException("parser for your xml exporter is not provided")
+
+        if documentation is not None:
+            exporter=documentation.get('exporter')
+            
+            # ZHIYUN: call corresponding parser for xml file
+            if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName)
+            elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName) 
+            else: raise e.SimpleException("parser for your xml exporter is not provided")
+        else:
+            # Bo: Try XSLTJSON here
 
 
     def EA_XMLUtil(self,root,namespaces,PROJECT_DIR,_dmoName):
