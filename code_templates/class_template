@@ -17,21 +17,6 @@ $collection_name.attribute_schema = {
 $attribute_schema
 };
 
-
-/*
-$collection_name.$collection_name_schema = 
-{
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: $collection_name.attributes,
-            properties: $collection_name.attribute_schema
-        }
-    },
-    validationLevel: "moderate"
-};
-*/
-
 $collection_name.$collection_name_schema = $validator;
 
 $collection_name.check_$collection_name_collection = function() {

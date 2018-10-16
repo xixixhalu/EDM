@@ -94,7 +94,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     authen_file = open("code_templates/"+ "authen_template", "r")
     behavior_file = open("code_templates/"+ "behavior", "r")
     package_json_file = open("code_templates/"+ "package.json", "r")
-    type_converter_file = open("code_templates/"+ "typeConverter", "r")
+    type_converter_file = open(db_template_path+ "typeConverter", "r")
 
     server_template = server_file.read()
     class_template = class_file.read()
