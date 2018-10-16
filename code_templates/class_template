@@ -17,17 +17,7 @@ $collection_name.attribute_schema = {
 $attribute_schema
 };
 
-$collection_name.$collection_name_schema = 
-{
-    validator: {
-        $jsonSchema: {
-            bsonType: "object",
-            required: $collection_name.attributes,
-            properties: $collection_name.attribute_schema
-        }
-    },
-    validationLevel: "moderate"
-};
+$collection_name.$collection_name_schema = $validator;
 
 $collection_name.check_$collection_name_collection = function() {
     if ($collection_name.attributes.length != 0) {
@@ -42,6 +32,10 @@ $collection_name.check_$collection_name_collection = function() {
         console.log("$collection_name has no schema");
     }
 }
+
+
+
+
 
 // CRUD: Create one and Create Many
 router.post('/', function (req, res) {

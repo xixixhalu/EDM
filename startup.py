@@ -26,7 +26,6 @@ from bson import binary
 import subprocess as sp
 import time
 
-from config import config
 from authentication.User import User
 from authentication.authen import authen_bp
 from database_manager.setup import mgInstance

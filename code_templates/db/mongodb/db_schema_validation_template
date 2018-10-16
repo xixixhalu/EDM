@@ -1,0 +1,10 @@
+{
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: $collection_name.attributes,
+            properties: $collection_name.attribute_schema
+        }
+    },
+    validationLevel: "moderate"
+}
