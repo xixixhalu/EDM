@@ -57,10 +57,10 @@ class ApiGenerator:
         # definition
         api['definitions'] = {}
         return api
-
-    def __set_entity_apis(self, entity_name):
+# 先改read create delete基本 
+    def __set_entity_apis(self, entity_name): # + attribute (key)   value=> "value of key"
         # create data payload structure
-        self.__define_object('SingleData', self.__gen_properties(entity_name, data_num=1)) 
+        self.__define_object('SingleData', self.__gen_properties(entity_name, data_num=1)) # + attribute (key) 
         self.__define_object('SingleId', self.__gen_properties(entity_name, id_num=1))
         self.__define_object('MultiData', self.__gen_properties(entity_name, data_num=2))
         self.__define_object('UpdateById', self.__gen_properties(entity_name, id_num=1, new_data=1))
@@ -68,7 +68,7 @@ class ApiGenerator:
 
         params = []
         self.__gen_parameter(params, 'Create with single data', 'SingleData')
-        self.__add_entity_api(entity_name, 'create', 'post', params)
+        self.__add_entity_api(entity_name, 'create', 'post', params) # query or /id
 
         params = []
         self.__gen_parameter(params, 'Create with multiple data', 'MultiData')
@@ -186,6 +186,7 @@ if __name__ == '__main__':
     gen.set_basic_path('localhost:2000', 'one_to_one')
     gen.set_access_key('1234567890')
     gen.set_user_name('danny')
+    # parameter
     gen.add_entity('class1')
     gen.add_entity('class2')
     gen.generate_file('./')
