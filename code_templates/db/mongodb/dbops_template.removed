@@ -1,7 +1,6 @@
 
 var wrapper = require("./db_connection.js");
 var mongodb = require('mongodb');
-var ObjectId = require('mongodb').ObjectID;
 
 var dbOps = {};
 
@@ -41,7 +40,7 @@ dbOps.readOne = function(collection, _id, data, onResult) {
             }
         });
     } else if (typeof(data) !== 'undefined') {
-        //var data = JSON.parse(data);
+        var data = JSON.parse(data);
         wrapper.db.collection(collection).find(data).next(function (err, result) {
             if (err) {
                 onResult(null);
@@ -79,7 +78,7 @@ dbOps.delete = function(collection, _id, data, onResult) {
         });
     } else if (typeof(data) !== 'undefined') {
         // Remove several documents with same key-value pair
-        //var data = JSON.parse(data);
+        var data = JSON.parse(data);
 
         wrapper.db.collection(collection).removeMany(data, {w: 1}, function (err, result) {
             if (err) {

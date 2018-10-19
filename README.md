@@ -3,11 +3,13 @@
 **_Please remember to branch off and merge later, do not commit on master_**
 
 ## Basic Structure
+-*main* : Contains the blueprint with main view functions and the Flask login manager object.
+
 -*authentication* : Contains the authentication service that authorizes access to the REST API using a key associated with every user.
 
 -*code_templates* : Contains the javascript templates for the Adapter, Method, Model and Server.
 
--*database_manager* : Creates the required database and collections in Mongo DB.
+-*database_manager* : Creates the required database and collections in Mongo DB. Also creates a singleton PyMongo object for other modules to import.
 
 -*generated\_code* : Contains the json file obtained after parsing the XML file and extracting necessary information. It also contains the js files generated from code_templates after the ```Submit``` button is clicked. These files are created at the following location -> generated_code/default/<domain_module_name>/.
 
