@@ -28,12 +28,12 @@ class ApiGenerator:
     def set_user_name(self, user):
         self.__user = user
 
-    def add_entity(self, entity_name):
+    def add_entity(self, entity_name, attributes):
         self.__json['tags'].append({
             'name': entity_name,
-            'description': 'Everything about' + entity_name
+            'description': 'Everything about ' + entity_name
         })
-        self.__set_entity_apis(entity_name)
+        self.__set_entity_apis(entity_name, attributes)
 
     def generate_file(self, path):
         # with fileOps.safe_open_w(path + 'openAPI.json', 'w') as o:
@@ -57,120 +57,153 @@ class ApiGenerator:
         # definition
         api['definitions'] = {}
         return api
-# 先改read create delete基本 
-    def __set_entity_apis(self, entity_name): # + attribute (key)   value=> "value of key"
-        # create data payload structure
-        self.__define_object('SingleData', self.__gen_properties(entity_name, data_num=1)) # + attribute (key) 
-        self.__define_object('SingleId', self.__gen_properties(entity_name, id_num=1))
-        self.__define_object('MultiData', self.__gen_properties(entity_name, data_num=2))
-        self.__define_object('UpdateById', self.__gen_properties(entity_name, id_num=1, new_data=1))
-        self.__define_object('UpdateByData', self.__gen_properties(entity_name, old_data=1, new_data=1))
+
+    def __set_entity_apis(self, entity_name, attributes):
+        # create data payload structure (sample)
+
+        # CREATE
+        params = []
+        self.__gen_parameter(params, attributes=attributes)
+        self.__add_entity_api(entity_name, 'CreateOne or CreateMany', 'post', params)
+
+        # same path can only have one API sample
+        # params = []
+        # self.__gen_parameter(params, attributes=attributes, data_num=3)
+        # self.__add_entity_api(entity_name, 'CreateMany', 'post', params)
+
+        # READ
+        params = []
+        path = {}
+        path['name'] = 'Id'
+        path['details'] = {}
+        path['details']['type'] = 'string'
+        path['details']['required'] = True
+        self.__gen_parameter(params, path=path)
+        self.__add_entity_api(entity_name, 'ReadOnebyId', 'get', params, path=path)
 
         params = []
-        self.__gen_parameter(params, 'Create with single data', 'SingleData')
-        self.__add_entity_api(entity_name, 'create', 'post', params) # query or /id
+        queries = []
+        query = {}
+        query['name'] = attributes[0]['name']
+        query['details'] = {}
+        query['details']['type'] = 'string'
+        queries.append(query)
+        self.__gen_parameter(params, queries=queries)
+        self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params)
+
+        # DELETE
+        params = []
+        self.__gen_parameter(params, attributes=attributes)
+        self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params)
 
         params = []
-        self.__gen_parameter(params, 'Create with multiple data', 'MultiData')
-        self.__add_entity_api(entity_name, 'createMany', 'post', params)
+        path = {}
+        path['name'] = 'Id'
+        path['details'] = {}
+        path['details']['type'] = 'string'
+        path['details']['required'] = True
+        self.__gen_parameter(params, path=path)
+        self.__add_entity_api(entity_name, 'DeletebyIdviaLink', 'delete', params, path=path)
 
-        params = []
-        # self.__gen_parameter(params, 'Read by data', 'SingleData') # can't apply multiple request body
-        self.__gen_parameter(params, 'Read by id', 'SingleId')
-        self.__add_entity_api(entity_name, 'readOne', 'post', params)
 
-        params = []
-        self.__gen_parameter(params, 'Read all by data', 'SingleData')
-        self.__add_entity_api(entity_name, 'readAll', 'post', params)
-
-        params = []
-        self.__gen_parameter(params, 'Detele by data', 'SingleData')
-        # self.__gen_parameter(params, 'Delete by id', 'SingleId')
-        self.__add_entity_api(entity_name, 'delete', 'delete', params)
-
-        params = []
-        # self.__gen_parameter(params, 'Update data by data id', 'UpdateById')
-        self.__gen_parameter(params, 'Update data by old data', 'UpdateByData')
-        self.__add_entity_api(entity_name, 'update', 'put', params)
-    
     '''
     add_entity_api(Generalization, create, post, ...)
     '''
-    def __add_entity_api(self, entity_name, action, http_method, params):
-        api_path = '/' + entity_name + '/' + action
-        self.__json['paths'][api_path] = {}
+    def __add_entity_api(self, entity_name, description, http_method, params, path=None):
+        if path:
+            api_path = '/' + entity_name + '/{' + path['name'] + '}'
+        else:
+            api_path = '/' + entity_name + '/'
+        
+
+        if not self.__json['paths'].get(api_path):
+            self.__json['paths'][api_path] = {}
         self.__json['paths'][api_path][http_method] = {
             'tags': [entity_name],
-            'summary': action + ' elements for ' + entity_name,
-            'consumes': ['application/json'],
+            'summary': description + ' for ' + entity_name,
+            'consumes': ['application/json', 'application/x-www-form-urlencoded'],
             'produces': ['application/json'],
             'responses': {
                 '200': {
-                    'description': entity_name + ': ' + action + ' successfully'
+                    'description': entity_name + ': ' + description + ' successfully'
                 }
             },
             'parameters': params
-        }
+        }   
 
-    def __gen_properties(self, entity_name, id_num=0, data_num=0, old_data=0, new_data=0):
-        properties = {}
-        if id == 1:
-            properties['_id'] = {
-                'type': 'string',
-                'example': '5b2a10190d7dceabda2fe3bb'
-            }
-        sample_data = {
-            'name': 'test1'
-        }
-        if data_num > 1:
-            sample_list = []
-            for i in xrange(1, data_num + 1):
-                sample_list.append({'name': 'test' + str(i)})
 
-            properties['data'] = {
-                'type': 'string',
-                'example': str(sample_list).encode('string-escape')
-            }
-        elif data_num == 1:
-            properties['data'] = {
-                'type': 'string',
-                'example': str(sample_data).encode('string-escape')
-            }
-        if old_data == 1:
-            properties['oldData'] = {
-                'type': 'string',
-                'example': str(sample_data).encode('string-escape')
-            }
-        if new_data == 1:
-            properties['newData'] = {
-                'type': 'string',
-                'example': str(sample_data).encode('string-escape')
-            }
-        properties['collection'] = {
-            'type': 'string',
-            'example': entity_name
-        }
-        properties['username'] = {
-            'type': 'string',
-            'example': self.__user
-        }
-        properties['key'] = {
-            'type': 'string',
-            'example': self.__accessKey
-        }
-        return properties
+    # def __gen_properties(self, entity_name, id_num=0, data_num=0, old_data=0, new_data=0):
+    #     properties = {}
+    #     if id == 1:
+    #         properties['_id'] = {
+    #             'type': 'string',
+    #             'example': '5b2a10190d7dceabda2fe3bb'
+    #         }
+    #     sample_data = {
+    #         'name': 'test1'
+    #     }
+    #     if data_num > 1:
+    #         sample_list = []
+    #         for i in xrange(1, data_num + 1):
+    #             sample_list.append({'name': 'test' + str(i)})
 
-    def __gen_parameter(self, params, description, object_name):
-        param = {
-            'in': 'body',
-            'name': 'body',
-            'description': description,
-            'required': True,
-            'schema': {
-                '$ref': '#/definitions/' + object_name
+    #         properties['data'] = {
+    #             'type': 'string',
+    #             'example': str(sample_list).encode('string-escape')
+    #         }
+    #     elif data_num == 1:
+    #         properties['data'] = {
+    #             'type': 'string',
+    #             'example': str(sample_data).encode('string-escape')
+    #         }
+    #     if old_data == 1:
+    #         properties['oldData'] = {
+    #             'type': 'string',
+    #             'example': str(sample_data).encode('string-escape')
+    #         }
+    #     if new_data == 1:
+    #         properties['newData'] = {
+    #             'type': 'string',
+    #             'example': str(sample_data).encode('string-escape')
+    #         }
+    #     properties['collection'] = {
+    #         'type': 'string',
+    #         'example': entity_name
+    #     }
+
+    def __gen_parameter(self, params, attributes=None, path=None, queries=None, data_num=1):
+        # type: query, path, header, 'formData', body
+        if path:
+            param = {
+                'in': 'path',
+                'name': path.get('name', ''),
+                'type': path['details'].get('type', 'string'),
+                'description': path['details'].get('description', ''),
+                'required': path['details'].get('required', False)
             }
-        }
-        params.append(param)
+            params.append(param)
+        if queries:
+            for query in queries:
+                param = {
+                    'in': 'query',
+                    'name': query.get('name', ''),
+                    'type': query['details'].get('type', 'string'),
+                    'description': query['details'].get('description', ''),
+                    'required': query['details'].get('required', False)
+                }
+                params.append(param)
+        if attributes:
+            for attr in attributes:
+                # print(attr)
+                param = {
+                    'in': 'formData',
+                    'name': attr.get('name'),
+                    'type': attr['details'].get('type', 'string'),
+                    'description': attr['details'].get('description', '')
+                    # 'required': True,
+                }
+                params.append(param)
+        
 
     '''
     use for building sample data structure
@@ -187,6 +220,30 @@ if __name__ == '__main__':
     gen.set_access_key('1234567890')
     gen.set_user_name('danny')
     # parameter
-    gen.add_entity('class1')
-    gen.add_entity('class2')
+    attr1 = [{
+                'name': 'class1Attribute1',
+                'details': {
+                    'maxOccurs': 1,
+                    'type': 'string',
+                    'minOccurs': 1
+                }
+            },
+            {
+                'name': 'class1Attribute2',
+                'details': {
+                    'maxOccurs': 1,
+                    'type': 'integer',
+                    'minOccurs': 1
+                }
+            }]
+    gen.add_entity('class1', attr1)
+    attr2 = [{
+                'name': 'class2Attribute1',
+                'details': {
+                    'maxOccurs': 1,
+                    'type': 'integer',
+                    'minOccurs': 1
+                }
+            }]
+    gen.add_entity('class2', attr2)
     gen.generate_file('./')
