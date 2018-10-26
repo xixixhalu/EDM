@@ -188,7 +188,19 @@ class Analyzer:
                             dmo.defineComplexAttribute(elemName,AttributeName, AttributeElemName, AttributeTypeSetter)
 
         # ZHIYUN: adding relations to elemnents 
-                
+
+        # NIKITA: Check if the element has any operations defined and add them, implement operations on domain model
+                elemOperations = element.find('operations')
+                if elemOperations is not None:
+                    for elemOperation in elemOperations:
+                        elemOperationName = elemOperation.get('name')
+                        dmo.defineOperation(elemName, elemOperationName)
+                else:
+                    elemOperations = element.findall('ownedOperation')
+                    for elemOperation in elemOperations:
+                        elemOperationName = elemOperation.get('name')
+                        dmo.defineOperation(elemName, elemOperationName)
+            
         # ZHIYUN: add generalization relations
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
