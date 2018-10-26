@@ -7,6 +7,7 @@ from utilities import edm_utils
 from uml_parser.domain_model import DomainModel
 from uml_parser import datatypes as dt
 import xml.etree.ElementTree as ET
+from XSLTJSONParser import XSLTJSONParser as XLSTUtil
 
 import re
 
@@ -44,8 +45,8 @@ class Analyzer:
             elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName) 
             else: raise e.SimpleException("parser for your xml exporter is not provided")
         else:
-            # Bo: Try XSLTJSON here
-
+            # Bo: TODO: Try XSLTJSON here
+            return XLSTUtil.process(PROJECT_DIR, _dmoName)
 
     def EA_XMLUtil(self,root,namespaces,PROJECT_DIR,_dmoName):
         # NITIN : TODO : Change parsing after correcting assumptions about the XML structure

@@ -54,19 +54,27 @@ app.use(function (req, res, next) {
 // end point: http://host:port/dbname/collection_name/crud_operation
 for (var i = 0; i < collection_names.length; i++)
 {
-    var class_name = collection_names[i];
-    var class_model = require('./' + class_name + '.js');
-    class_models.push(class_model);
-    app.use('/' + dbname + '/' + class_name, class_model);
+    try {
+        var class_name = collection_names[i];
+        var class_model = require('./' + class_name + '.js');
+        class_models.push(class_model);
+        app.use('/' + dbname + '/' + class_name, class_model);
+    } catch (error) {
+        console.log("Error in " + class_name + ".js" + "  SKIP");
+    }
 }
 
 // end point: http://host:port/dbname/behavior
 var behavior_path = __dirname + "/Behaviors";
 if (fs.existsSync(behavior_path)) {
     fs.readdirSync(behavior_path).forEach(file => {
-        var behavior = require('./Behaviors/' + file);
-        app.use("/" + dbname, behavior);
-    })
+        try {
+            var behavior = require('./Behaviors/' + file);
+            app.use("/" + dbname, behavior);
+        } catch (error) {
+            console.log("Error in " + file + "  SKIP");
+        }
+    });
 }
 
 // create collection with schema if a collection doesn't exist
@@ -74,7 +82,6 @@ var check_collections = function() {
     for (var i = 0; i < class_models.length; i++) {
         class_models[i].check_collection();
     }
-    console.log("Collection Checking completed");
 };
 
 //Server is running in port 9001; REST API should call ex. localhost:9001/readoneData etc...

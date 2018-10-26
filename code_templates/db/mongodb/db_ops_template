@@ -68,9 +68,21 @@ dbOps.patch = function(collection, _id, data, onResult) {
 };
 
 dbOps.check_collection = function(collection_name, validator_schema, callback) {
-    wrapper.db.createCollection(collection_name, validator_schema, function(err, collection) {
-        callback(err, collection);
+
+    wrapper.db.listCollections({name: collection_name}).toArray(function(err, items) {
+        if (items.length >= 1) {
+            wrapper.db.command({ "collMod": collection_name, "validator": validator_schema.validator }, 
+            function(err, result) {
+                callback(err, result);
+            });
+            
+        } else {
+            wrapper.db.createCollection(collection_name, validator_schema, function(err, result) {
+                callback(err, result);
+            });
+        }
     });
+    
 }
 
 module.exports = dbOps;

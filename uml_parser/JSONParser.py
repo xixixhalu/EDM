@@ -7,26 +7,51 @@ from JSONParser import *
 
 class JSONParser:
 
-    def __init__(self, json_dm, dmname):
+    def __init__(self, json_dm, dmname=None):
 
         self.__entity = {}
         self.__attribute = {}
+        self.__nested_object = {}
         self.__behavior = {}
         self.__association = {}
 
-        elements = json_dm[dmname]['elements']
+        if dmname is not None:
+            elements = json_dm[dmname]['elements']
+        else:
+            elements = [json_dm]
+
+        
         for entity in elements:
-            # map id with name
-            self.__entity[entity['elementId']] = entity['elementName']
+            try:
+                # map id with name
+                self.__entity[entity['elementId']] = entity['elementName']
+            except Exception as e:
+                pass
 
-            # process attributes
-            self.__attribute[entity['elementName']] = entity['Attributes']['Simple']
+            try:
+                # process attributes
+                self.__attribute[entity['elementName']] = entity['Attributes']['Simple']
+            except Exception as e:
+                pass
+
+            try:
+                # process nested_object
+                self.__nested_object[entity['elementName']] = entity['Attributes']['Complex']
+            except Exception as e:
+                pass
             
+            try:
             # process behaviors
-            self.__behavior[entity['elementName']] = entity['Behaviors']
+                self.__behavior[entity['elementName']] = entity['Behaviors']
+            except Exception as e:
+                pass
 
-            # process associations
-            self.__association[entity['elementName']] = entity['Relations']['To']
+            try:
+                # process associations
+                self.__association[entity['elementName']] = entity['Relations']['To']
+            except Exception as e:
+                pass
+
 
     @classmethod
     def fromFile(cls, path, dmname):
@@ -41,6 +66,9 @@ class JSONParser:
     def attributes(self):
         return self.__attribute
 
+    def nested_objects(self):
+        return self.__nested_object
+
     def behaviors(self):
         return self.__behavior
 
@@ -48,25 +76,31 @@ class JSONParser:
         return self.__association
 
     def findEntityNameById(self, entityId):
-        if entityId in self.__entity:
+        if self.__entity and entityId in self.__entity:
             return self.__entity[entityId]
         else:
             return []
 
     def findEntityAttributes(self, entityName):
-        if entityName in self.__attribute:
+        if self.__attribute and entityName in self.__attribute:
             return self.__attribute[entityName]
         else:
             return []
 
+    def findEntityNestedObjects(self, entityName):
+        if self.__nested_object and entityName in self.__nested_object:
+            return self.__nested_object[entityName]
+        else:
+            return []
+
     def findEntityBehaviors(self, entityName):
-        if entityName in self.__behavior:
+        if self.__behavior and entityName in self.__behavior:
             return self.__behavior[entityName]
         else:
             return []
 
     def findEntityAssociations(self, entityName):
-        if entityName in self.__association:
+        if self.__association and entityName in self.__association:
             return self.__association[entityName]
         else:
             return []

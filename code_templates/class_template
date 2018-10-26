@@ -22,7 +22,7 @@ $collection_name.$collection_name_schema = $validator;
 $collection_name.check_$collection_name_collection = function() {
     if ($collection_name.attributes.length != 0) {
         dbOps.check_collection("$collection_name", $collection_name.$collection_name_schema, 
-            function(err, collection) {
+            function(err, result) {
                 if (!err)
                     console.log("$collection_name schema checked");
                 else

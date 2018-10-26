@@ -88,6 +88,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
 
     db_template_path = config.get('Output', 'instance_db_template') + "/"
     db_schema_file = open(db_template_path+ "db_schema_template", "r")
+    db_schema_nested_file = open(db_template_path+ "db_schema_nested_template", "r")
     db_connection_file = open(db_template_path+ "db_connection_template", "r")
     db_ops_file = open(db_template_path+ "db_ops_template", "r")
     db_schema_validation_file = open(db_template_path+ "db_schema_validation_template", "r")
@@ -99,6 +100,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     server_template = server_file.read()
     class_template = class_file.read()
     db_schema_template = db_schema_file.read()
+    db_schema_nested_template = db_schema_nested_file.read()
     db_connection_template = db_connection_file.read()
     db_ops_template = db_ops_file.read()
     db_schema_validation_template = db_schema_validation_file.read()
@@ -131,10 +133,8 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
 
     # generate entities
     jp = JSONParser(json_data, dm_name)
-    
-    for entity_id, entity_name in jp.entities().items():
-        attribute_names = set()
-        attribute_schema = []
+
+    def add_simple_attribute_schema(entity_name, attribute_names, attribute_schema, jp=jp):
         for attribute in jp.findEntityAttributes(entity_name):
             attribute_names.add(attribute['name'].encode('utf-8'))
 
@@ -144,6 +144,43 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
             }
             content = replace_words(db_schema_template, data)
             attribute_schema.append(content)
+
+    # For handling nested object
+    def add_complex_attribute_schema(entity_name, attribute_names, attribute_schema, jp=jp):
+        # Bo: TODO: the current format of complex attributes is different 
+        #           between the stardard parser and the XLST parser.
+        #           This piece of code supports XLST paser only
+        #           For the standard parser, it just ignore the complex attributes via try...except
+        try:
+            for attribute in jp.findEntityNestedObjects(entity_name):
+                object_name = attribute['elementName'].encode('utf-8')
+                attribute_names.add(object_name)
+
+                inner_jp = JSONParser(attribute)
+
+                inner_attribute_names = set()
+                inner_attribute_schema = []
+
+                add_simple_attribute_schema(object_name, inner_attribute_names, inner_attribute_schema, inner_jp)
+                add_complex_attribute_schema(object_name, inner_attribute_names, inner_attribute_schema, inner_jp)
+
+                data = {
+                    "nested_object_name": attribute['elementName'],
+                    "nested_object_schema": ',\n'.join(inner_attribute_schema)
+                }
+                content = replace_words(db_schema_nested_template, data)
+                attribute_schema.append(content)
+        except Exception as e:
+            print "In standard parser, the complex attributes are not handled"
+            pass
+    # End for handling nested object
+    
+    for entity_id, entity_name in jp.entities().items():
+        attribute_names = set()
+        attribute_schema = []
+
+        add_simple_attribute_schema(entity_name, attribute_names, attribute_schema, jp)
+        add_complex_attribute_schema(entity_name, attribute_names, attribute_schema, jp)
 
         data = {
             "collection_name" : entity_name
@@ -160,6 +197,8 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
         output_location = output_path + entity_name + ".js"
         with fileOps.safe_open_w(output_location) as output_file:
             output_file.write(content)
+
+
 
     # generate behaviors
     behaviors = [element["Behaviors"] for element in elements]
@@ -201,7 +240,8 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
 
     server_file.close()
     class_file.close()
-    class_file.close()
+    db_schema_file.close()
+    db_schema_nested_file.close()
     db_connection_file.close()
     db_ops_file.close()
     db_schema_validation_file.close()
