@@ -1,8 +1,7 @@
 import sys
 import json
 sys.path.append('../')
-# from utilities.file_op import fileOps
-from ApiGenerator import *
+from utilities.file_op import fileOps
 
 class ApiGenerator:
     def __init__(self):
@@ -36,8 +35,8 @@ class ApiGenerator:
         self.__set_entity_apis(entity_name, attributes)
 
     def generate_file(self, path):
-        # with fileOps.safe_open_w(path + 'openAPI.json', 'w') as o:
-        with open(path + 'openAPI.json', 'w') as o:
+        with fileOps.safe_open_w(path + '/' + 'api.json') as o:
+        # with open(path + '/' + 'openAPI.json', 'w') as o:
             json.dump(self.__json, o)
 
     def __create_basic_template(self):
@@ -71,39 +70,39 @@ class ApiGenerator:
         # self.__gen_parameter(params, attributes=attributes, data_num=3)
         # self.__add_entity_api(entity_name, 'CreateMany', 'post', params)
 
-        # READ
-        params = []
-        path = {}
-        path['name'] = 'Id'
-        path['details'] = {}
-        path['details']['type'] = 'string'
-        path['details']['required'] = True
-        self.__gen_parameter(params, path=path)
-        self.__add_entity_api(entity_name, 'ReadOnebyId', 'get', params, path=path)
+        # # READ
+        # params = []
+        # path = {}
+        # path['name'] = 'Id'
+        # path['details'] = {}
+        # path['details']['type'] = 'string'
+        # path['details']['required'] = True
+        # self.__gen_parameter(params, path=path)
+        # self.__add_entity_api(entity_name, 'ReadOnebyId', 'get', params, path=path)
 
-        params = []
-        queries = []
-        query = {}
-        query['name'] = attributes[0]['name']
-        query['details'] = {}
-        query['details']['type'] = 'string'
-        queries.append(query)
-        self.__gen_parameter(params, queries=queries)
-        self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params)
+        # params = []
+        # queries = []
+        # query = {}
+        # query['name'] = attributes[0]['name']
+        # query['details'] = {}
+        # query['details']['type'] = 'string'
+        # queries.append(query)
+        # self.__gen_parameter(params, queries=queries)
+        # self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params)
 
-        # DELETE
-        params = []
-        self.__gen_parameter(params, attributes=attributes)
-        self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params)
+        # # DELETE
+        # params = []
+        # self.__gen_parameter(params, attributes=attributes)
+        # self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params)
 
-        params = []
-        path = {}
-        path['name'] = 'Id'
-        path['details'] = {}
-        path['details']['type'] = 'string'
-        path['details']['required'] = True
-        self.__gen_parameter(params, path=path)
-        self.__add_entity_api(entity_name, 'DeletebyIdviaLink', 'delete', params, path=path)
+        # params = []
+        # path = {}
+        # path['name'] = 'Id'
+        # path['details'] = {}
+        # path['details']['type'] = 'string'
+        # path['details']['required'] = True
+        # self.__gen_parameter(params, path=path)
+        # self.__add_entity_api(entity_name, 'DeletebyIdviaLink', 'delete', params, path=path)
 
 
     '''

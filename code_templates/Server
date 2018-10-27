@@ -21,6 +21,7 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var client = mongodb.MongoClient;
 var ObjectId = mongodb.ObjectId;
+var pathToSwaggerUi = require('swagger-ui-dist').absolutePath();
 
 //using express for RESTful communcation
 var app = express();
@@ -63,6 +64,18 @@ for (var i = 0; i < collection_names.length; i++)
         console.log("Error in " + class_name + ".js" + "  SKIP");
     }
 }
+
+// api reference for the crud operations
+var api_file = 'api.json'
+app.use('/apiref', express.static(pathToSwaggerUi));
+app.use('/' + api_file, function(req, res) {
+    res.json(require('./' + api_file));
+})
+
+// redirect to file path
+app.use('/api', function(req, res) {
+    res.redirect('/apiref?url=/' + api_file);
+})
 
 // end point: http://host:port/dbname/behavior
 var behavior_path = __dirname + "/Behaviors";

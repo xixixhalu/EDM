@@ -18,7 +18,7 @@
 </xsl:template>
 
 <!-- Special Character Replacer -->
-<xsl:param name="apos">"'"</xsl:param>
+<xsl:param name="apos">'</xsl:param>
 <xsl:param name="quot">"</xsl:param>
 <xsl:template name="special_character_replacer">
 	<xsl:param name="name" as="xs:string" />

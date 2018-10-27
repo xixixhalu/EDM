@@ -11,6 +11,8 @@ from utilities.file_op import fileOps
 from uml_parser.JSONParser import JSONParser
 from uml_parser.UMLViewer import *
 
+from code_generator.ApiGenerator import ApiGenerator
+
 def get_server_info():
     # display_ip = "34.223.218.62" # Local env 127.0.0.0 Prev 18.216.141.169
     # server_ip = "0.0.0.0" # Local env - 127.0.0.0
@@ -73,7 +75,7 @@ def generate_adapter(language, server_ip, port, dm_name, output_dir, to_file):
     return code_display_data
 
 
-""" This method creates the server js file"""
+""" This method creates the server file"""
 def generate_server(server_ip, port, output_path, dm_name, json_data):
     """
     Creates the server code file for the REST services
@@ -249,6 +251,22 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     behavior_file.close()
     type_converter_file.close()
 
+
+""" This method creates the api reference page """
+def generate_api_reference(server_ip, port, output_path, dm_name, json_data):
+    gen = ApiGenerator()
+    gen.set_basic_path(server_ip + ":" + port, dm_name)
+    # gen.set_access_key('1234567890')
+    # gen.set_user_name('danny')
+    # parameter
+    jp = JSONParser(json_data, dm_name)
+
+    for entity_id, entity_name in jp.entities().items():
+        gen.add_entity(entity_name, jp.findEntityAttributes(entity_name))
+    
+    gen.generate_file(output_path)
+
+
 def generate_diagram(json_data, dm_name, output_path):
     jp = JSONParser(json_data, dm_name)
     viewer = UMLViewer()
@@ -307,6 +325,8 @@ def generate_all(dm_name, output_dir, to_file=True):
 
         # generate server code files
         generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
+
+        #generate_api_reference(str(server_ip), str(port), output_dir + '/Server', dm_name, json_data)
 
         # generate UML diagram
         generate_diagram(json_data, dm_name, output_dir)
