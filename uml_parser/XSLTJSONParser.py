@@ -39,7 +39,7 @@ class XSLTJSONParser:
             json_str = transform(xml_file)
         except Exception as e:
             print e
-        print str(json_str)
+        # print str(json_str)
         return json.loads(str(json_str))
 
 

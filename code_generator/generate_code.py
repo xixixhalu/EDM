@@ -168,6 +168,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
 
                 data = {
                     "nested_object_name": attribute['elementName'],
+                    "nested_attributes": str(list(inner_attribute_names)),
                     "nested_object_schema": ',\n'.join(inner_attribute_schema)
                 }
                 content = replace_words(db_schema_nested_template, data)
