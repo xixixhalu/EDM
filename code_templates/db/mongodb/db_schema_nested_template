@@ -1,6 +1,7 @@
 				$nested_object_name : {
 		          bsonType: 'object',
 		          additionalProperties: true,
+		          required: $nested_attributes,
 		          properties: {
 		          	$nested_object_schema
 		          }
