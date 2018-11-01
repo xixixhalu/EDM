@@ -327,7 +327,7 @@ def generate_all(dm_name, output_dir, to_file=True):
         # generate server code files
         generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
 
-        #generate_api_reference(str(server_ip), str(port), output_dir + '/Server', dm_name, json_data)
+        generate_api_reference(str(server_ip), str(port), output_dir + '/Server', dm_name, json_data)
 
         # generate UML diagram
         generate_diagram(json_data, dm_name, output_dir)

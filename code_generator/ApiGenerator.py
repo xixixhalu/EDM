@@ -58,69 +58,81 @@ class ApiGenerator:
         return api
 
     def __set_entity_apis(self, entity_name, attributes):
+        # create empty body for empty attrbutes case
+        property = {
+            'sampleAttribute' : {
+                'type': 'string'
+            }
+        }
+        self.__define_object('Empty', property)
         # create data payload structure (sample)
-
-        # CREATE
+        # ---- CREATE ----
         params = []
-        self.__gen_parameter(params, attributes=attributes)
-        self.__add_entity_api(entity_name, 'CreateOne or CreateMany', 'post', params)
+        if len(attributes) != 0:
+            self.__gen_parameter(params, attributes=attributes)
+            self.__add_entity_api(entity_name, 'CreateOne or CreateMany', 'post', params)
+        else:
+            self.__gen_parameter(params, attributes=[])
+            self.__add_entity_api(entity_name, 'CreateOne or CreateMany', 'post', params, format='json')
 
-        # same path can only have one API sample
-        # params = []
-        # self.__gen_parameter(params, attributes=attributes, data_num=3)
-        # self.__add_entity_api(entity_name, 'CreateMany', 'post', params)
+        # ---- READ ----
+        params = []
+        path = {}
+        path['name'] = 'Id'
+        path['details'] = {}
+        path['details']['type'] = 'string'
+        path['details']['required'] = True
+        self.__gen_parameter(params, path=path)
+        self.__add_entity_api(entity_name, 'ReadOnebyId', 'get', params, path=path)
 
-        # # READ
-        # params = []
-        # path = {}
-        # path['name'] = 'Id'
-        # path['details'] = {}
-        # path['details']['type'] = 'string'
-        # path['details']['required'] = True
-        # self.__gen_parameter(params, path=path)
-        # self.__add_entity_api(entity_name, 'ReadOnebyId', 'get', params, path=path)
+        params = []
+        queries = []
+        query = {}
+        if len(attributes) != 0:
+            query['name'] = attributes[0]['name']
+            query['details'] = {}
+            query['details']['type'] = 'string'
+            queries.append(query)
+            self.__gen_parameter(params, queries=queries)
+            self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params)
+        else:
+            self.__gen_parameter(params, queries=[])
+            self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params, format='json')
+       
+        # ---- DELETE ----
+        params = []
+        if len(attributes) != 0:
+            self.__gen_parameter(params, attributes=attributes)
+            self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params)
+        else:
+            self.__gen_parameter(params, attributes=[])
+            self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params, format='json')
 
-        # params = []
-        # queries = []
-        # query = {}
-        # query['name'] = attributes[0]['name']
-        # query['details'] = {}
-        # query['details']['type'] = 'string'
-        # queries.append(query)
-        # self.__gen_parameter(params, queries=queries)
-        # self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params)
-
-        # # DELETE
-        # params = []
-        # self.__gen_parameter(params, attributes=attributes)
-        # self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params)
-
-        # params = []
-        # path = {}
-        # path['name'] = 'Id'
-        # path['details'] = {}
-        # path['details']['type'] = 'string'
-        # path['details']['required'] = True
-        # self.__gen_parameter(params, path=path)
-        # self.__add_entity_api(entity_name, 'DeletebyIdviaLink', 'delete', params, path=path)
+        params = []
+        path = {}
+        path['name'] = 'Id'
+        path['details'] = {}
+        path['details']['type'] = 'string'
+        path['details']['required'] = True
+        self.__gen_parameter(params, path=path)
+        self.__add_entity_api(entity_name, 'DeletebyIdviaLink', 'delete', params, path=path)
 
 
     '''
     add_entity_api(Generalization, create, post, ...)
     '''
-    def __add_entity_api(self, entity_name, description, http_method, params, path=None):
+    def __add_entity_api(self, entity_name, description, http_method, params, path=None, format='x-www-form-urlencoded'):
         if path:
             api_path = '/' + entity_name + '/{' + path['name'] + '}'
         else:
             api_path = '/' + entity_name + '/'
-        
 
         if not self.__json['paths'].get(api_path):
             self.__json['paths'][api_path] = {}
         self.__json['paths'][api_path][http_method] = {
             'tags': [entity_name],
             'summary': description + ' for ' + entity_name,
-            'consumes': ['application/json', 'application/x-www-form-urlencoded'],
+            'consumes': ['application/' + format],
             'produces': ['application/json'],
             'responses': {
                 '200': {
@@ -191,15 +203,25 @@ class ApiGenerator:
                     'required': query['details'].get('required', False)
                 }
                 params.append(param)
-        if attributes:
+        if attributes is not None:
+            if len(attributes) == 0:
+                param = {
+                    'in': 'body',
+                    'name': 'body',
+                    'description': 'Please enter JSON body',
+                    'required': True,
+                    'schema': {
+                        '$ref': '#/definitions/Empty'
+                    }
+                }
+                params.append(param)
+                return
             for attr in attributes:
-                # print(attr)
                 param = {
                     'in': 'formData',
                     'name': attr.get('name'),
                     'type': attr['details'].get('type', 'string'),
                     'description': attr['details'].get('description', '')
-                    # 'required': True,
                 }
                 params.append(param)
         
@@ -245,4 +267,6 @@ if __name__ == '__main__':
                 }
             }]
     gen.add_entity('class2', attr2)
+    attr3 = []
+    gen.add_entity('class3', attr3)
     gen.generate_file('./')
