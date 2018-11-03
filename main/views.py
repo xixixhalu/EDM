@@ -41,10 +41,21 @@ def index():
             history_data = []
         else:
             history_data = dumps(history_data['uploads'])
+
+
+        running_instance = mgInstance.mongo.db.running_instance
+        running_instance_data = running_instance.find_one({'username': session['username']})
+
+        if running_instance_data is None:
+            running_instance_data = []
+        else:
+            running_instance_data = dumps(running_instance_data['instances'])
+
         
         # Pass required data to the template
         description_data = {
-            "history_data": history_data
+            "history_data": str(history_data),
+            "running_instance_data": str(running_instance_data)
         }
         return render_template('user_profile.html', **description_data)
     return render_template('homepage.html')
@@ -231,7 +242,7 @@ def run_instance():
 
         final_path = base_path + user_path + instance_path + server_path
 
-        child_process = sp.Popen(["npm", "run", "launch"], cwd=final_path)
+        child_process = sp.Popen(["npm", "run", "forever_start"], cwd=final_path)
         # Temporary solution..
         time.sleep(0.5)
 
@@ -239,8 +250,40 @@ def run_instance():
             flash('Successful to run the specified instance')
         else:
             flash('Failed to run the specified instance')
+
+        dbOps.registerRunningInstance(mgInstance.mongo, session['username'], 
+                                        request.form['domainModelName'], request.form['fileId']);    
+
         return redirect(url_for('main_bp.index'))
     return redirect(url_for('main_bp.index'))
+
+#Stop the specified instance
+@main_bp.route('/stopinstance', methods=['POST', 'GET'])
+@login_required
+def stop_instance():
+    if request.method == 'POST':
+        base_path = os.path.join(config.get('Output', 'output_path'))
+        user_path = "/" + session['username']
+        instance_path = "/" + request.form['domainModelName'] + "/" + request.form['fileId']
+        server_path = "/" + "Server" + "/" #+ "Server.js"
+
+        final_path = base_path + user_path + instance_path + server_path
+
+        child_process = sp.Popen(["npm", "run", "forever_stop"], cwd=final_path)
+        # Temporary solution..
+        time.sleep(0.5)
+
+        if child_process.poll() == None:
+            flash('Successful to stop the specified instance')
+        else:
+            flash('Failed to stop the specified instance')
+
+        dbOps.stopRunningInstance(mgInstance.mongo, session['username'], 
+                                        request.form['domainModelName'], request.form['fileId']);    
+
+        return redirect(url_for('main_bp.index'))
+    return redirect(url_for('main_bp.index'))
+
 
 #Update instance with a new UML
 @main_bp.route('/updateinstance', methods=['GET','POST'])

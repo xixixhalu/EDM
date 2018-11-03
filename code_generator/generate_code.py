@@ -114,6 +114,10 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     output_path = output_path + "/Server/"
     if not os.path.isdir(output_path):
         os.makedirs(output_path)
+
+    log_path = output_path + "/log/"
+    if not os.path.isdir(log_path):
+        os.makedirs(log_path)
     
     elements = None
     for model_name in json_data:

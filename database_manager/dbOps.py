@@ -9,6 +9,42 @@ import pytz
 
 
 class dbOps:
+
+    @staticmethod
+    def registerRunningInstance(mongo, username, modelName, fileId):
+        mongo.db.running_instance.update(
+                    {
+                        "username": username
+                    },
+                    {
+                        "$push" : {
+                            "instances": {
+                                "date":dt.datetime.now(pytz.utc),
+                                "domainModelName": modelName,
+                                "file":ObjectId(fileId)
+                            }
+                    
+                        }
+                    },
+                    upsert = True
+                )
+
+    @staticmethod
+    def stopRunningInstance(mongo, username, modelName, fileId):
+        mongo.db.running_instance.update(
+                    {
+                        "username": username
+                    },
+                    {
+                        "$pull" : {
+                            "instances": {
+                                "domainModelName": modelName,
+                                "file":ObjectId(fileId)
+                            }
+                    
+                        }
+                    }
+                )
     
     @staticmethod
     def updateInstanceDb(mongo, username, modelName, fileId, filecontent):
@@ -23,11 +59,14 @@ class dbOps:
                     'file': filecontent
                 }
             }
-            )
+        )
 
         #change the datetime in history
-        getfile = mongo.db.history.find({"uploads.files.file":ObjectId(fileId)})[0]["uploads"][0]["files"][0]
-        date = getfile["date"]
+        getfile = list(mongo.db.history.aggregate([
+            {"$unwind" : "$uploads"}, {"$unwind": "$uploads.files"},
+            {"$match" : {"uploads.files.file" : ObjectId(fileId)}}
+        ]))[0]
+        date = getfile["uploads"]["files"]["date"]
         #print date
             
         mongo.db.history.update(

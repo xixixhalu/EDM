@@ -42,8 +42,9 @@
 				</ul>
 				<!-- User welcome title -->
 				<span class="navbar-text">
-					<!-- Welcome  <strong>{{ session['username'] }} !</strong> -->
-					Welcome  <strong>User_ID_GOES_HERE !</strong>
+					{%endraw%}
+					Welcome  <strong>{{ session['username'] }} !</strong>
+					{%raw%}
 				</span>
 				<form class="form-inline mt-2 mt-md-0 ml-3" action="{{ url_for('main_bp.logout') }}">
 						<button class="btn btn-outline-success my-2 my-sm-0" id="log_out" ><span class="fas fa-sign-out-alt"></span>&nbsp Logout</button>
@@ -55,7 +56,7 @@
 			<div class="jumbotron text-center">
 				<div class="container">
 					<h1>Executable Domain Modeling</h1>
-					<p>Convert XML files to real code</p>
+					<p>Generate microservice instances for use cases</p>
 				</div>
 			</div>
 			<div id="container">
