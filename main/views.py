@@ -242,7 +242,7 @@ def run_instance():
 
         final_path = base_path + user_path + instance_path + server_path
 
-        child_process = sp.Popen(["npm", "run", "forever_start"], cwd=final_path)
+        child_process = sp.Popen(["npm", "run", "launch"], cwd=final_path)
         # Temporary solution..
         time.sleep(0.5)
 
@@ -380,9 +380,9 @@ def delete_instance():
     return redirect(url_for('main_bp.index'))
 
 
-@main_bp.route('/detailinstance', methods=['GET'])
+@main_bp.route('/detailsdk', methods=['GET'])
 @login_required
-def detail_instance():
+def detail_sdk():
 
     file_id = request.args['fileId']
     domain_model_name = request.args['domainModelName']
@@ -400,7 +400,31 @@ def detail_instance():
         "model_display_data": model_display_data
     }
 
-    return render_template('reference.html', **description_data)
+    return render_template('sdk_reference.html', **description_data)
+
+@main_bp.route('/detailapi', methods=['GET'])
+@login_required
+def detail_api():
+
+    file_id = request.args['fileId']
+    domain_model_name = request.args['domainModelName']
+
+    json_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
+    json_dir = json_dir + "/" + domain_model_name + "/" + str(file_id)
+
+    # Get description_data from json file
+    meta_data = generate_code.read_description_from_file(domain_model_name, json_dir)
+
+    server_url = meta_data["server_url"]
+    authen_key = meta_data["authen_key"]
+
+    # Pass required data to the template
+    description_data = {
+        "server_url": server_url,
+        "authen_key": authen_key
+    }
+
+    return render_template('api_reference.html', **description_data)
 
 
 
@@ -423,9 +447,44 @@ def serverstatus():
     # Pass required data to the template
     description_data = {
         "server_url": server_url,
-        "authen_key": authen_key
+        "authen_key": authen_key,
+        "fileId": file_id,
+        "domainModelName" : domain_model_name
     }
     return render_template('server_status.html', **description_data)
+
+@main_bp.route('/regenerate', methods=['POST'])
+@login_required
+def regenerate():
+
+    file_id = request.form['fileId']
+    domain_model_name = request.form['domainModelName']
+
+    output_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
+    output_dir = output_dir + "/" + domain_model_name + "/" + str(file_id)
+
+    p().DM_File_Analyze(output_dir, {'DM_Input_type': "Simple_XML"}, domain_model_name)
+         
+    # Parse JSON and generate code
+    model_display_data, server_url = generate_code.generate_all(domain_model_name, output_dir)
+
+    authen_key = dbOps.getAuthenKey(mgInstance.mongo, session['username'])
+    
+    # Pass required data to the template
+    description_data = {
+        "model_display_data": model_display_data,
+        "server_url": server_url,
+        "authen_key" : authen_key
+    }
+    # write description_data into json file
+    generate_code.write_description_to_file(domain_model_name, output_dir, description_data)
+
+    description_data = {
+        "fileId": file_id,
+        "domainModelName" : domain_model_name
+    }
+
+    return redirect(url_for('main_bp.serverstatus', **description_data))
 
 
 @main_bp.route('/description')

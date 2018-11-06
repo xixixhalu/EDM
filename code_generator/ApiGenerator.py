@@ -32,12 +32,12 @@ class ApiGenerator:
             'name': entity_name,
             'description': 'Everything about ' + entity_name
         })
-        self.__set_entity_apis(entity_name, attributes)
+        self.__parse_entity(entity_name, attributes)
 
     def generate_file(self, path):
         with fileOps.safe_open_w(path + '/' + 'api.json') as o:
         # with open(path + '/' + 'openAPI.json', 'w') as o:
-            json.dump(self.__json, o)
+            json.dump(self.__json, o, indent=2)
 
     def __create_basic_template(self):
         api = {
@@ -55,72 +55,157 @@ class ApiGenerator:
         api['paths'] = {}
         # definition
         api['definitions'] = {}
+        # definition
+        api['parameters'] = {}
+
         return api
 
-    def __set_entity_apis(self, entity_name, attributes):
-        # create empty body for empty attrbutes case
-        property = {
-            'sampleAttribute' : {
-                'type': 'string'
+    '''
+    use for building sample data structure
+    '''
+    def __define_object(self, object_name, obj):
+        self.__json['definitions'][object_name] = obj
+
+    # '''
+    # use for building parameter data structure
+    # '''
+    # def __define_query(self, object_name, obj):
+    #     self.__json['parameters'][object_name] = obj   
+
+    def __parse_entity(self, entity_name, attributes):
+        obj = ApiTemplate.initObject()
+        if len(attributes) == 0:
+            ApiTemplate.setAttribute(obj, ApiTemplate.entityPlaceholder())
+            attribute_undefined = True
+        else:
+            for attribute in attributes:
+                ApiTemplate.setAttribute(obj, attribute)
+            attribute_undefined = False
+
+        self.__define_object(entity_name, obj)
+        self.__set_entity_apis(entity_name, attributes, attribute_undefined=attribute_undefined)
+
+
+    def __set_entity_apis(self, entity_name, attributes, attribute_undefined=False):
+        
+        # Predefine path for _id
+        path = {
+            'name' : '_id',
+            'details' : {
+                'type' : 'objectId',
+                'required' : True,
+                'description' : '12-byte ObjectId value'
             }
         }
-        self.__define_object('Empty', property)
         # create data payload structure (sample)
+
         # ---- CREATE ----
-        params = []
-        if len(attributes) != 0:
-            self.__gen_parameter(params, attributes=attributes)
-            self.__add_entity_api(entity_name, 'CreateOne or CreateMany', 'post', params)
-        else:
-            self.__gen_parameter(params, attributes=[])
-            self.__add_entity_api(entity_name, 'CreateOne or CreateMany', 'post', params, format='json')
+        description = 'JSON body can be either an object or an array of objects'
+        params = self.__gen_parameter(body=['#/definitions/' + entity_name], description=description)
+        self.__add_entity_api(entity_name, 'Create One or Create Many', 'post', params, format='json')
 
         # ---- READ ----
-        params = []
-        path = {}
-        path['name'] = 'Id'
-        path['details'] = {}
-        path['details']['type'] = 'string'
-        path['details']['required'] = True
-        self.__gen_parameter(params, path=path)
-        self.__add_entity_api(entity_name, 'ReadOnebyId', 'get', params, path=path)
-
-        params = []
-        queries = []
-        query = {}
-        if len(attributes) != 0:
-            query['name'] = attributes[0]['name']
-            query['details'] = {}
-            query['details']['type'] = 'string'
-            queries.append(query)
-            self.__gen_parameter(params, queries=queries)
-            self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params)
+        description = 'Optional'
+        if not attribute_undefined:
+            params = self.__gen_parameter(queries=attributes, description=description)
         else:
-            self.__gen_parameter(params, queries=[])
-            self.__add_entity_api(entity_name, 'ReadAll or ReadManyByAttributes', 'get', params, format='json')
-       
+            params = []
+        self.__add_entity_api(entity_name, 'Read All or Read Many By Attributes', 'get', params, format='json')
+
+        description = ''
+        params = self.__gen_parameter(path=[path], description=description)
+        self.__add_entity_api(entity_name, 'Read One by Id', 'get', params, path=path)
+ 
         # ---- DELETE ----
-        params = []
-        if len(attributes) != 0:
-            self.__gen_parameter(params, attributes=attributes)
-            self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params)
+        description = 'Optional'
+        if not attribute_undefined:
+            params = self.__gen_parameter(formData=attributes, description=description)
+            self.__add_entity_api(entity_name, 'Detelte By Attributes', 'delete', params)
+
+        description = ''
+        params = self.__gen_parameter(path=[path], description=description)
+        self.__add_entity_api(entity_name, 'Delete by Id', 'delete', params, path=path)
+
+        # ---- UPDATE ----
+        if not attribute_undefined:
+            description = 'Optional'
+            params = self.__gen_parameter(path=[path], formData=attributes, description=description)
+            self.__add_entity_api(entity_name, 'Modify Entity', 'patch', params, path=path)
+
+            for attr in attributes:
+                attr['details']['required'] = True
+            params = self.__gen_parameter(path=[path], formData=attributes, description=description)
+            self.__add_entity_api(entity_name, 'Replace Entity', 'put', params, path=path)
+
         else:
-            self.__gen_parameter(params, attributes=[])
-            self.__add_entity_api(entity_name, 'DeletebyId or DeleteByAttributes', 'delete', params, format='json')
+            description = 'Optional'
+            params = self.__gen_parameter(path=[path], body=['#/definitions/' + entity_name], description=description)
+            self.__add_entity_api(entity_name, 'Modify Entity', 'patch', params, path=path, format='json')
 
-        params = []
-        path = {}
-        path['name'] = 'Id'
-        path['details'] = {}
-        path['details']['type'] = 'string'
-        path['details']['required'] = True
-        self.__gen_parameter(params, path=path)
-        self.__add_entity_api(entity_name, 'DeletebyIdviaLink', 'delete', params, path=path)
-
+        
 
     '''
     add_entity_api(Generalization, create, post, ...)
     '''
+
+    def __gen_parameter(self, body=None, formData=None, path=None, queries=None, description=''):
+
+        # def refAttribute(attribute=None, attrQueryMethod='body', required=True):
+        #     param = {
+        #         'in': attrQueryMethod,
+        #         'name': 'body',
+        #         'description': description,
+        #         'required': required,
+        #         'schema': {
+        #             '$ref': attribute
+        #         }
+        #     }
+        #     return param
+
+        # def simpleAttribute(attribute=None, attrQueryMethod='query'):
+        #     param = {
+        #         'in': attrQueryMethod,
+        #         'name': attribute.get('name', ''),
+        #         'type': ApiTemplate.typeConvert(attribute['details'].get('type', 'string')),
+        #         'description': attribute['details'].get('description', ''),
+        #         'required': attribute['details'].get('required', False)
+        #     }
+        #     return param
+
+        # def complexAttribute(attribute=None, attrQueryMethod='formData'):
+        #     if len()
+        #     param = {
+        #         'in': attrQueryMethod,
+        #         'name': 'body',
+        #         'description': description,
+        #         'required': False,
+        #         'schema': {
+        #             '$ref': ref
+        #         }
+        #     }
+        #     return param
+            # else:
+            #     return simpleAttribute(attribute, attrQueryMethod)
+
+        # type: ref, query, path, header, 'formData', body
+        params = ApiTemplate.initQuery()
+
+        if path:
+            for attr in path:
+                ApiTemplate.setParameter(params, attr, 'path', description=description)
+        if body:
+            for attr in body:
+                ApiTemplate.setParameter(params, attr, 'body', description=description)
+        if queries:
+            for attr in queries:
+                ApiTemplate.setParameter(params, attr, 'query', description=description)
+        if formData:
+            for attr in formData:
+                ApiTemplate.setParameter(params, attr, 'formData', description=description)
+
+        return params
+
+
     def __add_entity_api(self, entity_name, description, http_method, params, path=None, format='x-www-form-urlencoded'):
         if path:
             api_path = '/' + entity_name + '/{' + path['name'] + '}'
@@ -143,97 +228,147 @@ class ApiGenerator:
         }   
 
 
-    # def __gen_properties(self, entity_name, id_num=0, data_num=0, old_data=0, new_data=0):
-    #     properties = {}
-    #     if id == 1:
-    #         properties['_id'] = {
-    #             'type': 'string',
-    #             'example': '5b2a10190d7dceabda2fe3bb'
-    #         }
-    #     sample_data = {
-    #         'name': 'test1'
-    #     }
-    #     if data_num > 1:
-    #         sample_list = []
-    #         for i in xrange(1, data_num + 1):
-    #             sample_list.append({'name': 'test' + str(i)})
+class ApiTemplate:
 
-    #         properties['data'] = {
-    #             'type': 'string',
-    #             'example': str(sample_list).encode('string-escape')
-    #         }
-    #     elif data_num == 1:
-    #         properties['data'] = {
-    #             'type': 'string',
-    #             'example': str(sample_data).encode('string-escape')
-    #         }
-    #     if old_data == 1:
-    #         properties['oldData'] = {
-    #             'type': 'string',
-    #             'example': str(sample_data).encode('string-escape')
-    #         }
-    #     if new_data == 1:
-    #         properties['newData'] = {
-    #             'type': 'string',
-    #             'example': str(sample_data).encode('string-escape')
-    #         }
-    #     properties['collection'] = {
-    #         'type': 'string',
-    #         'example': entity_name
-    #     }
-
-    def __gen_parameter(self, params, attributes=None, path=None, queries=None, data_num=1):
-        # type: query, path, header, 'formData', body
-        if path:
-            param = {
-                'in': 'path',
-                'name': path.get('name', ''),
-                'type': path['details'].get('type', 'string'),
-                'description': path['details'].get('description', ''),
-                'required': path['details'].get('required', False)
+    # Define data model
+    @staticmethod
+    def entityPlaceholder():
+        # create empty body for empty attrbutes case
+        entityProperty = {
+            'name': 'entityAttribute',
+            'details': {
+                'description': 'Can be any value - string, number, integer, boolean, array or object.',
+                'type': 'unknown'
             }
-            params.append(param)
-        if queries:
-            for query in queries:
-                param = {
-                    'in': 'query',
-                    'name': query.get('name', ''),
-                    'type': query['details'].get('type', 'string'),
-                    'description': query['details'].get('description', ''),
-                    'required': query['details'].get('required', False)
+        }
+        return entityProperty
+
+    @staticmethod
+    def initObject():
+        result = {
+            'type': 'object',
+            'properties' : {}
+        }
+        return result
+
+    @staticmethod
+    def setAttribute(obj, attribute):
+        obj['properties'][attribute.get('name', 'unknown')] = {
+            'type': ApiTemplate.typeConvert(attribute['details'].get('type')),
+            'format': attribute['details'].get('type'),
+            'example': ApiTemplate.typeExample(attribute['details'].get('type')),
+            'description': attribute['details'].get('description', '')
+        }
+
+    @staticmethod
+    def array(array, attributes, required=False):
+        result = {}
+        result[obj.get('name')] = {
+            'type': ApiTemplate.typeConvert(obj['details'].get('type')),
+            'description': obj['details'].get('description', ''),
+            'required': obj['details'].get('required', required),
+            'example': ApiTemplate.typeExample(ApiTemplate.typeConvert(attribute['details'].get('type'))),
+            'schema': attributes
+        }
+        return result
+
+    # End of define data model
+
+
+    # Define parameter
+
+    @staticmethod
+    def initQuery():
+        result = []
+        return result
+
+    @staticmethod
+    def setParameter(qry, parameter, attrQueryMethod='query', required=False, description=''):
+        if attrQueryMethod == 'body':
+            param = {
+                'in': attrQueryMethod,
+                'name': 'body',
+                'description': description,
+                'required': required,
+                'schema': {
+                    '$ref': parameter
                 }
-                params.append(param)
-        if attributes is not None:
-            if len(attributes) == 0:
-                param = {
-                    'in': 'body',
-                    'name': 'body',
-                    'description': 'Please enter JSON body',
-                    'required': True,
-                    'schema': {
-                        '$ref': '#/definitions/Empty'
-                    }
+            }
+        else:
+            param = {
+                'in': attrQueryMethod,
+                'name': parameter.get('name', 'unknown'),
+                'description': parameter['details'].get('description', parameter['details'].get('type')),
+                'required': parameter['details'].get('required', required),
+                'schema': {
+                    # 'example': ApiTemplate.typeExample(parameter['details'].get('type')),
+                    'type': ApiTemplate.typeConvert(parameter['details'].get('type')),
+                    'format': parameter['details'].get('type')
                 }
-                params.append(param)
-                return
-            for attr in attributes:
-                param = {
-                    'in': 'formData',
-                    'name': attr.get('name'),
-                    'type': attr['details'].get('type', 'string'),
-                    'description': attr['details'].get('description', '')
-                }
-                params.append(param)
+            }
+            if param['required']:
+                param['schema']['example'] = ApiTemplate.typeExample(parameter['details'].get('type'))
+        qry.append(param)
         
 
-    '''
-    use for building sample data structure
-    '''
-    def __define_object(self, object_name, properties):
-        self.__json['definitions'][object_name] = {
-            'type': 'object',
-	        'properties': properties
+
+    # End of define parameter
+
+
+    # Other definition helper
+
+    @staticmethod
+    def typeConvert(attr_type):
+        type_switcher = {
+            "string": "string",
+            "date": "string",
+            "datetime": "string",
+            "time": "string",
+            "byte": "string",
+            "binary": "string",
+            "decimal": "number",
+            "float": "number",
+            "double": "number",
+            "int": "integer",
+            "int32": "integer",
+            "int64": "integer",
+            "boolean": "boolean",
+            "objectId": "string",
+            "array": "array",
+            "object": "object"
         }
+        if not attr_type in type_switcher:
+            result =  "string"
+        else:
+            result = type_switcher[attr_type]
+        return result
+
+    @staticmethod
+    def typeExample(attr_type, formatExample={}):
+        type_switcher = {
+            "string": "attribute value",
+            "date": "2018-12-25T00:00:00Z",
+            "datetime": "2018-12-25T00:00:00Z",
+            "time": "2018-12-25T00:00:00Z",
+            "byte": "string",
+            "binary": "string",
+            "decimal": "3.1415926535",
+            "float": "3.14",
+            "double": "3.14159265",
+            "int": "2",
+            "int32": "32",
+            "int64": "64",
+            "boolean": True,
+            "objectId": "5bda90261089fd3358f2e526",
+            "array": [formatExample],
+            "object": formatExample
+        }
+        if not attr_type in type_switcher:
+            result =  "attribute value"
+        else:
+            result = type_switcher[attr_type]
+        return result
+
 
 if __name__ == '__main__':
     gen = ApiGenerator()
