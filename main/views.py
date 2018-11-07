@@ -379,6 +379,10 @@ def delete_instance():
         return redirect(url_for('main_bp.index'))
     return redirect(url_for('main_bp.index'))
 
+@main_bp.route('/behavior', methods=['GET'])
+@login_required
+def behavior():
+    return render_template('behavior.html')
 
 @main_bp.route('/detailsdk', methods=['GET'])
 @login_required

@@ -20,6 +20,12 @@
                 </li>
                 <!--Redirect to API reference page here!-->
                 <li class="nav-item">
+                    <form action="{{ url_for('main_bp.behavior') }}" name="behavior" method="GET">
+                        <a class="nav-link" href="javascript: document.behavior.submit()">Behaviors</a>
+                    </form>
+                </li>
+                <!--Redirect to API reference page here!-->
+                <li class="nav-item">
                     <form action="{{ url_for('main_bp.detail_api') }}" name="detailapi" method="GET">
                         <a class="nav-link" href="javascript: document.detailapi.submit()">API Reference</a>
                     </form>
@@ -73,6 +79,7 @@
             document.getElementsByName('description')[0].innerHTML += new_div.innerHTML;
             document.getElementsByName('detailapi')[0].innerHTML += new_div.innerHTML;
             document.getElementsByName('detailsdk')[0].innerHTML += new_div.innerHTML;
+            document.getElementsByName('behavior')[0].innerHTML += new_div.innerHTML;
         };
 </script>
 
