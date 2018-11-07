@@ -48,6 +48,23 @@
             </form>
         </div>
     </nav>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <div class="fixed-top alert alert-warning" role="alert" style="float:left; width:100%;">
+        {% for message in messages %}
+          {{ message }}
+        </div>  
+        {% endfor %}
+        <script type="text/javascript">
+            window.setTimeout(function () {
+                $(".alert-warning").fadeTo(500, 0).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, 2000);
+        </script>
+      {% endif %}
+    {% endwith %}
 
     <script>
         function GetQueryString(name) {

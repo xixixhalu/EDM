@@ -228,7 +228,7 @@ def result():
         else:
             flash('File type is not allowed')
             return redirect(request.url)
-    return redirect(request.url)
+    return redirect(url_for('main_bp.upload_xml'))
 
 #Run the specified instance
 @main_bp.route('/runinstance', methods=['POST', 'GET'])
@@ -296,6 +296,9 @@ def update_instance():
         oldfile_id = request.form['fileId']
         domain_model_name = request.form['domainModelName']
 
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
 
         file = request.files['file']
       
@@ -336,7 +339,7 @@ def update_instance():
 
             authen_key = dbOps.getAuthenKey(mgInstance.mongo, session['username'])
          
-
+            flash('Successfully updated')
             # Pass required data to the template
             description_data = {
                 "model_display_data": model_display_data,
@@ -349,8 +352,8 @@ def update_instance():
 
         return redirect(url_for('main_bp.index'))
   
-    #return redirect(url_for('index'))  
-    return redirect(url_for('main_bp.update_instance'))
+    return redirect(url_for('main_bp.index'))  
+    #return redirect(url_for('main_bp.update_instance'))
 
 
 @main_bp.route('/deleteinstance', methods=['GET', 'POST'])
@@ -482,6 +485,8 @@ def regenerate():
     }
     # write description_data into json file
     generate_code.write_description_to_file(domain_model_name, output_dir, description_data)
+
+    flash('Refresh Server Status')
 
     description_data = {
         "fileId": file_id,
