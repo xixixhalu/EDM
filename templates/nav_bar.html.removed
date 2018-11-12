@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+    <meta charset="utf-8">
+    <title>API References - Executable Domain Modeling</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+    <basefont size="7">
+</head>
+<body>
+<div id="class1" class="container-fluid">
+    <h4>Attributes</h4>
+    <div class="containter-fluid">
+        String/Int/Char
+    </div>
+    <br>
+    <h4>Code</h4>
+    <div class="col-sm-10">
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#swift1">Swift</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#js1">Java Script</a></li>
+            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#python1">Python</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane container-fluid" id="swift1">
+                <!--Here insert the data about swift code-->
+				<!-- File to insert here is code_display-->
+                <!--testing data--> Swift1
+            </div>
+            <div class="tab-pane container-fluid" id="js1">
+                <!--Here insert the data about swift code-->
+				<!-- File to insert here is code_display-->
+                <!--testing data--> Javascript1
+            </div>
+            <div class="tab-pane container-fluid" id="python1">
+                <!--Here insert the data about swift code-->
+				<!-- File to insert here is code_display-->
+                <!--testing data--> Python1
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
