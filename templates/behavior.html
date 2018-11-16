@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/behavior.css') }}">
 		<basefont size="7">
 	</head>
 	<body>
@@ -20,43 +21,41 @@
 					<p>Convert XML files to real code</p>
 				</div>
 			</div>
+			<div class="container-fluid px-3">
+				<div class="row mx-auto sub-navline">
+					<div class="col-md-12">
+						<div class="input-group">
+							<div class="input-group-prepend functional-tab" id="new_button">
+								<button class="btn btn-light" onclick=""><span class="fas fa-bars"></span> Menu</button>
+								<button class="btn btn-light" onclick=""><span class="fas fa-plus-square"></span> New</button>
+								<button class="btn btn-light" onclick=""><span class="fas fa-trash-alt"></span> Delete</button>
+								<button class="btn btn-light" onclick=""><span class="fas fa-save"></span> Save</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class="container" ng-controller="behaviorCtrl">
-				<div class="row">
-				  	<div class="col-sm-3">
-				  		<button type="button" class="btn btn-primary btn-lg btn-block">Function1</button>
-				  		<br>
-						<button type="button" class="btn btn-primary btn-lg btn-block">Function2</button>
-						<br>
-						<button type="button" class="btn btn-primary btn-lg btn-block">Function3</button>
-				  	</div>
-				  	<div class="col-sm-9">
-				  		<button type="button" class="btn btn-primary">New</button>
-						<button type="button" class="btn btn-primary">Delete</button>
-						<button type="button" class="btn btn-primary">Save</button>
-						<br><br>
-						<div class="input-group mb-3">
-						  	<div class="input-group-prepend">
-						    	<label class="input-group-text" for="inputGroupSelect01">Options</label>
-						  	</div>
-						  	<select class="custom-select" id="inputGroupSelect01">
-							    <option selected>Choose...</option>
-							    <option value="1">One</option>
-							    <option value="2">Two</option>
-							    <option value="3">Three</option>
-						  	</select>
-						</div>
-						<br>
-						<div class="row">
-						  	<div class="col-sm-2">
-						  		<label>Parameters</label>
-								<span class="fas fa-plus" ng-click="add()"></span>
-						  	</div>
-						  	<div class="col-sm-5" id="parameters_even"></div>
-							<div class="col-sm-5" id="parameters_odd"></div>
-						</div>
-						<br>
-						<textarea class="form-control" rows="8" id="comment"></textarea>
-				  	</div>
+				<div class="row mt-3">
+					<div class="input-group">
+						  <div class="input-group-prepend">
+						    <label class="input-group-text" for="inputGroupSelect01">Options</label>
+						  </div>
+						  <select class="custom-select" id="inputGroupSelect01">
+							   <option selected>Choose...</option>
+							   <option value="1">One</option>
+							   <option value="2">Two</option>
+							   <option value="3">Three</option>
+						  </select>
+					</div>
+				</div>
+				<div class="row mt-3">
+					<strong>Parameters <span class="fas fa-plus" ng-click="addElement()"></span></strong>
+				</div>
+				<div class="row" id="parameters">
+				</div>
+				<div class="row mt-3">
+					<textarea class="form-control" rows="8" id="comment"></textarea>
 				</div>
 			</div>
 		</main>
@@ -75,18 +74,15 @@
 			app.controller('behaviorCtrl', ['$scope', '$http', '$compile', function($scope, $http, $compile) {
 				$scope.para_count = 0;
 			    $scope.clear = function(id) {
-			    	id_name = "parameter" + id;
+			    	var id_name = "parameter" + id;
 			    	var child = document.getElementById(id_name);
-			    	var parent = child.parentNode;
+			      var parent = child.parentNode;
 			    	parent.removeChild(child);
 			    }
-			    $scope.add = function() {
-			    	input = "<div class='input-group mb-3' id='parameter"+ $scope.para_count +"'><input type='text' class='form-control'><div class='input-group-append'><button class='btn btn-outline-secondary' type='button' ng-click='clear("+ $scope.para_count +")'><span class='fas fa-trash'></span></button></div></div>"
-			    	var $input = $compile(input)($scope);
-			    	var child_even = document.getElementById('parameters_even').children.length;
-			    	var child_odd = document.getElementById('parameters_odd').children.length;
-			    	if (child_even <= child_odd) $('#parameters_even').append($input);
-			    	else $('#parameters_odd').append($input);
+			    $scope.addElement = function() {
+						var parameter = "<div class='col-md-3' id='parameter"+ $scope.para_count +"'><div class='input-group mb-3'><input type='text' class='form-control'><div class='input-group-append'><button class='btn btn-outline-secondary' type='button' ng-click='clear("+ $scope.para_count +")'><span class='fas fa-trash'></span></button></div></div></div>";
+			    	var $input = $compile(parameter)($scope);
+						$('#parameters').append($input);
 			    	$scope.para_count += 1;
 			    }
 

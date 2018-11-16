@@ -1,0 +1,9 @@
+/* Functional tabs styling */
+.sub-navline {
+	border-bottom: 3px solid #e9ecef;
+}
+
+.functional-tab {
+	margin-bottom: 0.5em;
+	height: 10%;
+}
