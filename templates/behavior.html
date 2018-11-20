@@ -12,59 +12,66 @@
 		<basefont size="7">
 	</head>
 	<body>
-		{% include 'nav_bar.html' %}
+		<header>
+			{% include 'nav_bar.html' %}
+		</header>
+		<div class="sidenav bg-primary">
+			<div class="container side-content">
+				<div class="row function"><a href="#"><span class="fas fa-box"></span> Function 1</a></div>
+				<div class="row function"><a href="#"><span class="fas fa-box"></span> Function 2</a></div>
+				<div class="row function"><a href="#"><span class="fas fa-box"></span> Function 3</a></div>
+				<div class="row function"><a href="#"><span class="fas fa-box"></span> Function 4</a></div>
+				<div class="row function"><a href="#"><span class="fas fa-box"></span> Function 5</a></div>
+			</div>
+		</div>
 		<main role="main">
-			<!--Shows the title of the page - Project header -->
-			<div class="jumbotron text-center">
-				<div class="container">
-					<h1>Executable Domain Modeling</h1>
-					<p>Convert XML files to real code</p>
+			<div class="container content">
+				<div class="row">
+					<p>Chosen function's name</p>
 				</div>
-			</div>
-			<div class="container-fluid px-3">
-				<div class="row mx-auto sub-navline">
-					<div class="col-md-12">
-						<div class="input-group">
-							<div class="input-group-prepend functional-tab" id="new_button">
-								<button class="btn btn-light" onclick=""><span class="fas fa-bars"></span> Menu</button>
-								<button class="btn btn-light" onclick=""><span class="fas fa-plus-square"></span> New</button>
-								<button class="btn btn-light" onclick=""><span class="fas fa-trash-alt"></span> Delete</button>
-								<button class="btn btn-light" onclick=""><span class="fas fa-save"></span> Save</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="container" ng-controller="behaviorCtrl">
-				<div class="row mt-3">
-					<div class="input-group">
-						  <div class="input-group-prepend">
-						    <label class="input-group-text" for="inputGroupSelect01">Options</label>
-						  </div>
-						  <select class="custom-select" id="inputGroupSelect01">
-							   <option selected>Choose...</option>
-							   <option value="1">One</option>
-							   <option value="2">Two</option>
-							   <option value="3">Three</option>
-						  </select>
-					</div>
-				</div>
-				<div class="row mt-3">
-					<strong>Parameters <span class="fas fa-plus" ng-click="addElement()"></span></strong>
-				</div>
-				<div class="row" id="parameters">
-				</div>
-				<div class="row mt-3">
-					<textarea class="form-control" rows="8" id="comment"></textarea>
-				</div>
+				<div class="row sub-navline">
+		      <div class="col-md-12">
+		        <div class="input-group">
+		          <div class="input-group-prepend functional-tab" id="new_button">
+		            <button class="btn btn-light" onclick=""><span class="fas fa-plus-square"></span> New</button>
+		            <button class="btn btn-light" onclick=""><span class="fas fa-trash-alt"></span> Delete</button>
+		            <button class="btn btn-light" onclick=""><span class="fas fa-save"></span> Save</button>
+		          </div>
+		        </div>
+		      </div>
+		    </div>
+				<div class="row">
+		      <div class="container" ng-controller="behaviorCtrl">
+		        <div class="row mt-3">
+		          <div class="input-group">
+		            <div class="input-group-prepend">
+		              <label class="input-group-text" for="inputGroupSelect01">Options</label>
+		            </div>
+		            <select class="custom-select" id="inputGroupSelect01">
+		              <option selected>Choose...</option>
+		              <option value="1">One</option>
+		              <option value="2">Two</option>
+		              <option value="3">Three</option>
+		            </select>
+		          </div>
+		        </div>
+		        <div class="row mt-3">
+		          <strong>Parameters <span class="fas fa-plus" ng-click="addElement()"></span></strong>
+		        </div>
+		        <div class="row" id="parameters">
+		        </div>
+		        <div class="row mt-3">
+		          <textarea class="form-control" rows="8" id="comment"></textarea>
+		        </div>
+		      </div>
+		    </div>
 			</div>
 		</main>
-		<!--show the copyright as footer-->
-		<footer class="footer">
+		<div class="side-footer">
 			<div class="container text-center">
 				<span class="text-muted">&copy;Copyright Protected. All rights reserved</span>
 			</div>
-		</footer>
+		</div>
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
