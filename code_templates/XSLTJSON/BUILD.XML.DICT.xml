@@ -10,9 +10,14 @@
 	  <xsl:when test="$type='Date' or $type='Time' or $type='DateTime' or $type='Datetime' ">date</xsl:when>
 	  <xsl:when test="$type='Integer' ">int</xsl:when>
 	  <xsl:when test="$type='Text' ">string</xsl:when>
-	  <xsl:when test="$type='Decimal' ">decimal</xsl:when>
 	  <xsl:when test="$type='Boolean' ">bool</xsl:when>
-<!-- 	  <xsl:when test="$type='' "></xsl:when> -->
+	  <xsl:when test="$type='Decimal' ">decimal</xsl:when>
+	  <xsl:when test="$type='Rate' ">decimal</xsl:when>
+	  <xsl:when test="$type='Rate2' ">decimal</xsl:when>
+	  <xsl:when test="$type='Rate3' ">decimal</xsl:when>
+	  <xsl:when test="$type='Rate6' ">decimal</xsl:when>
+	  <xsl:when test="$type='Dollar' ">decimal</xsl:when>
+	  <xsl:when test="$type='Dollar4' ">decimal</xsl:when>
 	  <xsl:otherwise><xsl:value-of select="$default_type"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

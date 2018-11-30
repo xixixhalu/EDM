@@ -267,7 +267,7 @@ def generate_api_reference(server_ip, port, output_path, dm_name, json_data):
     jp = JSONParser(json_data, dm_name)
 
     for entity_id, entity_name in jp.entities().items():
-        gen.add_entity(entity_name, jp.findEntityAttributes(entity_name))
+        gen.add_entity(entity_name, jp)
     
     gen.generate_file(output_path)
 

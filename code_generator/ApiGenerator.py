@@ -3,6 +3,8 @@ import json
 sys.path.append('../')
 from utilities.file_op import fileOps
 
+from uml_parser.JSONParser import JSONParser
+
 class ApiGenerator:
     def __init__(self):
         self.__outjson = {}
@@ -27,12 +29,12 @@ class ApiGenerator:
     def set_user_name(self, user):
         self.__user = user
 
-    def add_entity(self, entity_name, attributes):
+    def add_entity(self, entity_name, json_parser):
         self.__json['tags'].append({
             'name': entity_name,
             'description': 'Everything about ' + entity_name
         })
-        self.__parse_entity(entity_name, attributes)
+        self.__parse_entity(entity_name, json_parser)
 
     def generate_file(self, path):
         with fileOps.safe_open_w(path + '/' + 'api.json') as o:
@@ -72,14 +74,19 @@ class ApiGenerator:
     # def __define_query(self, object_name, obj):
     #     self.__json['parameters'][object_name] = obj   
 
-    def __parse_entity(self, entity_name, attributes):
+    def __parse_entity(self, entity_name, json_parser):
         obj = ApiTemplate.initObject()
-        if len(attributes) == 0:
+        attributes = json_parser.findEntityAttributes(entity_name)
+        nestedObjects = json_parser.findEntityNestedObjects(entity_name)
+
+        if len(attributes) == 0 and len(nestedObjects) == 0:
             ApiTemplate.setAttribute(obj, ApiTemplate.entityPlaceholder())
             attribute_undefined = True
         else:
             for attribute in attributes:
                 ApiTemplate.setAttribute(obj, attribute)
+            for nestedObject in nestedObjects:
+                ApiTemplate.setAttribute(obj, nestedObject, type="complex")
             attribute_undefined = False
 
         self.__define_object(entity_name, obj)
@@ -108,6 +115,7 @@ class ApiGenerator:
         description = 'Optional'
         if not attribute_undefined:
             params = self.__gen_parameter(queries=attributes, description=description)
+            # params = self.__gen_parameter(body=['#/definitions/' + entity_name], description=description)
         else:
             params = []
         self.__add_entity_api(entity_name, 'Read All or Read Many By Attributes', 'get', params, format='json')
@@ -119,8 +127,10 @@ class ApiGenerator:
         # ---- DELETE ----
         description = 'Optional'
         if not attribute_undefined:
-            params = self.__gen_parameter(formData=attributes, description=description)
-            self.__add_entity_api(entity_name, 'Detelte By Attributes', 'delete', params)
+            # params = self.__gen_parameter(formData=attributes, description=description)
+            params = self.__gen_parameter(body=['#/definitions/' + entity_name], description=description)
+            # self.__add_entity_api(entity_name, 'Detelte By Attributes', 'delete', params)
+            self.__add_entity_api(entity_name, 'Detelte By Attributes', 'delete', params, format='json')
 
         description = ''
         params = self.__gen_parameter(path=[path], description=description)
@@ -129,13 +139,17 @@ class ApiGenerator:
         # ---- UPDATE ----
         if not attribute_undefined:
             description = 'Optional'
-            params = self.__gen_parameter(path=[path], formData=attributes, description=description)
-            self.__add_entity_api(entity_name, 'Modify Entity', 'patch', params, path=path)
+            # params = self.__gen_parameter(path=[path], formData=attributes, description=description)
+            params = self.__gen_parameter(path=[path], body=['#/definitions/' + entity_name], description=description)
+            # self.__add_entity_api(entity_name, 'Modify Entity', 'patch', params, path=path)
+            self.__add_entity_api(entity_name, 'Modify Entity', 'patch', params, path=path, format='json')
 
-            for attr in attributes:
-                attr['details']['required'] = True
-            params = self.__gen_parameter(path=[path], formData=attributes, description=description)
-            self.__add_entity_api(entity_name, 'Replace Entity', 'put', params, path=path)
+            # for attr in attributes:
+            #     attr['details']['required'] = True
+            # params = self.__gen_parameter(path=[path], formData=attributes, description=description)
+            params = self.__gen_parameter(path=[path], body=['#/definitions/' + entity_name], description=description)
+            # self.__add_entity_api(entity_name, 'Replace Entity', 'put', params, path=path)
+            self.__add_entity_api(entity_name, 'Replace Entity', 'put', params, path=path, format='json')
 
         else:
             description = 'Optional'
@@ -252,13 +266,38 @@ class ApiTemplate:
         return result
 
     @staticmethod
-    def setAttribute(obj, attribute):
-        obj['properties'][attribute.get('name', 'unknown')] = {
-            'type': ApiTemplate.typeConvert(attribute['details'].get('type')),
-            'format': attribute['details'].get('type'),
-            'example': ApiTemplate.typeExample(attribute['details'].get('type')),
-            'description': attribute['details'].get('description', '')
-        }
+    def setAttribute(obj, attribute, type='simple'):
+        '''
+        type: simple == simple attribute, complex == nested object, list == array list
+        '''
+        if type == "simple":
+            obj['properties'][attribute.get('name', 'unknown')] = {
+                'type': ApiTemplate.typeConvert(attribute['details'].get('type')),
+                'format': attribute['details'].get('type'),
+                'example': ApiTemplate.typeExample(attribute['details'].get('type')),
+                'description': attribute['details'].get('description', '')
+            }
+        elif type == "complex":
+            ApiTemplate.setNestedObject(obj, attribute)
+
+
+    @staticmethod
+    def setNestedObject(obj, nestedAttribute):
+        nestedObj = ApiTemplate.initObject()
+        nestedName = nestedAttribute.get('elementName', 'unknown')
+        jp = JSONParser(nestedAttribute)
+        attrs = jp.findEntityAttributes(nestedName)
+        objs = jp.findEntityNestedObjects(nestedName)
+
+        for attr in attrs:
+            ApiTemplate.setAttribute(nestedObj, attr)
+
+        for o in objs:
+            ApiTemplate.setAttribute(nestedObj, o, type="complex")
+
+        obj['properties'][nestedName] = nestedObj
+
+        
 
     @staticmethod
     def array(array, attributes, required=False):
