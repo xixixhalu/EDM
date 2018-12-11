@@ -266,17 +266,31 @@ class ApiTemplate:
         return result
 
     @staticmethod
+    def initArray(attr):
+        result = {
+            'type': 'array',
+            'items' : attr
+        }
+        return result
+
+    @staticmethod
     def setAttribute(obj, attribute, type='simple'):
         '''
-        type: simple == simple attribute, complex == nested object, list == array list
+        type: simple == simple attribute, complex == nested object
         '''
         if type == "simple":
-            obj['properties'][attribute.get('name', 'unknown')] = {
+            simpleAttr = {
                 'type': ApiTemplate.typeConvert(attribute['details'].get('type')),
                 'format': attribute['details'].get('type'),
                 'example': ApiTemplate.typeExample(attribute['details'].get('type')),
                 'description': attribute['details'].get('description', '')
             }
+
+            if 'details' in attribute and attribute['details'].get('isArray', 'false') == 'true':
+                obj['properties'][attribute.get('name', 'unknown')] = ApiTemplate.initArray(simpleAttr)
+            else:
+                obj['properties'][attribute.get('name', 'unknown')] = simpleAttr
+
         elif type == "complex":
             ApiTemplate.setNestedObject(obj, attribute)
 
@@ -295,21 +309,12 @@ class ApiTemplate:
         for o in objs:
             ApiTemplate.setAttribute(nestedObj, o, type="complex")
 
-        obj['properties'][nestedName] = nestedObj
+        if 'details' in nestedAttribute and nestedAttribute['details'].get('isArray', 'false') == 'true':
+            obj['properties'][nestedName] = ApiTemplate.initArray(nestedObj)
+        else:
+            obj['properties'][nestedName] = nestedObj
 
         
-
-    @staticmethod
-    def array(array, attributes, required=False):
-        result = {}
-        result[obj.get('name')] = {
-            'type': ApiTemplate.typeConvert(obj['details'].get('type')),
-            'description': obj['details'].get('description', ''),
-            'required': obj['details'].get('required', required),
-            'example': ApiTemplate.typeExample(ApiTemplate.typeConvert(attribute['details'].get('type'))),
-            'schema': attributes
-        }
-        return result
 
     # End of define data model
 
@@ -371,7 +376,7 @@ class ApiTemplate:
             "int": "integer",
             "int32": "integer",
             "int64": "integer",
-            "boolean": "boolean",
+            "bool": "boolean",
             "objectId": "string",
             "array": "array",
             "object": "object"
@@ -391,13 +396,13 @@ class ApiTemplate:
             "time": "2018-12-25T00:00:00Z",
             "byte": "string",
             "binary": "string",
-            "decimal": "3.1415926535",
-            "float": "3.14",
-            "double": "3.14159265",
-            "int": "2",
-            "int32": "32",
-            "int64": "64",
-            "boolean": True,
+            "decimal": 3.1415926535,
+            "float": 3.14,
+            "double": 3.14159265,
+            "int": 2,
+            "int32": 32,
+            "int64": 64,
+            "bool": True,
             "objectId": "5bda90261089fd3358f2e526",
             "array": [formatExample],
             "object": formatExample

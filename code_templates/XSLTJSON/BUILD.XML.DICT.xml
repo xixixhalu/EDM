@@ -11,13 +11,13 @@
 	  <xsl:when test="$type='Integer' ">int</xsl:when>
 	  <xsl:when test="$type='Text' ">string</xsl:when>
 	  <xsl:when test="$type='Boolean' ">bool</xsl:when>
-	  <xsl:when test="$type='Decimal' ">decimal</xsl:when>
-	  <xsl:when test="$type='Rate' ">decimal</xsl:when>
-	  <xsl:when test="$type='Rate2' ">decimal</xsl:when>
-	  <xsl:when test="$type='Rate3' ">decimal</xsl:when>
-	  <xsl:when test="$type='Rate6' ">decimal</xsl:when>
-	  <xsl:when test="$type='Dollar' ">decimal</xsl:when>
-	  <xsl:when test="$type='Dollar4' ">decimal</xsl:when>
+	  <xsl:when test="$type='Decimal' ">double</xsl:when>
+	  <xsl:when test="$type='Rate' ">double</xsl:when>
+	  <xsl:when test="$type='Rate2' ">double</xsl:when>
+	  <xsl:when test="$type='Rate3' ">double</xsl:when>
+	  <xsl:when test="$type='Rate6' ">double</xsl:when>
+	  <xsl:when test="$type='Dollar' ">double</xsl:when>
+	  <xsl:when test="$type='Dollar4' ">double</xsl:when>
 	  <xsl:otherwise><xsl:value-of select="$default_type"/></xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -44,6 +44,7 @@
 <xsl:template name="simple_attribute">
 	<xsl:param name="name" as="xs:string" />
 	<xsl:param name="type" as="xs:string" />
+	<xsl:param name="array" as="xs:string" />
 	{	
       	"name": "<xsl:call-template name="special_character_replacer">
 	                	<xsl:with-param name="name" select="$name" />
@@ -52,7 +53,11 @@
 <!-- 	        "maxOccurs": 1, -->
 	        "type": "<xsl:call-template name="type_converter">
 	                	<xsl:with-param name="type" select="$type" />
-	                </xsl:call-template>"
+	                </xsl:call-template>",
+	        "isArray" : "<xsl:choose>
+	        				<xsl:when test="$array = 'True'">true</xsl:when>
+	        				<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>"
 	        		<!-- <xsl:choose>
 	        			<xsl:when test="not($type)">
 	        				"<xsl:value-of select="$default_type"/>"
@@ -80,22 +85,29 @@
         	
 			"Simple": [
 				<!-- Filter @Type is not Object or Array -->
-				<xsl:for-each select="./Tag[not(@Type) or @Type != 'Object']">
+				<xsl:for-each select="./Tag[not(@Type) or @Type != 'Object' and @Type != 'ObjectList']">
 					<xsl:if test="position() != 1">, </xsl:if>
 					<xsl:call-template name="simple_attribute">
 	                	<xsl:with-param name="name" select="./@Name" />
 	                	<xsl:with-param name="type" select="./@Type" />
+	                	<xsl:with-param name="array" select="./@List" />
 	                </xsl:call-template>
         		</xsl:for-each>
           	],
 			"Complex": [
 				<!-- Filter @Type is Object -->
-				<xsl:for-each select="./Tag[@Type = 'Object']">
+				<xsl:for-each select="./Tag[@Type = 'Object' or @Type = 'ObjectList']" >
 					<xsl:if test="position() != 1">, </xsl:if>
 					<xsl:call-template name="complex_attribute" />
 	            </xsl:for-each>
 			]
-			
+        },
+        "details" : {
+        	"isArray" : "<xsl:choose>
+	        				<xsl:when test="./@List = 'True' or ./@Type = 'ObjectList'">true</xsl:when>
+	        				<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>"
+
         },
         <!--  "isExtension": false, -->
         "elementId": "<xsl:value-of select="generate-id(./@Name)" />"

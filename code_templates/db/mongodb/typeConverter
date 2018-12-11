@@ -43,7 +43,7 @@ typeConverter.typeConvert = function(data, key, schema) {
 	    case "array":
 	        return JSON.parse(value);
 	    case "bool":
-	    	return (value === 'true');
+	    	return (value == true);
 	    case "date":
 	    	return new Date(value);
 	    case "int":
