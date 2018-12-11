@@ -41,7 +41,22 @@ typeConverter.typeConvert = function(data, key, schema) {
 	    case "object":
 	    	return typeConverter.convert(data[key], schema[key].properties);
 	    case "array":
-	        return JSON.parse(value);
+	    	if (schema[key]['items']['bsonType'] == 'object') {
+	    		var values = []
+	    		for (let i = 0; i < value.length; i++) {
+	    			var v = typeConverter.convert(value[i], schema[key]['items'].properties);
+	    			values.push(v);
+	    		}
+	    		return values;
+	    	} else {
+	    		var values = []
+	    		for (let i = 0; i < value.length; i++) {
+	    			var data = {'items': value[i]};
+	    			var v = typeConverter.typeConvert(data, 'items', schema[key]);
+	    			values.push(v);
+	    		}
+	    		return values;
+	    	}
 	    case "bool":
 	    	return (value == true);
 	    case "date":
@@ -60,13 +75,15 @@ typeConverter.typeConvert = function(data, key, schema) {
 // Type for MongoDB
 typeConverter.convert = function(data, attribute_schema) {
 	var rst = {};
-	Object.keys(data).forEach(key => {
+	var keys = Object.keys(data);
+	for (let i = 0; i < keys.length; i++) {
+		var key = keys[i];
         if (attribute_schema.hasOwnProperty(key)) {
             rst[key] = typeConverter.typeConvert(data, key, attribute_schema);
         } else {
         	rst[key] = data[key];
         }
-    });
+    };
     return rst;
 }
 

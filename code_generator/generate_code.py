@@ -90,7 +90,9 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
 
     db_template_path = config.get('Output', 'instance_db_template') + "/"
     db_schema_file = open(db_template_path+ "db_schema_template", "r")
+    db_schema_array_file = open(db_template_path+ "db_schema_array_template", "r")
     db_schema_nested_file = open(db_template_path+ "db_schema_nested_template", "r")
+    db_schema_nested_array_file = open(db_template_path+ "db_schema_nested_array_template", "r")
     db_connection_file = open(db_template_path+ "db_connection_template", "r")
     db_ops_file = open(db_template_path+ "db_ops_template", "r")
     db_schema_validation_file = open(db_template_path+ "db_schema_validation_template", "r")
@@ -102,7 +104,9 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     server_template = server_file.read()
     class_template = class_file.read()
     db_schema_template = db_schema_file.read()
+    db_schema_array_template = db_schema_array_file.read()
     db_schema_nested_template = db_schema_nested_file.read()
+    db_schema_nested_array_template = db_schema_nested_array_file.read()
     db_connection_template = db_connection_file.read()
     db_ops_template = db_ops_file.read()
     db_schema_validation_template = db_schema_validation_file.read()
@@ -148,7 +152,11 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
                 "attribute": attribute['name'],
                 "type": attribute['details']['type']
             }
-            content = replace_words(db_schema_template, data)
+
+            if "details" in attribute and attribute["details"].get("isArray", 'false') == 'true':
+                content = replace_words(db_schema_array_template, data)
+            else:
+                content = replace_words(db_schema_template, data)
             attribute_schema.append(content)
 
     # For handling nested object
@@ -175,7 +183,12 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
                     "nested_attributes": str(list(inner_attribute_names)),
                     "nested_object_schema": ',\n'.join(inner_attribute_schema)
                 }
-                content = replace_words(db_schema_nested_template, data)
+
+                if "details" in attribute and attribute["details"].get("isArray", 'false') == 'true':
+                    content = replace_words(db_schema_nested_array_template, data)
+                else:
+                    content = replace_words(db_schema_nested_template, data)
+                    
                 attribute_schema.append(content)
         except Exception as e:
             print "In standard parser, the complex attributes are not handled"
@@ -248,7 +261,9 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     server_file.close()
     class_file.close()
     db_schema_file.close()
+    db_schema_array_file.close()
     db_schema_nested_file.close()
+    db_schema_nested_array_file.close()
     db_connection_file.close()
     db_ops_file.close()
     db_schema_validation_file.close()
