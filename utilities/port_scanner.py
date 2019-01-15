@@ -22,15 +22,15 @@ def runPortScan(rangeLow, RangeHigh):
     else:
         return "no ports available"
 
-if len(sys.argv) == 3:
-    # NITIN : NOTE : Vinita, if using through cmdline pass portHigh and portLow (inclusive) as
-    # cmdline args to the script
-    result = runPortScan(int(sys.argv[1]), int(sys.argv[2]))
-else:
-    # NITIN : NOTE : Vinita remove below line and pass port ranges(inclusive) as arguments to
-    # runPortScan() function, it will return the first available port in the range,
-    # typically we should always specify same range
-    pass
+# if len(sys.argv) == 3:
+#     # NITIN : NOTE : Vinita, if using through cmdline pass portHigh and portLow (inclusive) as
+#     # cmdline args to the script
+#     result = runPortScan(int(sys.argv[1]), int(sys.argv[2]))
+# else:
+#     # NITIN : NOTE : Vinita remove below line and pass port ranges(inclusive) as arguments to
+#     # runPortScan() function, it will return the first available port in the range,
+#     # typically we should always specify same range
+#     pass
 
 # print result
 
