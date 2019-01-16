@@ -26,7 +26,7 @@ class ComplexType(BaseType):
 		BaseType.__init__(self, _type, _minOccurs,_maxOccurs)
 	def toJson(self):
 		retObj = {}
-                retObj["type"]=self.type.lower().replace(" ","_")
+                retObj["type"]=self.type.replace(" ","_")
 		retObj["minOccurs"] = self.minOccurs
 		retObj["maxOccurs"] = self.maxOccurs
 		return retObj
