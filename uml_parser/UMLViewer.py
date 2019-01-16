@@ -21,14 +21,14 @@ class UMLAssociation:
     def __init__(self, entity_one, entity_two, association_type='association', multiplicity='one_to_one'):
         self.__entity_one = entity_one
         self.__entity_two = entity_two
-        self.__association_type = association_type.lower()
-        self.__multiplicity = multiplicity.lower()
+        self.__association_type = association_type
+        self.__multiplicity = multiplicity
 
     def set_assocciation_type(self, association_type):
-        self.__association_type = association_type.lower()
+        self.__association_type = association_type
 
     def set_multiplicity(self, multiplicity):
-        self.__multiplicity = multiplicity.lower()
+        self.__multiplicity = multiplicity
 
     def association(self, association_type='association', multiplicity='one_to_one'):
         type_switcher = {

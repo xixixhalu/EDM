@@ -21,7 +21,7 @@ class DomainModel:
 	def declareElement(self , _ElementName, _id):
 		# NITIN : NOTE : create a unique id for each element, used for associations
                 # ZHIYUN: format element name
-                _ElementName=_ElementName.lower().replace(" ","_")
+                _ElementName=_ElementName.replace(" ","_")
 		newElement = self.Element(_ElementName , _id)
 		self.ElementDirectory[_id] = newElement
 		self.ElementReference[_ElementName] = _id
@@ -30,7 +30,7 @@ class DomainModel:
 	# NITIN : NOTE : Define simple atrribute on a declared element
 	def defineSimpleAttribute(self , _ElementName , _AttributeName , _AttributeType): 
                 # ZHIYUN: format element name
-                _ElementName=_ElementName.lower().replace(" ","_")
+                _ElementName=_ElementName.replace(" ","_")
 		try:
 			assert self.isElementDeclared(_ElementName)
 		except:
@@ -42,8 +42,8 @@ class DomainModel:
 	# NITIN : NOTE : Define a attribute of the type of another element
 	def defineComplexAttribute(self, _ElementName , _AttributeName , _AttributeElementName , _AttributeType):
                 # ZHIYUN: format element name
-                _ElementName=_ElementName.lower().replace(" ","_")
-                _AttributeElementName=_AttributeElementName.lower().replace(" ","_")
+                _ElementName=_ElementName.replace(" ","_")
+                _AttributeElementName=_AttributeElementName.replace(" ","_")
 		try:
 			assert self.isElementDeclared(_ElementName)
 		except:
@@ -89,7 +89,7 @@ class DomainModel:
 	# Bo : Define simple operation on a declared element
 	# _ReturnValue and _ParameterValue have not been extracted. So leave them as default values.
 	def defineOperation(self , _ElementName, _OperationName, _ReturnValue=[] , _ParameterValue=[]): 
- 		_ElementName=_ElementName.lower().replace(" ","_")
+ 		_ElementName=_ElementName.replace(" ","_")
 		try:
 			assert self.isElementDeclared(_ElementName)
 		except:
@@ -100,7 +100,7 @@ class DomainModel:
 
 	# NITIN : NOTE : Make an element an extension of another element, basically imports all the base element's attributes and functions
 	def extendElement(self, _ElementName, _ExtensionType):
-                _ElementName=_ElementName.lower().replace(" ","_")
+                _ElementName=_ElementName.replace(" ","_")
 		if not isinstance(_ExtensionType, dt.ExtensionType): raise e.SimpleException("_AttributeType has to be ExtensionType.")
                 
 		id = self.ElementReference[_ElementName]
