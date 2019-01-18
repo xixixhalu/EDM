@@ -1,5 +1,6 @@
 package $NAMESPACE;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 // $MODEL_NAME
@@ -11,96 +12,46 @@ public class $model {
         $attributes
     };
 
+//    public $model($attributeListWithTypes) {
+//        // TODO really need a foreach capability in the template
+//    }
+
     $FUNC createOne
-    public static void createOne(JsonObject data) {
-        class CreateOneCallback {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
-        CreateOneCallback cbModel = new CreateOneCallback();
-        Adapter.createOne(className, data, cbModel);
+    public static void createOne(JsonObject data, Adapter.ApiCallback callback) {
+        Adapter.createOne(className, data, callback);
     }
     $ENDFUNC
 
     $FUNC createMany
-    public static void createMany(JsonArray data) {
-        class createManyCB {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
-        createManyCB CBModel = new createManyCB();
-        Adapter.createMany(className, data, CBModel);
+    public static void createMany(JsonArray data, Adapter.ApiCallback callback) {
+        Adapter.createMany(className, data, callback);
     }
     $ENDFUNC
 
     $FUNC readOne
-    public static void readOne(JsonObject data) {
-        class readOneCB {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
-        readOneCB CBModel = new readOneCB();
-        Adapter.readOne(className, data, CBModel);
+    public static void readOne(JsonObject data, Adapter.ApiCallback callback) {
+        Adapter.readOne(className, data, callback);
     }
     $ENDFUNC
 
     $FUNC readMany
-    public static void readMany(JsonObject data) {
-        class readManyCB {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
-        readManyCB CBModel = new readManyCB();
-        Adapter.readMany(className, data, CBModel);
+    public static void readMany(JsonObject data, Adapter.ApiCallback callback) {
+        Adapter.readMany(className, data, callback);
     }
     $ENDFUNC
 
     $FUNC update
-    public static void update(JsonObject searchData, JsonObject updateData) {
-        class updateCB {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
+    public static void update(JsonObject searchData, JsonObject updateData, Adapter.ApiCallback callback) {
         JsonObject data = new JsonObject();
-        data.add("oldData",search);
-        data.add("newData",update);
-        updateCB CBModel = new updateCB();
-        Adapter.update(className, data, CBModel);
+        data.add("oldData",searchData);
+        data.add("newData",updateData);
+        Adapter.update(className, data, callback);
     }
     $ENDFUNC
 
     $FUNC delete
-    public static void delete(JsonObject data) {
-        class deleteCB {
-            public void successCB(String result) {
-                System.out.println("successCB: " + result);
-            }
-            public void errorCB(String message) {
-                System.out.println("errorCB: " + message);
-            }
-        }
-        deleteCB CBModel = new deleteCB();
-        Adapter.delete(className, data, CBModel);
+    public static void delete(JsonObject data, Adapter.ApiCallback callback) {
+        Adapter.delete(className, data, callback);
     }
     $ENDFUNC
 
