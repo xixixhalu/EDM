@@ -10,17 +10,17 @@ from utilities.file_op import fileOps
 from database_manager.dbOps import dbOps
 
 
-def cogent(inputfile, outputfile):
+def cogent(inputfile, output_dir):
 
     filename = secure_filename(os.path.basename(inputfile))
     filename_str = filename.split(".")[0]
 
     input_dir = inputfile
-    output_dir = os.path.join(outputfile) + "/" + filename_str
+    # output_dir = os.path.join(outputdir)
 
     # generate a uuid to store different versions of uploads
-    file_id = str(uuid.uuid4())
-    output_dir = output_dir + '/' + file_id
+    #file_id = str(uuid.uuid4())
+    # output_dir = output_dir + '/' + file_id
 
     fileOps.mkdir_p(output_dir)
     copyfile(input_dir, output_dir + '/' + filename)

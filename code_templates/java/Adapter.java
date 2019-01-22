@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -22,14 +23,16 @@ import java.util.stream.Collectors;
 public class Adapter {
     private static String serverIP = "$server_ip";
     private static String port = "$port";
-    private static String serverUrl = "http://" + serverIP + ":" + port + "/";
+    private static String dmName = "$dm_name";
+
+    private static String serverUrl = "http://" + serverIP + ":" + port + "/" + dmName + "/";
     private static CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.createDefault();
 
 
     public interface ApiCallback {
-        public void success(String js);
+        void success(String js);
 
-        public void error(String err);
+        void error(String err);
     }
 
 
@@ -59,12 +62,12 @@ public class Adapter {
 
     public static void readOne(String collection, JsonObject data, ApiCallback callback) {
         List<NameValuePair> dataArgs = basicDataArgs(data);
-        callServer(collection, "readOne", dataArgs, callback);
+        GetCall(serverUrl + collection + "/readOne", callback);
     }
 
     public static void readMany(String collection, JsonObject data, ApiCallback callback) {
         List<NameValuePair> dataArgs = basicDataArgs(data);
-        callServer(collection, "readAll", dataArgs, callback);
+        GetCall(serverUrl + collection, callback);
     }
 
     public static void createOne(String collection, JsonObject data, ApiCallback callback) {
@@ -104,6 +107,12 @@ public class Adapter {
         PostCall(url, params, callback);
     }
 
+    public static void GetCall(String url, ApiCallback callback) {
+        HttpGet get = new HttpGet(url);
+        get.setHeader("Accept", "application/json");
+        httpAsyncClient.execute(get, responseHandler(callback));
+    }
+
     public static void PostCall(String url, List<NameValuePair> params, ApiCallback callback) {
         HttpPost post = new HttpPost(url);
         post.setHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
@@ -115,7 +124,11 @@ public class Adapter {
                 e.printStackTrace();
             }
         }
-        httpAsyncClient.execute(post, new FutureCallback<HttpResponse>() {
+        httpAsyncClient.execute(post, responseHandler(callback));
+    }
+
+    private static FutureCallback<HttpResponse> responseHandler(ApiCallback callback) {
+        return new FutureCallback<HttpResponse>() {
             @Override
             public void completed(HttpResponse result) {
                 try {
@@ -144,8 +157,7 @@ public class Adapter {
                     e.printStackTrace();
                 }
             }
-        });
-
+        };
     }
 
     $ENDFUNC
