@@ -60,8 +60,16 @@ for (var i = 0; i < collection_names.length; i++)
         var class_model = require('./' + class_name + '.js');
         class_models.push(class_model);
         app.use('/' + dbname + '/' + class_name, class_model);
-    } catch (error) {
+    } catch (e) {
         console.log("Error in " + class_name + ".js" + "  SKIP");
+        if (e.code !== 'MODULE_NOT_FOUND') {
+            // Re-throw not "Module not found" errors 
+            throw e;
+        }
+        if (e.message.indexOf('\'express\'') === -1) {
+            // Re-throw not found errors for other modules
+            throw e;
+        }
     }
 }
 
