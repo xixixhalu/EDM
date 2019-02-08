@@ -61,6 +61,7 @@ for (var i = 0; i < collection_names.length; i++)
         class_models.push(class_model);
         app.use('/' + dbname + '/' + class_name, class_model);
     } catch (e) {
+        console.log("Error in " + class_name + ".js" + "  SKIP");
         if (e.code !== 'MODULE_NOT_FOUND') {
             // Re-throw not "Module not found" errors 
             throw e;
@@ -69,7 +70,6 @@ for (var i = 0; i < collection_names.length; i++)
             // Re-throw not found errors for other modules
             throw e;
         }
-        console.log("Error in " + class_name + ".js" + "  SKIP");
     }
 }
 
