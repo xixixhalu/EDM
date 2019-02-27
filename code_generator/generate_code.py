@@ -86,9 +86,9 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
     :json_data: the domain model json structure
     """
     server_file = open("code_templates/" + "Server", "r")
-    class_file = open(db_template_path+ "class_template", "r")
 
     db_template_path = config.get('Output', 'instance_db_template') + "/"
+    class_file = open(db_template_path+ "class_template", "r")
     db_schema_file = open(db_template_path+ "db_schema_template", "r")
     db_schema_array_file = open(db_template_path+ "db_schema_array_template", "r")
     db_schema_nested_file = open(db_template_path+ "db_schema_nested_template", "r")
