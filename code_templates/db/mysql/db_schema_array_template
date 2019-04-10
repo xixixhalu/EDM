@@ -1,0 +1,6 @@
+				$attribute: {
+				   	bsonType: "array",
+				   	items: {
+				   		bsonType: "$type"
+				   	}
+				}

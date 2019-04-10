@@ -1,0 +1,195 @@
+
+var wrapper = require("./db_connection.js");
+const uuidV1 = require('uuid/v1');
+var fs = require('fs');
+var filename = "createdb.sql";
+var dbOps = {};
+
+dbOps.create = function(collection, data, onResult) {
+    if(Array.isArray(data)){
+        for(var j=0; j<data.length; j++){
+            var keyset = Object.keys(data[j]);
+            var key = "";
+            var value = "";
+            for(var i=0; i<keyset.length; i++){
+                key += keyset[i];
+                if(i != keyset.length -1) key += ", ";
+
+                mydata = data[keyset[i]];
+                if (typeof mydata === 'string' || typeof mydata === 'object'){
+                    //console.log("This is string");
+                    mydata = "\"" + mydata + "\"";
+                }
+                value += mydata;
+
+                if(i != keyset.length -1) value += ", ";
+            }
+            key +=", UID";
+            value += ", \"" + uuidV1() + "\"";
+
+            var sql = "INSERT INTO " + collection + " (" + key + ") VALUES (" + value + ")";
+            wrapper.db.query(sql, function (err, result) {
+                onResult(err,result);
+                console.log("1 record inserted");
+            });
+        }
+    }
+    else{
+        var keyset = Object.keys(data);
+        var key = "";
+        var value = "";
+        for(var i=0; i<keyset.length; i++){
+            key += keyset[i];
+            if(i != keyset.length -1) key += ", ";
+
+            mydata = data[keyset[i]];
+            if (typeof mydata === 'string' || typeof mydata === 'object'){
+                mydata = "\"" + mydata + "\"";
+            }
+            value += mydata;
+            if(i != keyset.length -1) value += ", ";
+        }
+        key +=", UID";
+        value += ", \"" + uuidV1() + "\"";
+        var sql = "INSERT INTO " + collection + " (" + key + ") VALUES (" + value + ")";
+        console.log(sql);
+        wrapper.db.query(sql, function (err, result) {
+            onResult(err,result);
+            console.log("1 record inserted");
+        });
+    }
+
+};
+
+dbOps.readOne = function(collection, _id, onResult) {
+    var sql = "SELECT * FROM " + collection + " WHERE UID = '" + _id + "'";
+    console.log(sql);
+    wrapper.db.query(sql, function (err, result) {
+    onResult(err,result);
+    console.log(result);
+  });
+};
+
+dbOps.readAll = function(collection, _id, data, onResult) {   
+    var sql = "SELECT * FROM " + collection;
+    var keyset = Object.keys(data);
+    if(keyset.length>0){
+        var condition = "";
+        for(var i=0; i<keyset.length; i++){
+            var mydata = data[keyset[i]];
+            if (typeof mydata === 'string' || typeof mydata === 'object'){
+                mydata = "\"" + mydata + "\"";
+            }
+
+            condition += keyset[i] + " = " + mydata;
+            if(i != keyset.length -1) condition += " and ";
+        }
+        sql = sql + " WHERE " + condition;
+    }
+    wrapper.db.query(sql, function (err, result, fields) {
+        onResult(err,result);
+        console.log(sql);
+    });
+}
+
+dbOps.delete = function(collection, _id, data, onResult) {
+    var sql = "DELETE FROM " + collection;
+    if(_id != null){
+        sql += " WHERE UID = '"  + _id + "'";
+    }
+    else{
+        var keyset = Object.keys(data);
+        if(keyset.length>0){
+            var condition = "";
+            for(var i=0; i<keyset.length; i++){
+                var mydata = data[keyset[i]];
+                if (typeof mydata === 'string' || typeof mydata === 'object'){
+                    mydata = "\"" + mydata + "\"";
+                }
+                condition += keyset[i] + " = " + mydata;
+                if(i != keyset.length -1) condition += " and ";
+            }
+            sql += " WHERE " + condition;
+        }
+    }
+    wrapper.db.query(sql, function (err, result, fields) {
+        onResult(err,result);
+        console.log("Number of records deleted: " + result.affectedRows);
+    });
+};
+
+dbOps.put = function(collection, _id, data, onResult) {
+    var sql = "UPDATE " + collection;
+
+    var keyset = Object.keys(data);
+        if(keyset.length>0){
+            var condition = "";
+            for(var i=0; i<keyset.length; i++){
+                var mydata = data[keyset[i]];
+                if (typeof mydata === 'string' || typeof mydata === 'object'){
+                    mydata = "\"" + mydata + "\"";
+                }
+                condition += keyset[i] + " = " + mydata;
+                if(i != keyset.length -1) condition += " , ";
+            }
+            sql += " SET " + condition;
+        }
+    sql += " WHERE UID = '"  + _id + "'"; 
+    console.log(sql);
+    wrapper.db.query(sql, function (err, result) {
+        onResult(err,result);
+        console.log(result.affectedRows + " record(s) updated");
+    });
+};
+
+dbOps.patch = function(collection, _id, data, onResult) {
+    var sql = "UPDATE " + collection;
+
+    var keyset = Object.keys(data);
+        if(keyset.length>0){
+            var condition = "";
+            for(var i=0; i<keyset.length; i++){
+                var mydata = data[keyset[i]];
+                if (typeof mydata === 'string' || typeof mydata === 'object'){
+                    mydata = "\"" + mydata + "\"";
+                }
+                condition += keyset[i] + " = " + mydata;
+                if(i != keyset.length -1) condition += " , ";
+            }
+            sql += " SET " + condition;
+        }
+    sql += " WHERE UID = '"  + _id + "'"; 
+    wrapper.db.query(sql, function (err, result) {
+        onResult(err,result);
+        console.log(result.affectedRows + " record(s) updated");
+    });
+};
+
+dbOps.check_collection = function(collection,schema, callback) {
+
+    var keys = Object.keys(schema);
+    var table_schema = "";
+    for (var i = 0; i < keys.length; i++) {
+        var type = schema[keys[i]]['bsonType'];
+        if(type === "objectId"){
+            type = "varchar(255)";
+        }
+        table_schema += keys[i]+" "+ type;
+        if(i != keys.length - 1) table_schema +=", ";
+    }
+    table_schema += ", UID varchar(255), PRIMARY KEY(UID)"
+    var sql = "CREATE TABLE IF NOT EXISTS " + collection + " (" + table_schema + ")";
+    wrapper.db.query(sql,function(err,result){
+        callback(err,result);
+        console.log("Table " + collection +  " created");
+    });
+
+    fs.appendFile(filename, sql+";\n", function(err) {
+        if(err) {
+            console.log(err);
+        }
+    });   
+}
+
+
+module.exports = dbOps;

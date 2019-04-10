@@ -15,7 +15,7 @@ var class_models = [];
 /*
  Required node module
  */
-var mysql = require('mysql');
+var mysql = require('mysql')
 var mongodb = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
