@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:transform version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >
+<xsl:output method="text" indent="yes" />
+
+<!-- Type Converter here -->
+<xsl:param name="default_type">string</xsl:param>
+<xsl:template name="type_converter">
+	<xsl:param name="type" as="xs:string" />
+	<xsl:choose>
+	  <xsl:when test="$type='Date' or $type='Time' or $type='DateTime' or $type='Datetime' ">date</xsl:when>
+	  <xsl:when test="$type='Integer' ">int</xsl:when>
+	  <xsl:when test="$type='Text' ">string</xsl:when>
+	  <xsl:when test="$type='Boolean' ">bool</xsl:when>
+	  <xsl:when test="$type='Decimal' ">double</xsl:when>
+	  <xsl:when test="$type='Rate' ">double</xsl:when>
+	  <xsl:when test="$type='Rate2' ">double</xsl:when>
+	  <xsl:when test="$type='Rate3' ">double</xsl:when>
+	  <xsl:when test="$type='Rate6' ">double</xsl:when>
+	  <xsl:when test="$type='Dollar' ">double</xsl:when>
+	  <xsl:when test="$type='Dollar4' ">double</xsl:when>
+	  <xsl:otherwise><xsl:value-of select="$default_type"/></xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- Special Character Replacer -->
+<xsl:param name="apos">'</xsl:param>
+<xsl:param name="quot">"</xsl:param>
+<xsl:template name="special_character_replacer">
+	<xsl:param name="name" as="xs:string" />
+	<xsl:value-of select="translate(translate($name, $apos, '_'), ':/#?-.', '______')"/>
+</xsl:template>
+
+<xsl:template match="/">
+	[
+	<xsl:for-each select=".//Dictionary">
+		<xsl:if test="not(@ForceDynDAO)">
+			<xsl:if test="position() != 1">, </xsl:if>
+			<xsl:call-template name="complex_attribute" />
+			</xsl:if>
+	</xsl:for-each>
+	]
+</xsl:template>
+
+<xsl:template name="simple_attribute">
+	<xsl:param name="name" as="xs:string" />
+	<xsl:param name="type" as="xs:string" />
+	<xsl:param name="array" as="xs:string" />
+	{	
+      	"name": "<xsl:call-template name="special_character_replacer">
+	                	<xsl:with-param name="name" select="$name" />
+	                </xsl:call-template>",
+      	"details": {
+<!-- 	        "maxOccurs": 1, -->
+	        "type": "<xsl:call-template name="type_converter">
+	                	<xsl:with-param name="type" select="$type" />
+	                </xsl:call-template>",
+	        "isArray" : "<xsl:choose>
+	        				<xsl:when test="$array = 'True'">true</xsl:when>
+	        				<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>"
+	        		<!-- <xsl:choose>
+	        			<xsl:when test="not($type)">
+	        				"<xsl:value-of select="$default_type"/>"
+	        			</xsl:when>
+	        			<xsl:otherwise>
+	        				"<xsl:value-of select="$type"/>"
+	        			</xsl:otherwise>
+	        		</xsl:choose> -->
+	        		<!-- , -->
+<!-- 	        "minOccurs": 1 -->
+        }
+    }
+</xsl:template>
+
+<!-- Template for nested object -->
+<xsl:template name="complex_attribute">
+	{
+        "Behaviors": [],
+        "elementName": "<xsl:value-of select="translate(./@Name, '.:', '__')"/>",
+        "Relations": {
+			"To": [],
+			"From": []
+        },
+        "Attributes": {
+        	
+			"Simple": [
+				<!-- Filter @Type is not Object or Array -->
+				<xsl:for-each select="./Tag[not(@Type) or @Type != 'Object' and @Type != 'ObjectList']">
+					<xsl:if test="position() != 1">, </xsl:if>
+					<xsl:call-template name="simple_attribute">
+	                	<xsl:with-param name="name" select="./@Name" />
+	                	<xsl:with-param name="type" select="./@Type" />
+	                	<xsl:with-param name="array" select="./@List" />
+	                </xsl:call-template>
+        		</xsl:for-each>
+          	],
+			"Complex": [
+				<!-- Filter @Type is Object -->
+				<xsl:for-each select="./Tag[@Type = 'Object' or @Type = 'ObjectList']" >
+					<xsl:if test="position() != 1">, </xsl:if>
+					<xsl:call-template name="complex_attribute" />
+	            </xsl:for-each>
+			]
+        },
+        "details" : {
+        	"isArray" : "<xsl:choose>
+	        				<xsl:when test="./@List = 'True' or ./@Type = 'ObjectList'">true</xsl:when>
+	        				<xsl:otherwise>false</xsl:otherwise>
+						</xsl:choose>"
+
+        },
+        <!--  "isExtension": false, -->
+        "elementId": "<xsl:value-of select="generate-id(./@Name)" />"
+    }
+</xsl:template>
+
+
+</xsl:transform>

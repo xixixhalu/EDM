@@ -1,0 +1,78 @@
+/* For different size screens */
+
+@media only screen and (min-width: 576px) and (max-width: 767px){
+	body {height: 100%;width:100%; font-size: 1em;}
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1199px){
+	body {height: 100%;width:100%; font-size: 1.0em;}
+}
+
+@media only screen and (min-width: 1200px) and (max-width: 1499px){
+   body {height: 100%; width:100%; font-size: 1.1em;}
+}
+
+@media only screen and (min-width: 1500px) and (max-width: 1919px){
+   body {height: 100%;width:100%; font-size: 1.3em;}
+}
+
+@media only screen and (min-width: 1920px) and (max-width: 2799px){
+   body {height: 100%;width:100%; font-size: 1.4em;}
+}
+
+@media only screen and (min-width: 2800px){
+	 body {height: 100%;width:100%; font-size: 1.5em;}
+}
+
+html {
+	position: relative;
+	min-height: 100%;
+	display: block;
+}
+
+/* For padding between <footer> and <main> */
+body {
+	background-color: #fafafa;
+	margin-bottom: 100px;
+}
+
+/* Navigation bar styling */
+.navbar-nav > li {
+	margin-left: 5em;
+}
+
+/* Container */
+.container-fluid {
+	padding: 0;
+}
+
+/* Jumbotron background image and title text */
+
+.jumbotron {
+	/* background source : https://www.videoblocks.com/video/triangles-background-modern-background-loop-animation-h49q2ti8xiy1hn3gv */
+	background-image: url("/static/img/edm_background_3.png");
+	color: #ffffff;
+	padding-bottom: 1.5em;
+}
+
+.jumbotron h1 {
+	font-size: 3em;
+}
+
+.jumbotron p {
+	font-size: 1.5em;
+}
+
+/* Footer */
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	max-width: 100vw;
+	height: 60px;
+	background-color: #e9ecef;
+}
+
+.footer > .container {
+	padding-top: 20px;
+}

@@ -7,9 +7,9 @@ from utilities import edm_utils
 from uml_parser.domain_model import DomainModel
 from uml_parser import datatypes as dt
 import xml.etree.ElementTree as ET
+from XSLTJSONParser import XSLTJSONParser as XLSTUtil
 
-output_filename = ""
-
+import re
 
 class Analyzer:
 
@@ -20,34 +20,35 @@ class Analyzer:
         if not os.path.exists(PROJECT_DIR):
             raise e.SimpleException("Project Home Directory not created, run project initialize first.")
 
-        global output_filename
-        output_filename = filename
         DM_File_type = config['DM_Input_type']
         if DM_File_type == "Simple_XML":      
-            retObj = self.SimpleXMLUtil(PROJECT_DIR + "/" + filename+".xml", filename)
+            retObj = self.SimpleXMLUtil(PROJECT_DIR, filename)
             if retObj is None:
                 raise e.SimpleException("xml file not provided in the directory, check if file with extension .xml is uploaded")
             return retObj
 
 
-    def SimpleXMLUtil(self,dmoFile, _dmoName):
-        global output_filename
+    def SimpleXMLUtil(self,PROJECT_DIR, _dmoName):
         # NITIN : TODO : check how to handle namepspaces dynamically later
         namespaces = {"xmi_namespace": "http://schema.omg.org/spec/XMI/2.1"}
 
-        myDMO = ET.parse(dmoFile)
+        myDMO = ET.parse(PROJECT_DIR + "/" + _dmoName +".xml")
         root = myDMO.getroot()
 
         documentation=root.find('xmi_namespace:Documentation', namespaces)
-        exporter=documentation.get('exporter')
-        
-        # ZHIYUN: call corresponding parser for xml file
-        if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,_dmoName)
-        elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,_dmoName) 
-        else: raise e.SimpleException("parser for your xml exporter is not provided")
 
+        if documentation is not None:
+            exporter=documentation.get('exporter')
+            
+            # ZHIYUN: call corresponding parser for xml file
+            if exporter=="Enterprise Architect": return self.EA_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName)
+            elif exporter=="Visual Paradigm": return self.VP_XMLUtil(root,namespaces,PROJECT_DIR,_dmoName) 
+            else: raise e.SimpleException("parser for your xml exporter is not provided")
+        else:
+            # Bo: TODO: Try XSLTJSON here
+            return XLSTUtil.process(PROJECT_DIR, _dmoName)
 
-    def EA_XMLUtil(self,root,namespaces,_dmoName):
+    def EA_XMLUtil(self,root,namespaces,PROJECT_DIR,_dmoName):
         # NITIN : TODO : Change parsing after correcting assumptions about the XML structure
         definition = root.find('xmi_namespace:Extension', namespaces)   
         elements = definition.find("elements")
@@ -62,7 +63,8 @@ class Analyzer:
             # ZHIYUN : extract element if it's a definition of a class
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
                 elemId = element.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
-                elemName = element.get('name').strip()
+                # Bo: replace some special charactors
+                elemName = re.sub('[\W]', '_', element.get('name').strip())
                 dmo.declareElement( elemName , elemId)
                 elem[elemId]=elemName
       
@@ -70,12 +72,16 @@ class Analyzer:
         # ZHIYUN: adding attributes to element
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
-                elemName = element.get('name').strip()
+                # Bo: replace some special charactors
+                elemName = elemName = re.sub('[\W]', '_', element.get('name').strip())
                 elemAttributes = element.find('attributes')
                 if elemAttributes is not None:
                     for elemAttribute in elemAttributes:
-                        elemAttributeName = elemAttribute.get('name')
+                        elemAttributeName = re.sub('[\W]', '_', elemAttribute.get('name'))
                         elemAttributeType = elemAttribute.find('properties').get('type')
+                        # Bo: Teporarily solve unknown type
+                        if elemAttributeType == None or elemAttributeType == 'unknown':
+                             elemAttributeType = "string"
 
                         # ZHIYUN: add complex attributes
                         if elemAttributeType in elem.values():
@@ -89,13 +95,17 @@ class Analyzer:
                             
                         # NITIN : TODO : extract other features like upper and lower bounds, scope,
 
-                # NITIN : TODO : Check if the element has any operations defined and aadd them, implement operations on domain model
-
-
+                # Bo: Check if the element has any operations defined and aadd them, implement operations on domain model
+                elemOperations = element.find('operations')
+                if elemOperations is not None:
+                    for elemOperation in elemOperations:
+                        elemOperationName = elemOperation.get('name')
+                        dmo.defineOperation(elemName, elemOperationName)
+                        # Bo: TODO: check the return value and parameters
 
 
         # ZHIYUN: iterate all upper value of relation                
-	connectors=definition.find('connectors').findall('connector')
+        connectors=definition.find('connectors').findall('connector')
         upperValues={}
         for connector in connectors:
             relationId=connector.get(self.xmiPrefixAppender('idref', namespaces["xmi_namespace"] ))
@@ -127,12 +137,8 @@ class Analyzer:
                             endUpperValue=upperValues[relationId][1]
                         dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag), startUpperValue, endUpperValue)
 
-        file_path = "generated_code/default/" + _dmoName + "/"
-        if not os.path.exists(file_path):
-            os.makedirs(file_path)
-        edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
-        json_file = open(file_path + output_filename + ".json", "w")
-
+        #edm_utils.copyDirLink('code_templates/node_modules', PROJECT_DIR + "/" +'node_modules')
+        json_file = open(PROJECT_DIR + "/" + _dmoName + ".json", "w")
 
         json_file.write(dmo.toJson())
         json_file.close()
@@ -142,7 +148,7 @@ class Analyzer:
 
 
 
-    def VP_XMLUtil(self,root,namespaces,_dmoName):
+    def VP_XMLUtil(self,root,namespaces,PROJECT_DIR,_dmoName):
         elements = root.findall("packagedElement")
         dmo = DomainModel(_dmoName)
 
@@ -187,7 +193,19 @@ class Analyzer:
                             dmo.defineComplexAttribute(elemName,AttributeName, AttributeElemName, AttributeTypeSetter)
 
         # ZHIYUN: adding relations to elemnents 
-                
+
+        # NIKITA: Check if the element has any operations defined and add them, implement operations on domain model
+                elemOperations = element.find('operations')
+                if elemOperations is not None:
+                    for elemOperation in elemOperations:
+                        elemOperationName = elemOperation.get('name')
+                        dmo.defineOperation(elemName, elemOperationName)
+                else:
+                    elemOperations = element.findall('ownedOperation')
+                    for elemOperation in elemOperations:
+                        elemOperationName = elemOperation.get('name')
+                        dmo.defineOperation(elemName, elemOperationName)
+            
         # ZHIYUN: add generalization relations
         for element in elements:
             if element.get(self.xmiPrefixAppender('type', namespaces["xmi_namespace"] )) == "uml:Class":
@@ -224,12 +242,9 @@ class Analyzer:
 
 
   
-        file_path = "generated_code/default/" + _dmoName + "/"
-        if not os.path.exists(file_path):
-            os.makedirs(file_path)
-        edm_utils.copyDirLink('code_templates/node_modules', file_path+'node_modules')
-        json_file = open(file_path + output_filename + ".json", "w")
-        
+        #edm_utils.copyDirLink('code_templates/node_modules', PROJECT_DIR + "/" +'node_modules')
+        json_file = open(PROJECT_DIR + "/" + _dmoName + ".json", "w")
+
         json_file.write(dmo.toJson())
         json_file.close()
 

@@ -1,0 +1,88 @@
+
+var wrapper = require("./db_connection.js");
+var mongodb = require('mongodb');
+var ObjectId = require('mongodb').ObjectID;
+
+var dbOps = {};
+
+var primary_key = '_id';
+dbOps.create = function(collection, data, onResult) {
+	if (Array.isArray(data)) {
+		wrapper.db.collection(collection).insertMany(data, {w: 1}, function (err, result) {
+        	onResult(err, result);
+    	});
+	} else {
+		wrapper.db.collection(collection).insertOne(data, {w: 1}, function (err, result) {
+			onResult(err, result);
+		});
+	}
+};
+
+dbOps.readOne = function(collection, _id, onResult) {
+	var query = {};
+    query[primary_key] = new ObjectId(_id);
+    wrapper.db.collection(collection).find(query).next(function (err, result) {
+        onResult(err, result);
+    });
+};
+
+dbOps.readAll = function(collection, _id, data, onResult) {
+    if (_id != null) {
+        data[primary_key] = new ObjectId(_id);
+    }
+	wrapper.db.collection(collection).find(data).toArray(function (err, result) {
+        onResult(err, result);
+    });
+}
+
+dbOps.delete = function(collection, _id, data, onResult) {
+	if (_id != null) {
+        // Remove one document by _id
+        var query = {};
+        query[primary_key] = new ObjectId(_id);
+        wrapper.db.collection(collection).removeOne(query, {w: 1}, function (err, result) {
+            onResult(err, result);
+        });
+    } else if (typeof(data) !== 'undefined') {
+        // Remove several documents with same key-value pair
+        wrapper.db.collection(collection).removeMany(data, {w: 1}, function (err, result) {
+            onResult(err, result);
+        });
+    }
+};
+
+dbOps.put = function(collection, _id, data, onResult) {
+	var query = {};
+    query[primary_key] = new ObjectId(_id);
+    wrapper.db.collection(collection).update(query, data, function (err, result) {
+        onResult(err, result);
+    });
+};
+
+dbOps.patch = function(collection, _id, data, onResult) {
+    var query = {};
+    query[primary_key] = new ObjectId(_id);
+    wrapper.db.collection(collection).update(query, {$set: data}, function (err, result) {
+        onResult(err, result);
+    });
+};
+
+dbOps.check_collection = function(collection_name, validator_schema, callback) {
+
+    wrapper.db.listCollections({name: collection_name}).toArray(function(err, items) {
+        if (items.length >= 1) {
+            wrapper.db.command({ "collMod": collection_name, "validator": validator_schema.validator }, 
+            function(err, result) {
+                callback(err, result);
+            });
+            
+        } else {
+            wrapper.db.createCollection(collection_name, validator_schema, function(err, result) {
+                callback(err, result);
+            });
+        }
+    });
+    
+}
+
+module.exports = dbOps;

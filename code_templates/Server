@@ -4,22 +4,25 @@
  Configure the variables below
  */
 var server_ip = "$server_ip";
-var dbname = "$dbname";
+var dbname = "$db_name";
 var server_port = "$port";
 //declare what is the primary key for the table specified above.
 var primary_key = '_id';
 
 var collection_names = $collection_names;
-
+var class_models = [];
 
 /*
  Required node module
  */
+var mysql = require('mysql');
 var mongodb = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 var client = mongodb.MongoClient;
 var ObjectId = mongodb.ObjectId;
+var pathToSwaggerUi = require('swagger-ui-dist').absolutePath();
 
 //using express for RESTful communcation
 var app = express();
@@ -53,10 +56,55 @@ app.use(function (req, res, next) {
 // end point: http://host:port/dbname/collection_name/crud_operation
 for (var i = 0; i < collection_names.length; i++)
 {
-    var class_name = collection_names[i];
-    var class_model = require('./' + class_name + '.js');
-    app.use('/' + dbname + '/' + class_name, class_model);
+    try {
+        var class_name = collection_names[i];
+        var class_model = require('./' + class_name + '.js');
+        class_models.push(class_model);
+        app.use('/' + dbname + '/' + class_name, class_model);
+    } catch (e) {
+        console.log("Error in " + class_name + ".js" + "  SKIP");
+        if (e.code !== 'MODULE_NOT_FOUND') {
+            // Re-throw not "Module not found" errors 
+            throw e;
+        }
+        if (e.message.indexOf('\'express\'') === -1) {
+            // Re-throw not found errors for other modules
+            throw e;
+        }
+    }
 }
+
+// api reference for the crud operations
+var api_file = 'api.json'
+app.use('/apiref', express.static(pathToSwaggerUi));
+app.use('/' + api_file, function(req, res) {
+    res.json(require('./' + api_file));
+})
+
+// redirect to file path
+app.use('/api', function(req, res) {
+    res.redirect('/apiref?url=/' + api_file);
+})
+
+// end point: http://host:port/dbname/behavior
+var behavior_path = __dirname + "/Behaviors";
+if (fs.existsSync(behavior_path)) {
+    fs.readdirSync(behavior_path).forEach(file => {
+        try {
+            var behavior = require('./Behaviors/' + file);
+            app.use("/" + dbname, behavior);
+        } catch (error) {
+            console.log("Error in " + file + "  SKIP");
+        }
+    });
+}
+
+// create collection with schema if a collection doesn't exist
+var check_collections = function() {
+    for (var i = 0; i < class_models.length; i++) {
+        class_models[i].check_collection();
+    }
+};
 
 //Server is running in port 9001; REST API should call ex. localhost:9001/readoneData etc...
 var server = app.listen(server_port, server_ip, function () {
@@ -64,4 +112,6 @@ var server = app.listen(server_port, server_ip, function () {
     var port = server.address().port;
 
     console.log("App listening at http://%s:%s", host, port)
+
+    setTimeout(check_collections, 1000);
 });

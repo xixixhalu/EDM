@@ -1,6 +1,9 @@
+package $NAMESPACE;
+
 import com.google.gson.JsonObject;
 
-
+// $MODEL_NAME
+// $DM_NAME
 public class $model {
 
     public static String className = "$model";
@@ -10,7 +13,7 @@ public class $model {
 
     $FUNC createOne
     public static void createOne(JsonObject data) {
-        class createOneCB {
+        class CreateOneCallback {
             public void successCB(String result) {
                 System.out.println("successCB: " + result);
             }
@@ -18,8 +21,8 @@ public class $model {
                 System.out.println("errorCB: " + message);
             }
         }
-        createOneCB CBModel = new createOneCB();
-        Adapter.createOne(className, data, CBModel);
+        CreateOneCallback cbModel = new CreateOneCallback();
+        Adapter.createOne(className, data, cbModel);
     }
     $ENDFUNC
 

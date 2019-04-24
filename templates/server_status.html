@@ -3,66 +3,59 @@
 <html ng-app>
 	<head>
 		<meta charset="utf-8">
-		<title>API References - Executable Domain Modeling</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/style.css') }}">
-		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.9/angular.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-		<script type="text/javascript" src="{{ url_for('static',filename='js/main.js') }}"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Server Status - Executable Domain Modeling</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/global.css') }}">
 		<basefont size="7">
 	</head>
 	<body>
-		<div id="container">
-			<!--Show the title of the project -- Page header-->
-			<div class="jumbotron">
-				<div class="container text-center">
+		{% include 'nav_bar.html' %}
+		<main role="main">
+			<!--Shows the title of the page - Project header -->
+			<div class="jumbotron text-center">
+				<div class="container">
 					<h1>Executable Domain Modeling</h1>
-					<p>Convert XML files to real code</p>
+					<p>Generate microservice instances for use cases</p>
 				</div>
 			</div>
-			<!--Nav bars -- help redirect to different pages-->
-			<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-				<!-- Redirect to homepage here -->
-				<ul class="navbar-nav nav-justified col-sm-12">
-					<li class="nav-brand">
-						<a class="nav-link" href="#"><span class="fa fa-home"></span></a>
-					</li>
-					<!--Redirect to description page here!-->
-					<li class="nav-item">
-						<a class="nav-link" href="#">Description</a>
-					</li>
-					<!--Redirect to API reference page here!-->
-					<li class="nav-item">
-						<a class="nav-link" href="#">API Reference</a>
-					</li>
-					<!--Redirect to server status page here!-->
-					<li class="nav-item">
-						<a class="nav-link" href="#">Server Status</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a>
-					</li>
-				</ul>
-			</nav>
-			<div id="content">
-				<!--The main content on the page: A brief description about the server here-->
-				<div class="container-fluid" style="margin-top:20px">
-					<h3>Server Status</h3>
-					<div class="container-fluid ">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12"><h3>
+						<span class="fas fa-server"></span>
+						Server Status
+							<form class="operation"  method="POST" action="{{ url_for('main_bp.regenerate') }}" style="display:inline;">
+								<input type="hidden" name="domainModelName" value="{{ domainModelName }}">
+								<input type="hidden" name="fileId" value="{{ fileId }}">
+								<button class="operation btn" title="Regenerate"/>
+								<i class="fa fa-sync-alt"></i>
+							</form>
+						</h3>
+					</div>
+				</div>
+				<div class="row mt-2">
+					<div class="col-md-12">
 						<ul class="list-group">
-							<li class="list-group-item"> The status of the instance as seen on EC2 </li>
-							<li class="list-group-item"> Display the amount of data present</li>
+							<li class="list-group-item" id="urlli"></li>
+							<script>
+								document.getElementById("urlli").innerHTML="Server URL: " + "{{ server_url }}";
+							</script>
+
+							<li class="list-group-item" id="keyli"></li>
+							<script>
+								document.getElementById("keyli").innerHTML="Access Key: " +"{{ authen_key }}";
+							</script>
 						</ul>
 					</div>
 				</div>
 			</div>
-			<!--show the copyright as footer-->
-			<div id="footer" align="center">
-				<p>&copy; Copyright Protected. All rights reserved</p>
+		</main>
+		<!--show the copyright as footer-->
+		<footer class="footer">
+			<div class="container text-center">
+				<span class="text-muted">&copy;Copyright Protected. All rights reserved</span>
 			</div>
-		</div>
+		</footer>
 	</body>
 </html>

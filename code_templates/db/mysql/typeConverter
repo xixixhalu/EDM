@@ -1,0 +1,94 @@
+"use strict";
+
+var ObjectId = require('mongodb').ObjectID;
+
+
+var typeConverter = {};
+
+// Type for MongoDB
+typeConverter.type = {
+	"double" : 1,			// Double
+	"string" : 2,			// String	
+	"object" : 3,			// Object
+	"array" : 4,			// Array
+	//"binData" : 5,			// Binary data
+	//"undefined" : 6,		// Undefined	Deprecated.
+	"objectId" : 7,			// ObjectId 
+	"bool" : 8,				// Boolean	 
+	"date" : 9,				// Date 
+	//"null" : 10,			// Null
+	//"regex" : 11,			// Regular Expression	 
+	//"dbPointer" : 12,		// DBPointer	Deprecated.
+	//"javascript" : 13,		// JavaScript	 
+	//"symbol" : 14,			// Symbol	Deprecated.
+	//"javascriptWithScope" : 15,	// JavaScript (with scope)		 
+	"int" : 16,				// 32-bit integer	 
+	//"timestamp" : 17,		// Timestamp 
+	"long" : 18,			// 64-bit integer
+	"decimal" : 19			// Decimal128
+	//"minKey" : -1,			// Min key	 
+	//"maxKey" : 127			// Max key
+};
+
+// Temporary paser. Should be specified more detail in real environment 
+typeConverter.typeConvert = function(data, key, schema) {
+	var value = data[key];
+    var type = schema[key].bsonType;
+	switch(type) {
+	    case "double":
+	    case "decimal":
+	        return parseFloat(value);
+	    case "string":
+	        return String(value);
+	    case "object":
+	    	return typeConverter.convert(data[key], schema[key].properties);
+	    case "array":
+	    	if (schema[key]['items']['bsonType'] == 'object') {
+	    		var values = []
+	    		for (let i = 0; i < value.length; i++) {
+	    			var v = typeConverter.convert(value[i], schema[key]['items'].properties);
+	    			values.push(v);
+	    		}
+	    		return values;
+	    	} else {
+	    		var values = []
+	    		for (let i = 0; i < value.length; i++) {
+	    			var data = {'items': value[i]};
+	    			var v = typeConverter.typeConvert(data, 'items', schema[key]);
+	    			values.push(v);
+	    		}
+	    		return values;
+	    	}
+	    case "bool":
+	    	return (value == true);
+	    case "date":
+	    	return new Date(value);
+	    case "int":
+	    case "long":
+			return parseInt(value);
+		case "objectId":
+			return new String(value);
+	    default:
+			return String(value);
+    }	
+
+}
+
+// Type for MongoDB
+typeConverter.convert = function(data, attribute_schema) {
+	var rst = {};
+	var keys = Object.keys(data);
+	for (let i = 0; i < keys.length; i++) {
+		var key = keys[i];
+        if (attribute_schema.hasOwnProperty(key)) {
+            rst[key] = typeConverter.typeConvert(data, key, attribute_schema);
+        } else {
+        	rst[key] = data[key];
+        }
+    };
+    return rst;
+}
+
+
+
+module.exports = typeConverter;

@@ -1,6 +1,6 @@
-import re
 import json
 import os
+import re
 
 TEMPLATE_PREFIX = "$"
 TEMPLATE_FUNC_MARK = "\$FUNC"
@@ -11,9 +11,19 @@ TEMPLATE_LANGUAGES = ["JavaScript", "Java", "Swift"]
 TEMPLATE_PATH = {"Java": "code_templates/java/",
                  "JavaScript": "code_templates/javascript/",
                  "Swift": "code_templates/swift/"}
+
 LANGUAGE_SUFFIX = {"Java": ".java",
                    "JavaScript": ".js",
                    "Swift": ".swift"}
+
+SOURCE_SUBPATH = {"Java": "src/main/java/",
+                  "JavaScript": "",
+                  "Swift": ""}
+
+TEST_SUBPATH = {"Java": "src/test/java/",
+                "JavaScript": "",
+                "Swift": ""}
+
 
 def list2template_str(name_list):
     result_str = ""
@@ -41,10 +51,11 @@ def replace_words(template_content, replacements):
         content = content.replace(TEMPLATE_PREFIX + key, replacement)
     return content
 
-def template_output_path(dm_name, language=None, username="default"):
+
+def template_output_path(output_dir, dm_name, language=None):
     if language:
-        return "generated_code/%s/%s/%s/" % (username, dm_name, language)
-    return "generated_code/%s/%s/" % (username, dm_name)
+        return output_dir + "/" + language + "/"
+    return output_dir + "/" + dm_name + "/"
 
 
 def remove_indent(func_str):
@@ -88,6 +99,7 @@ class TemplateModel(dict):
         "methods": [String, ...]
     }
     """
+
     def __init__(self, **kwargs):
         dict.__init__(self, kwargs)
 
@@ -115,7 +127,7 @@ class TemplateModel(dict):
                               for attribute in element_attrs]
 
             # NOTE haven't test "Operations" part
-            method_names = element["Operations"]
+            method_names = element["Behaviors"]
             data = {"dm_name": dm_name,
                     "name": elem_name,
                     "attributes": attribute_list,
@@ -138,6 +150,7 @@ class TemplateMethod:
 
     should only be created by Template.extract_methods()
     """
+
     def __init__(self, language, name, annotation, content, model=None):
         self.name = name
         self.content = remove_indent(content)
@@ -214,30 +227,59 @@ class Template:
     General template class
 
     """
-    def __init__(self, language, template_type, dm_name=None, name=None, template_location=None, content=None):
+
+    def __init__(self, language, template_type, output_dir, dm_name=None, name=None, template_location=None,
+                 content=None):
         self.language = language
         self.type = template_type
         self.dm_name = dm_name
         self.name = name
-        self.methods = None
+        # self.methods = None
+        self.output_dir = output_dir
+        self.output_source_subpath = SOURCE_SUBPATH[language]
 
         if content:
             self.content = self.raw_content = content
         else:
-            template_location = template_location or (TEMPLATE_PATH[language] + template_type + LANGUAGE_SUFFIX[language])
+            template_location = template_location or (
+                    TEMPLATE_PATH[language] + template_type + LANGUAGE_SUFFIX[language])
             with open(template_location, "r") as template_file:
                 self.content = self.raw_content = template_file.read()
 
     def __str__(self):
         return self.content
 
+    namespacesByLanguage = {
+        "Java": (lambda self: self.construct_java_namespace()),
+        "JavaScript": (lambda self: ""),
+        "Swift": (lambda self: "")
+    }
+
     @property
     def output_path(self):
-        return template_output_path(self.dm_name, self.language)
+        return template_output_path(self.output_dir, self.dm_name, self.language)
 
     @property
     def output_location(self):
-        return self.output_path + self.name + LANGUAGE_SUFFIX[self.language]
+        return self.output_path + "/" + self.output_source_subpath + self.namespace_as_path
+
+    @property
+    def output_filename(self):
+        return self.name + LANGUAGE_SUFFIX[self.language]
+
+    @property
+    def namespace(self):
+        return self.namespacesByLanguage[self.language](self)
+
+    def construct_java_namespace(self):
+        ns0 = list(filter(lambda x: x is not None, ["com.parallelagile", self.dm_name]))
+        ns1 = list(map(lambda x: x.lower(), ns0))
+        return ".".join(ns1)
+
+    @property
+    def namespace_as_path(self):
+        path = self.namespace.replace(".", "/")
+        return path if path == "" else "/" + path + "/"
 
     def remove_func_marks(self):
         """
@@ -256,9 +298,8 @@ class Template:
         method_contents = re.findall(pattern, self.content, re.S)
         for method_name, method_annotation, method_body in method_contents:
             method_annotation = method_annotation[1:-2] if len(method_annotation) > 2 else ""
+            methods.append(TemplateMethod(language, method_name, method_annotation, method_body))
 
-            methods.append(TemplateMethod(language, name=method_name,
-                                          annotation=method_annotation, content=method_body))
         self.remove_func_marks()
         self.methods = methods
         return methods
@@ -273,10 +314,17 @@ class Template:
             list_str = list_str[1:-1]
             self.content = self.content.replace(TEMPLATE_PREFIX + key, list_str)
 
+    def replace_namespace(self):
+        self.replace_words({"NAMESPACE": self.namespace})
+
+    def replace_misc_words(self):
+        self.replace_words({"MODEL_NAME": self.name,
+                            "DM_NAME": self.dm_name})
+
     def output(self):
-        if not os.path.isdir(self.output_path):
-            os.makedirs(self.output_path)
-        with open(self.output_location, "w") as output_file:
+        if not os.path.isdir(self.output_location):
+            os.makedirs(self.output_location)
+        with open(self.output_location + self.output_filename, "w") as output_file:
             output_file.write(self.content)
 
     def render(self, tofile=True, reset=False, replace_words=None, replace_strlists=None):
@@ -299,10 +347,13 @@ class ModelTemplate(Template):
 
     just implement the code display data for class model and handle "$method" mark
     """
-    def __init__(self, language, dm_name, model):
-        Template.__init__(self, language, "Model", dm_name, model.name)
+
+    def __init__(self, language, dm_name, model, output_dir="default"):
+        Template.__init__(self, language, "Model", output_dir, dm_name, model.name)
         self.model = model
+        self.replace_namespace()
         self.replace_methods()
+        self.replace_misc_words()
         self.raw_content = self.content
 
     # XXX need test and extend
@@ -310,10 +361,11 @@ class ModelTemplate(Template):
         """
         find "$method" mark in template and replace with methods code according to model's info
         """
-        method_names = self.model.methods
-        template = Template(self.language, "Method")
-        method_content = [template.render(False, True, replace_words={"method": method_name, "parameters": ""})
-                          for method_name in method_names]
+        methods = self.model.methods
+        template = Template(self.language, "Method", self.output_dir)
+
+        method_content = [template.render(False, True, replace_words={"method": method['name'], "parameters": ""})
+                          for method in methods]
         method_content = "".join(method_content)
         self.replace_words({"methods": method_content})
 
@@ -326,7 +378,7 @@ class ModelTemplate(Template):
         func_info_list = [method.get_method_info() for method in self.methods]
         return {"func_info_list": func_info_list,
                 "attribute_list": [],
-                "file_uri": self.output_location}
+                "file_uri": self.output_location + self.output_filename}
 
     def render(self, tofile=True, reset=False, replace_words=None, replace_strlists=None):
         Template.render(self, False, False, replace_words, replace_strlists)
@@ -340,32 +392,18 @@ class AdapterTemplate(Template):
 
     not much different from basic template but just implement the code display data for Adapter
     """
-    def __init__(self, language, dm_name):
-        Template.__init__(self, language, "Adapter", dm_name, "Adapter")
+
+    def __init__(self, language, dm_name, output_dir="default"):
+        Template.__init__(self, language, "Adapter", output_dir, dm_name, "Adapter")
+        self.replace_namespace()
 
     def get_display_data(self):
         func_info_list = [method.get_method_info() for method in self.methods]
         return {"func_info_list": func_info_list,
                 "attribute_list": [],
-                "file_uri": self.output_location}
+                "file_uri": self.output_location + self.output_filename}
 
     def render(self, tofile=True, reset=False, replace_words=None, replace_strlists=None):
         Template.render(self, False, False, replace_words, replace_strlists)
         self.extract_methods()
         Template.render(self, tofile, reset)
-
-
-# Legacy class
-class ServerTemplate(Template):
-    """
-    Template class for Server code file
-
-    not much different from basic template but just specify file path
-    """
-    def __init__(self, dm_name):
-        template_location = "code_templates/Server"
-        Template.__init__(self, "JavaScript", "Server", dm_name, "Server", template_location=template_location)
-
-    @property
-    def output_path(self):
-        return template_output_path(self.dm_name)

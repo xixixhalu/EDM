@@ -7,10 +7,7 @@ var dbOps = require("./dbOps.js");
 
 var authen = {};
 
-
-authen.process = function(req, requesttype, onResult) {
-	var data = JSON.parse(req.body.data);
-    var collection = req.body.collection;
+authen.verify = function(req, onResult) {
     var postData = querystring.stringify({
             username: req.body.username,
             key: req.body.key
@@ -32,93 +29,16 @@ authen.process = function(req, requesttype, onResult) {
                 verification += chunk;
             });
             verif_result.on('end', function() {
-                var obj = JSON.parse(verification);
+            var obj = JSON.parse(verification);
             if (obj.valid === true)
-         	{
-            	if (requesttype == 1)
-            	{
-            		var data = JSON.parse(req.body.data);
-        			var collection = req.body.collection;
-	                dbOps.create(collection, data, function(result) {
-		                if (!result) 
-		                {
-		                    onResult(null, 1);
-		                }
-		                else 
-		                {
-		                    onResult(result, 0);
-		                }
-		            });
-            	}
-            	else if (requesttype == 2)
-            	{
-            		var collection = req.body.collection;
-    				var _id = req.body._id;
-    				var data = JSON.parse(req.body.data);
-    				dbOps.readOne(collection, _id, data, function(result) {
-	        			if (!result) 
-	        			{
-	        				onResult(null, 1);
-	        			}
-	        			else 
-	        			{
-	            			onResult(result, 0);
-	        			}
-    				});
-            	}
-            	else if (requesttype == 3)
-            	{
-            		var collection = req.body.collection;
-    				var data;
-    				if (typeof(req.body.data) === 'undefined')
-        				data = {};
-    				else
-        				data = JSON.parse(req.body.data);
-        			dbOps.readAll(collection, data, function(result) {
-        				if (!result) 
-        				{
-            				onResult(null, 1);
-        				}
-        				else 
-        				{
-            				onResult(result, 0);
-        				}
-    				});
-            	}
-            	else if (requesttype == 4)
-            	{
-            		var collection = req.body.collection;
-    				var _id = req.body._id;
-    				var data = JSON.parse(req.body.data);
-    				dbOps.delete(collection, _id, data, function(result) {
-	        			if (!result) 
-	        			{
-	            			onResult(null, 1);
-	        			}
-	        			else 
-	        			{
-	            			onResult(result, 0);
-	        			}
-    				});
-            	}
-            	else if (requesttype == 5)
-            	{
-            		var collection = req.body.collection;
-    				var _id = req.body._id;
-    				var newData = JSON.parse(req.body.newData);
-    				var oldData = JSON.parse(req.body.oldData);
-    				dbOps.update(collection, _id, newData, oldData, function(result) {
-        				onResult(result, 0);
-    				});
-            	}
+            {
+                onResult(true, 0);
             }
             else
             {
-                onResult(null, 2);
+                onResult(null, 1);
             }
         });
       }).write(postData);
 };
-
-
 module.exports = authen;

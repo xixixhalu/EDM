@@ -1,0 +1,11 @@
+				$nested_object_name : {
+		          bsonType: 'array',
+		          items: {
+		          	  bsonType: 'object',
+			          additionalProperties: true,
+			          required: $nested_attributes,
+			          properties: {
+			          	$nested_object_schema
+			          }
+		          }
+		        }

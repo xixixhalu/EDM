@@ -1,0 +1,126 @@
+/* Functional tabs styling */
+.sub-navline {
+	border-bottom: 3px solid #e9ecef;
+}
+
+.functional-tab {
+	margin-bottom: 0.5em;
+	height: 10%;
+}
+
+/*Instance table styling*/
+
+.card-header {
+	padding: 0.2rem 0rem;
+}
+
+.btn_dashboard {
+	text-decoration: none !important;
+	font-size: 15pt;
+	color: black;
+}
+
+.operation {
+	display: inline
+}
+
+.operation.btn {
+    border: none; /* Remove borders */
+    font-size: 10px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+}
+
+/* Darker background on mouse-over */
+.operation.btn:hover {
+    background-color: grey;
+}
+
+/* Removed style */
+
+/* div#container{
+	position:absolute;
+	width: 100%;
+	height:100%;
+	left: 0;
+	top: 0;
+} */
+
+/* div#content{
+	position:relative;
+	min-height: 90%;
+	padding: 1em 1em;
+	margin-bottom: 0;
+} */
+
+/* .content {
+	height: 540px;
+} */
+
+/* widget-area.blank {
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-ms-box-shadow: none;
+	-o-box-shadow: none;
+	box-shadow: none;
+}
+
+.widget-area {
+	background-color: #fff;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	-ms-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	-o-box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 0 16px rgba(0, 0, 0, 0.05);
+	float: left;
+	margin-top: 30px;
+	padding: 25px 30px;
+	position: relative;
+	width: 100%;
+} */
+
+/* .user_profile {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+	border-radius: 4px;
+	float: left;
+	overflow: hidden;
+	width: 100%;
+	font-weight: bold;
+} */
+
+/* .user_profile > span#instance_info {
+	background: #48a4dc;
+	color: white;
+}
+
+.user_profile > span#class_info {
+	background: #3b5998;
+	color: white;
+}
+
+.user_profile> span#function_info {
+	background: #ff604f;
+	color: white;
+}
+
+.user_profile > span {
+	float: left;
+	font-size: 28px;
+	height: 110px;
+	line-height: 110px;
+	text-align: center;
+	width: 100%;
+}
+
+#widget-box {
+	margin-top: 2%;
+	margin-bottom: 5%;
+} */
