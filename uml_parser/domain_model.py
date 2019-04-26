@@ -3,6 +3,7 @@
 from utilities import exceptions as e
 from uml_parser import datatypes as dt
 import json
+from collections import deque
 
 class DomainModel:
 	
@@ -16,6 +17,10 @@ class DomainModel:
  		self.Relations = set()
  		# NITIN : NOTE : Name of the domain model
  		self.dmoName = _dmoName
+ 		# Xiang: Set holds all generation classes
+ 		self.GeneralizationClasses = set()
+ 		# Xiang: Dictionary holds generalization relation for referencing (end_id:start_id)
+ 		self.GeneralizationRelations = {}
 
  	# NITIN : Element must be declared before being used
 	def declareElement(self , _ElementName, _id):
@@ -40,20 +45,26 @@ class DomainModel:
 		self.ElementDirectory[id].addSimpleAttribute(_AttributeName, _AttributeType)
 
 	# NITIN : NOTE : Define a attribute of the type of another element
-	def defineComplexAttribute(self, _ElementName , _AttributeName , _AttributeElementName , _AttributeType):
-                # ZHIYUN: format element name
-                _ElementName=_ElementName.replace(" ","_")
-                _AttributeElementName=_AttributeElementName.replace(" ","_")
+	# XUFENG : old API : defineComplexAttribute(self, _ElementName , _AttributeName, _AttributeElementName, _AttributeType)
+	def defineComplexAttribute(self, _ElementName , _AttributeName, _AttributeElementName = None, _AttributeType = None, _AttributeRef = None):
+		
+		# ZHIYUN: format element name
+		_ElementName=_ElementName.replace(" ","_")
 		try:
 			assert self.isElementDeclared(_ElementName)
 		except:
 			raise e.SimpleException("No such element declared, check for declaration of element :" + _ElementName)
-
-		if not self.isElementDeclared(_AttributeElementName) : 
-                    raise e.SimpleException("Attempt to create attribute of type " + _AttributeElementType + " which is not declared .")
-               
 		id = self.ElementReference[_ElementName]
-		self.ElementDirectory[id].addComplexAttribute(_AttributeName, _AttributeElementName, _AttributeType)
+		
+		# XUFENG : call addComplexAttribute, see call cases in addComplexAttribute
+		if not _AttributeRef:	# case 1
+			_AttributeElementName=_AttributeElementName.replace(" ","_")
+			if not self.isElementDeclared(_AttributeElementName) : 
+				raise e.SimpleException("Attempt to create attribute of type " + _AttributeElementType + " which is not declared .")
+			self.ElementDirectory[id].addComplexAttribute(_AttributeName, _AttributeElementName, _AttributeType)
+		else:	# case 2
+			self.ElementDirectory[id].addComplexAttribute(_AttributeName, None, None, _AttributeRef)
+
 
 	# NITIN : NOTE : Define relations between element
 	def defineRelation(self, _id,_start, _end,_RelationType = "Association", _startUpperVaule="unknown",_endUpperValue="unknown"):
@@ -75,8 +86,21 @@ class DomainModel:
 			self.defineSimpleAttribute(elemName, elemAttributeName, elemAttributeTypeSetter)
 		elif _RelationType == "Generalization":
 			relation = dt.Generalization(_id,_start, _end, _RelationType)
-                elif _RelationType == "Composition":
-                        relation = dt.Composition(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
+			self.GeneralizationClasses.add(_start)
+			self.GeneralizationClasses.add(_end)
+			if _end in self.GeneralizationRelations:
+				self.GeneralizationRelations[_end].append(_start)
+			else:
+				self.GeneralizationRelations[_end]=[]
+				self.GeneralizationRelations[_end].append(_start)
+		elif _RelationType == "Composition":		
+			relation = dt.Composition(_id,_start, _end,_RelationType,_startUpperVaule,_endUpperValue)
+			# XUFENG : add composition reference as a complex attribute
+			elemName = str(self.ElementDirectory[_start].ElementName)
+			attrName = str(self.ElementDirectory[_end].ElementName)
+			# attribute ref -> <domain model name>/<attribute class id>
+			attrRef = str(self.dmoName) + '/' + str(self.ElementDirectory[_end].id)
+			self.defineComplexAttribute(elemName, attrName, None, None, attrRef)
 		else:
 			#raise e.SimpleException("Type of relation not defined : " + _RelationType)
 			print "Type of relation not defined : " + _RelationType
@@ -97,6 +121,36 @@ class DomainModel:
 		
 		id = self.ElementReference[_ElementName]
 		self.ElementDirectory[id].addOperation(_OperationName, _ReturnValue, _ParameterValue)
+
+	#Xiang: Deal with generalization relation and add attributes in total.
+	def addAllGeneralizationAttributes(self):
+		#add all root classes of generalization relations to the set
+		allRoots = set()
+		for elementId in self.GeneralizationClasses:
+			if str(self.ElementDirectory[elementId].relationsFromThisElement).find('Generalization') < 0:
+				allRoots.add(elementId) 
+		#add attributes from the root of generalization relations.
+		for elementId in allRoots:
+			queue = deque([elementId])
+			while queue:
+				current = queue.popleft()
+				if current in self.GeneralizationRelations:
+					for nextLevel in self.GeneralizationRelations[current]:
+						queue.append(nextLevel)
+						#for each element generalized from current element, copy the SimpleAttributes and ComplexAttributes
+						for key,value in self.ElementDirectory[current].SimpleAttributes.iteritems():							
+							self.ElementDirectory[nextLevel].SimpleAttributes[key] = value
+							#attrName = key
+							#attrType = dt.SimpleType(str(value.toJson()["type"]))
+							#self.ElementDirectory[nextLevel].addSimpleAttribute(attrName, attrType)
+						for key,value in self.ElementDirectory[current].ComplexAttributes.iteritems():
+							self.ElementDirectory[nextLevel].ComplexAttributes[key] = value
+							#attrName = key
+							#attrType = dt.ComplexType(str(value[1].toJson()["type"]))
+							#self.ElementDirectory[nextLevel].addComplexAttribute(attrName, attrType)
+				#else condition: we have reached the bottom class of generalization chain
+
+
 
 	# NITIN : NOTE : Make an element an extension of another element, basically imports all the base element's attributes and functions
 	def extendElement(self, _ElementName, _ExtensionType):
@@ -147,9 +201,24 @@ class DomainModel:
 			if not isinstance(_AttributeType,dt.SimpleType) : raise e.SimpleException("Trying to add a non SimpleType attribute in the function addSimpleAttribute .") 
 			self.SimpleAttributes[_AttributeName] = _AttributeType
 		
-		def addComplexAttribute(self, _AttributeName , _AttributeElementName , _AttributeType):
-			if not isinstance(_AttributeType, dt.ComplexType) : raise e.SimpleException("Trying to add a non ComplexType attribute in the function addComplexAttribute .")
-			self.ComplexAttributes[_AttributeName] = (_AttributeElementName, _AttributeType)
+		# XUFENG : old API: addComplexAttribute(self, _AttributeName , _AttributeElementName , _AttributeType)
+		def addComplexAttribute(self, _AttributeName , _AttributeElementName = None, _AttributeType = None, _AttributeRef = None):
+			"""
+				call cases:
+				1. obj.addComplexAttribute(_AttributeName, _AttributeElementName, _AttributeType)
+					_AttributeElementName -> class name of the attribute
+					_AttributeType -> class id of the attribute 
+				2. obj.addComplexAttribute(_AttributeName, None, None, _AttributeRef)
+					_AttributeName -> class name of the composition class
+					_AttributeRef -> <domain model name>/<class id of the attribute>
+			"""
+			if not _AttributeRef:	# case 1
+				if not isinstance(_AttributeType, dt.ComplexType) : raise e.SimpleException("Trying to add a non ComplexType attribute in the function addComplexAttribute .")
+				self.ComplexAttributes[_AttributeName] = (_AttributeElementName, _AttributeType)
+			else:	# case 2
+				# attrType = _AttributeRef.split('/')[1]
+				# if not isinstance(attrType, dt.ComplexType) : raise e.SimpleException("Trying to add a non ComplexType attribute in the function addComplexAttribute .")
+				self.ComplexAttributes[_AttributeName] = (_AttributeName, _AttributeRef)
 
 		# Bo: add operation to element
 		def addOperation(self, _OperationName, _ReturnValue, _ParameterValue):
@@ -203,7 +272,13 @@ class DomainModel:
 				attrObj = {}
 				attrObj["name"] = key
 				attrObj["referenceType"] = value[0]
-				attrObj["details"] = value[1].toJson()
+				# XUFENG :
+				if isinstance(value[1], self.__class__):	# normal case
+					attrObj["details"] = value[1].toJson()
+				else:	# composition case
+					detailDict = dict()
+					detailDict['AttributeRef'] = value[1]
+					attrObj["details"] = detailDict
 				return_obj["Attributes"]["Complex"].append(attrObj)
 
 			for relation in self.relationsFromThisElement:
