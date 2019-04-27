@@ -140,14 +140,8 @@ class DomainModel:
 						#for each element generalized from current element, copy the SimpleAttributes and ComplexAttributes
 						for key,value in self.ElementDirectory[current].SimpleAttributes.iteritems():							
 							self.ElementDirectory[nextLevel].SimpleAttributes[key] = value
-							#attrName = key
-							#attrType = dt.SimpleType(str(value.toJson()["type"]))
-							#self.ElementDirectory[nextLevel].addSimpleAttribute(attrName, attrType)
 						for key,value in self.ElementDirectory[current].ComplexAttributes.iteritems():
 							self.ElementDirectory[nextLevel].ComplexAttributes[key] = value
-							#attrName = key
-							#attrType = dt.ComplexType(str(value[1].toJson()["type"]))
-							#self.ElementDirectory[nextLevel].addComplexAttribute(attrName, attrType)
 				#else condition: we have reached the bottom class of generalization chain
 
 
