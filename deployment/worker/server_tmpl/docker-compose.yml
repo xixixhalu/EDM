@@ -1,0 +1,28 @@
+version: '3'
+services:
+    db:
+        image: mongo.${UNAME}.${PNAME}.${IID}
+#        networks:
+#         - app-net
+        ports:
+         - "27017"
+        environment: 
+         - MONGO_INITDB_ROOT_USERNAME=admin-user
+         - MONGO_INITDB_ROOT_PASSWORD=admin-pwd
+         - MONGO_INITDB_DATABASE=admin
+         - SERVICE_NAME=mongo.${IID}
+    web:
+        image: web.${UNAME}.${PNAME}.${IID}
+        links:
+         - db
+        environment: 
+         - SERVICE_NAME=web.${IID}
+#        networks:
+#         - app-net
+        ports:
+         - "2000"
+        restart: unless-stopped
+        command: node Server.js
+
+#networks:
+#    app-net:

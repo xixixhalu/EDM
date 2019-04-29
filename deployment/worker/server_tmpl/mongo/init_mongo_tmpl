@@ -1,0 +1,14 @@
+db.auth('admin-user','admin-pwd')
+db = db.getSiblingDB('PROJECT_NAME')
+
+//role set to readWrite, cannot use dbAdmin now, will raise "not authorized" when operate db as the new user
+db.createUser({
+        user:"PROJECT_NAME_user",
+        pwd:"PROJECT_NAME_pwd",
+        roles:[{
+                role:"readWrite",
+                db:"PROJECT_NAME"
+        }]
+})
+
+db.auth('PROJECT_NAME_user','PROJECT_NAME_pwd')

@@ -1,0 +1,8 @@
+version: "3"
+services:
+  nginx:
+    image: nginx_lb
+    container_name: "lb"
+    ports:
+      - "80:80"
+    restart: "always"
