@@ -4,7 +4,7 @@ var mongodb = require('mongodb');
  Initialize a connection to the MongoDB
  change the IP and keyspace so that it is according to your setting.
  */
-var db_server = 'localhost:27017';
+var db_server = 'db:27017';
 var db_name = "$db_name"
 var db_user = "$db_user";
 var db_password = "$db_password";

@@ -24,7 +24,8 @@ def get_server_info():
     from_port = config_util.getInt('Port', 'from_port')
     to_port = config_util.getInt('Port', 'to_port')
 
-    port = port_scanner.runPortScan(from_port, to_port)
+#    port = port_scanner.runPortScan(from_port, to_port)
+    port = 2000
     return str(display_ip), str(server_ip), str(port)
 
 
@@ -279,6 +280,7 @@ def generate_server(server_ip, port, output_path, dm_name, json_data):
 def generate_api_reference(server_ip, port, output_path, dm_name, json_data):
     gen = ApiGenerator()
     gen.set_basic_path(server_ip + ":" + port, dm_name)
+
     # gen.set_access_key('1234567890')
     # gen.set_user_name('danny')
     # parameter
@@ -314,6 +316,38 @@ def generate_diagram(json_data, dm_name, output_path):
 
     viewer.generate_diagram(output_path)
 
+# Jun Guo : create corresponding docker file
+def generate_docker(server_ip, port, output_path, dm_name):
+
+    db_template_path = config.get('Output', 'instance_db_template') + "/"   
+
+    docker_compose_file = open("code_templates/docker_compose_template", "r")
+    db_init_mongo_file = open(db_template_path + "db_init_mongo_template", "r")    
+
+    docker_compose_template = docker_compose_file.read()
+
+    db_init_mongo_template = db_init_mongo_file.read()
+
+    db_user, db_password = edm_utils.generate_user_credentials(dm_name)
+    data = {"db_user": db_user,
+            "db_password": db_password,
+            "db_name": dm_name,
+            "port": port}
+
+    output_location = output_path + "/docker-compose.yaml"
+    with fileOps.safe_open_w(output_location) as output_file:
+        content = replace_words(docker_compose_template, data)
+        output_file.write(content)
+
+    output_location = output_path + "/init_mongo.js"
+    with fileOps.safe_open_w(output_location) as output_file:
+        content = replace_words(db_init_mongo_template, data)
+        output_file.write(content)
+
+
+
+    docker_compose_file.close()
+    db_init_mongo_file.close()
 
 def generate_all(dm_name, output_dir, to_file=True):
     """
@@ -350,10 +384,13 @@ def generate_all(dm_name, output_dir, to_file=True):
         # generate server code files
         generate_server(str(server_ip), str(port), output_dir, dm_name, json_data)
 
-        generate_api_reference(str(server_ip), str(port), output_dir + '/Server', dm_name, json_data)
+       # Jun Guo : generate_api_reference(str(server_ip), str(port), output_dir + '/Server', dm_name, json_data)
 
         # generate UML diagram
         generate_diagram(json_data, dm_name, output_dir)
+
+        # Jun Guo : docker related files
+        generate_docker(str(server_ip), str(port), output_dir, dm_name)
 
         # TODO
         # write model_display_data and display_ip to file

@@ -3,6 +3,7 @@ import os
 from code_generator import generate_code
 from utilities.config_util import ConfigUtil
 from utilities.file_op import fileOps
+from utilities import port_scanner
 from database_manager.dbOps import dbOps
 
 from flask import flash, Response, jsonify, current_app, Blueprint
@@ -16,6 +17,9 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 import subprocess as sp
 import time
+import commands
+import json
+
 
 from database_manager.setup import mgInstance
 from uml_parser.parse_dm_file import Analyzer as p
@@ -240,21 +244,61 @@ def run_instance():
         instance_path = "/" + request.form['domainModelName'] + "/" + request.form['fileId']
         server_path = "/" + "Server" + "/" #+ "Server.js"
 
-        final_path = base_path + user_path + instance_path + server_path
+	# Jun Guo : the past way to run the server
+#        final_path = base_path + user_path + instance_path + server_path
 
-        child_process = sp.Popen(["npm", "run", "launch"], cwd=final_path)
-        # Temporary solution..
-        time.sleep(0.5)
+#        child_process = sp.Popen(["npm", "run", "launch"], cwd=final_path)
+#        # Temporary solution..
+#        time.sleep(0.5)
 
-        if child_process.poll() == None:
+#        if child_process.poll() == None:
+#            flash('Successful to run the specified instance')
+#        else:
+#            flash('Failed to run the specified instance')
+        file_id = request.form['fileId']
+        final_path = base_path + user_path + instance_path
+	
+        _code,serviceCount = commands.getstatusoutput("docker service ls | grep " + file_id + "_web | awk '{print $4}' | cut -d / -f 1")
+
+        if serviceCount == '0':
+            print "service stopped, restarting ... "
+#            os.system("docker service update --replicas 1 " + file_id + "_db")
+#            os.system("docker service update --replicas 1 " + file_id + "_web")
+            os.system("docker service scale " + file_id + "_db=1 " + file_id + "_web=1")
+            
+
             flash('Successful to run the specified instance')
+            dbOps.registerRunningInstance(mgInstance.mongo, session['username'],request.form['domainModelName'], request.form['fileId']);
+            return redirect(url_for('main_bp.index'))
         else:
-            flash('Failed to run the specified instance')
+            print "no service"
 
-        dbOps.registerRunningInstance(mgInstance.mongo, session['username'], 
+  
+
+        # Jun Guo :  create stack
+        os.system('docker stack deploy -c ' + final_path + '/docker-compose.yaml ' + file_id)
+
+        # Get published port
+        _code,port = commands.getstatusoutput('docker service inspect --format "{{ (index .Endpoint.Ports 0).PublishedPort }}" ' + file_id + "_web")
+
+        # Jun Guo : Check whether service is available
+        retry_time, iter_no = 50, 0
+        _code,state = commands.getstatusoutput("docker service ps " + file_id + "_web | awk '{print $6}' | sed -n '2p'")
+        
+        while state != 'Running' and iter_no < retry_time:
+            _code,state = commands.getstatusoutput("docker service ps " + file_id + "_web | awk '{print $6}' | sed -n '2p'")  
+            time.sleep(0.5)
+            iter_no += 1
+          
+   
+        if iter_no >= 50:
+            flash('Failed to run the specificed instance')
+        else:
+            flash('Successful to run the specified instance')
+            dbOps.registerRunningInstance(mgInstance.mongo, session['username'], 
                                         request.form['domainModelName'], request.form['fileId']);    
+            return redirect(url_for('main_bp.index'))
 
-        return redirect(url_for('main_bp.index'))
     return redirect(url_for('main_bp.index'))
 
 #Stop the specified instance
@@ -269,14 +313,29 @@ def stop_instance():
 
         final_path = base_path + user_path + instance_path + server_path
 
-        child_process = sp.Popen(["npm", "run", "forever_stop"], cwd=final_path)
-        # Temporary solution..
-        time.sleep(0.5)
+#        child_process = sp.Popen(["npm", "run", "forever_stop"], cwd=final_path)
+#        # Temporary solution..
+#        time.sleep(0.5)
 
-        if child_process.poll() == None:
+#        if child_process.poll() == None:
+#            flash('Successful to stop the specified instance')
+#        else:
+#            flash('Failed to stop the specified instance')
+
+        # Jun Guo : stop the service
+        file_id = request.form['fileId']
+        os.system("docker service update --replicas 0 " + file_id + "_web")
+        os.system("docker service update --replicas 0 " + file_id + "_db")
+
+        time.sleep(5)
+
+        _code,serviceCount = commands.getstatusoutput("docker service ls | grep " + file_id + "_web | awk '{print $4}' | cut -d / -f 1")
+        
+        if serviceCount == '0':
             flash('Successful to stop the specified instance')
         else:
             flash('Failed to stop the specified instance')
+
 
         dbOps.stopRunningInstance(mgInstance.mongo, session['username'], 
                                         request.form['domainModelName'], request.form['fileId']);    
@@ -378,6 +437,10 @@ def delete_instance():
         file_dir = os.path.join(config.get('Output', 'output_path')) + "/" + username + "/" + domain_model_name + "/" + file_id
         fileOps.safe_delete_dir(file_dir)
 
+        # Jun Guo : delete docker service
+        os.system('docker stack rm '+request.form['fileId'])
+
+
         flash('Successfully deleted')
         return redirect(url_for('main_bp.index'))
     return redirect(url_for('main_bp.index'))
@@ -419,11 +482,26 @@ def detail_api():
     json_dir = os.path.join(config.get('Output', 'output_path')) + "/" + session['username']
     json_dir = json_dir + "/" + domain_model_name + "/" + str(file_id)
 
+    # Jun Guo : Get published port
+    _code,port = commands.getstatusoutput('docker service inspect --format "{{ (index .Endpoint.Ports 0).PublishedPort }}" ' + file_id + "_web")
+    server_ip = "127.0.0.1"
+
+    # Generate api reference file
+    api_file_location = json_dir + "/" + domain_model_name + ".json"
+    with open(api_file_location) as json_input:
+        json_data = json.load(json_input)
+
+        # Jun Guo : Generate api reference file when redirect to instance server page
+        generate_code.generate_api_reference(str(server_ip), str(port), json_dir + '/Server', domain_model_name, json_data)
+
+
     # Get description_data from json file
     meta_data = generate_code.read_description_from_file(domain_model_name, json_dir)
 
-    server_url = meta_data["server_url"]
+#    server_url = meta_data["server_url"]
     authen_key = meta_data["authen_key"]
+
+    server_url = server_ip + ":" + port
 
     # Pass required data to the template
     description_data = {
