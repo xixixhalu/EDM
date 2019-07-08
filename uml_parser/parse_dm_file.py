@@ -137,6 +137,9 @@ class Analyzer:
                             endUpperValue=upperValues[relationId][1]
                         dmo.defineRelation(relationId, str(elemRelation.get('start')), str(elemRelation.get('end')) , str(elemRelation.tag), startUpperValue, endUpperValue)
 
+        #Xiang: perform generalizaion
+        dmo.addAllGeneralizationAttributes()
+        
         #edm_utils.copyDirLink('code_templates/node_modules', PROJECT_DIR + "/" +'node_modules')
         json_file = open(PROJECT_DIR + "/" + _dmoName + ".json", "w")
 
