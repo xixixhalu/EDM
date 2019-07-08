@@ -40,9 +40,9 @@
                 <!-- <li class="nav-item"><a class="nav-link" href="#"><span class="fa fa-user"></span>&nbsp Account</a></li> -->
             </ul>
             <!-- User welcome title -->
-            <span class="navbar-text">
+            <!-- <span class="navbar-text">
                 Welcome  <strong>{{ session['username'] }} !</strong>
-            </span>
+            </span> -->
             <form class="form-inline mt-2 mt-md-0 ml-3" action="{{ url_for('main_bp.logout') }}">
                 <button class="btn btn-outline-success my-2 my-sm-0" id="log_out" ><span class="fas fa-sign-out-alt"></span>&nbsp Logout</button>
             </form>
@@ -54,7 +54,7 @@
         <div class="fixed-top alert alert-warning" role="alert" style="float:left; width:100%;">
         {% for message in messages %}
           {{ message }}
-        </div>  
+        </div>
         {% endfor %}
         <script type="text/javascript">
             window.setTimeout(function () {
@@ -99,7 +99,3 @@
             document.getElementsByName('behavior')[0].innerHTML += new_div.innerHTML;
         };
 </script>
-
-
-
-
